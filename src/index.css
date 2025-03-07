@@ -3,8 +3,25 @@
 @theme{
     --color-sblue:#0077B6;
     --color-pblue:#00B4D8;
+    --color-bgblue:#E0F2FE;
     --color-text:#474747;
     --color-text2:#909399;
 
+    --spacing-hheader:48px;
+    --spacing-hnavbar:56px;
 
 }
+body{
+    margin: 0;
+  padding: 0;
+    box-sizing: border-box;
+}
+.custom-scrollbar::-webkit-scrollbar {
+    width: 0px; /* Ẩn thanh cuộn trên Chrome, Edge, Safari */
+    background: transparent;
+  }
+  .custom-scrollbar {
+    -ms-overflow-style: none;  /* Ẩn trên IE, Edge */
+    scrollbar-width: none;      /* Ẩn trên Firefox */
+  }
+
