@@ -14,7 +14,7 @@ export default function Header() {
   };
   return (
     <div className="w-full bg-transparent h-hheader my-2.5">
-      <div className="mx-auto w-6xl">
+      <div className="mx-auto max-w-6xl">
         <div className="w-full flex justify-between  items-center">
           <div className="">
             <img

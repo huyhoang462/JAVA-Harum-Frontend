@@ -6,6 +6,7 @@
   --color-bgblue: #e0f2fe;
   --color-text: #474747;
   --color-text2: #909399;
+  --text-ssm: 12px;
 
   --spacing-hheader: 48px;
   --spacing-hnavbar: 56px;
@@ -14,6 +15,7 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  color: var(--color-text);
 }
 .custom-scrollbar::-webkit-scrollbar {
   width: 0px; /* Ẩn thanh cuộn trên Chrome, Edge, Safari */
