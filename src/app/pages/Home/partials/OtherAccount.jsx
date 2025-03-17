@@ -1,24 +1,29 @@
+import { UserRoundCheck, UserRoundPlus } from "lucide-react";
 import React from "react";
 
 export default function OtherAccount({ user }) {
   return (
-    <div className="grid grid-cols-6 gap-x-2">
-      <div className="h-12">
+    <div className="flex justify-between  text-ssm">
+      <div className=" flex">
         <img
           src={user.avatar}
-          className="w-12 h-12 object-cover rounded-full"
+          className="w-11 h-11 object-cover rounded-full shrink-0 mr-2"
         />
-      </div>
-      <div className="col-span-3">
-        <p className="font-bold text-ssm">{user.name}</p>
-        <p className=" text-ssm text-text2">{user.bio} </p>
+        <div className=" mx-auto">
+          <div className="font-bold ">{user.name}</div>
+          <div className="  text-text2">{user.bio} </div>
+        </div>
       </div>
       <div
-        className={`border-1 rounded-2xl text-ssm col-span-2 col-start-5 ml-auto w-[96px] h-8.5 cursor-pointer  flex items-center justify-center  ${
+        className={`border-1 rounded-full w-8 h-8 mt-1 cursor-pointer shrink-0 mx-2  flex items-center justify-center  ${
           user.isFollow ? "border-pblue text-pblue" : "border-text2 text-text2"
         }`}
       >
-        {user.isFollow ? "Đang theo dõi" : "Theo dõi"}
+        {user.isFollow ? (
+          <UserRoundCheck className="h-4" />
+        ) : (
+          <UserRoundPlus className="h-4" />
+        )}
       </div>
     </div>
   );
