@@ -7,6 +7,7 @@ import AccessLayout from "./app/layouts/AccessLayout";
 import Login from "./app/pages/Login/Login";
 import Signup from "./app/pages/Signup/Signup";
 import { ToastContainer } from "react-toastify";
+import PrivatePart from "./app/components/PrivatePart";
 function App() {
   return (
     <>
@@ -15,7 +16,14 @@ function App() {
           <Route path="*" element={<NotFound />} />
           <Route element={<DefaultLayout />}>
             <Route path="/" element={<Home />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route
+              path="/profile"
+              element={
+                <PrivatePart>
+                  <Profile />
+                </PrivatePart>
+              }
+            />
           </Route>
           <Route element={<AccessLayout />}>
             <Route path="/login" element={<Login />} />

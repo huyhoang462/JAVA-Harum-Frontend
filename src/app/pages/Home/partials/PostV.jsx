@@ -4,8 +4,8 @@ import React from "react";
 export default function PostV({ post }) {
   return (
     <div className="flex w-full cursor-pointer  ">
-      <img src={post.image} className="h-40 w-64 rounded-sm" />
-      <div className="flex flex-col justify-between w-full ml-2.5">
+      <img src={post.image} className="h-40 w-64 " />
+      <div className="flex flex-col justify-between w-full ml-4">
         <div className="text-ssm ">{post.topic}</div>
         <div className="text-xl font-medium line-clamp-2 min-h-14 ">
           {post.title}

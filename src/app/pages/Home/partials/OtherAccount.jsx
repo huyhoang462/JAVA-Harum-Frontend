@@ -7,11 +7,11 @@ export default function OtherAccount({ user }) {
       <div className=" flex">
         <img
           src={user.avatar}
-          className="w-11 h-11 object-cover rounded-full shrink-0 mr-2"
+          className="w-12 h-12 object-cover rounded-full shrink-0 mr-2"
         />
         <div className=" mx-auto">
-          <div className="font-bold ">{user.name}</div>
-          <div className="  text-text2">{user.bio} </div>
+          <div className="font-bold text-sm">{user.name}</div>
+          <div className="line-clamp-2  text-text2 text-sm">{user.bio} </div>
         </div>
       </div>
       <div

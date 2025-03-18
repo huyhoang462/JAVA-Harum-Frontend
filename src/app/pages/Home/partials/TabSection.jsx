@@ -12,12 +12,12 @@ const TabSection = ({ posts }) => {
 
   return (
     <div>
-      <div className="flex border-b border-gray-300  mb-4">
+      <div className="flex text-lg  mb-4">
         <button
           className={`pb-2 cursor-pointer px-4 ${
             activeTab === "forYou"
               ? "border-b-2 border-pblue text-pblue"
-              : "text-text2"
+              : "text-text"
           }`}
           onClick={() => setActiveTab("forYou")}
         >
@@ -27,7 +27,7 @@ const TabSection = ({ posts }) => {
           className={`pb-2 cursor-pointer px-4 ${
             activeTab === "byAuthor"
               ? "border-b-2 border-pblue text-pblue"
-              : "text-text2"
+              : "text-text"
           }`}
           onClick={() => setActiveTab("byAuthor")}
         >
@@ -37,7 +37,7 @@ const TabSection = ({ posts }) => {
           className={`pb-2 cursor-pointer px-4 ${
             activeTab === "topRated"
               ? "border-b-2 border-pblue text-pblue"
-              : "text-text2"
+              : "text-text"
           }`}
           onClick={() => setActiveTab("topRated")}
         >
@@ -45,7 +45,7 @@ const TabSection = ({ posts }) => {
         </button>
       </div>
 
-      <div className="flex flex-col gap-y-5">
+      <div className="flex flex-col gap-y-6">
         {filteredPosts[activeTab].map((post, index) => (
           <PostV key={index} post={post} />
         ))}

@@ -34,6 +34,7 @@ export default function Login() {
     const user = handleLoginApi();
     if (user) {
       nav("/");
+      localStorage.setItem("user_id", email);
     } else {
       toast.error("Sai thông tin đăng nhập");
     }
