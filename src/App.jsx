@@ -9,6 +9,8 @@ import Signup from "./app/pages/Signup/Signup";
 import { ToastContainer } from "react-toastify";
 import PrivatePart from "./app/components/PrivatePart";
 import ProfileLayout from "./app/layouts/ProfileLayout";
+import ProfileEdit from "./app/pages/ProfileEdit/ProfileEdit";
+import Topic from "./app/pages/Topic/Topic";
 function App() {
   return (
     <>
@@ -17,12 +19,14 @@ function App() {
           <Route path="*" element={<NotFound />} />
           <Route element={<DefaultLayout />}>
             <Route path="/" element={<Home />} />
+            <Route path="/topic/:topicName" element={<Topic />} />
           </Route>
           <Route element={<AccessLayout />}>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
           </Route>
           <Route element={<ProfileLayout />}>
+            <Route path="/edit-profile" element={<ProfileEdit />} />
             <Route
               path="/profile"
               element={
