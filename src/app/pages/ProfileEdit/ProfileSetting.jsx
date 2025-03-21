@@ -13,16 +13,16 @@ const ProfileSetting = () => {
       {/* Sidebar Tabs */}
       <div className="w-1/4 pr-4">
         <button
-          className={`block w-full text-left py-2 px-4 mb-2 border-l-4 ${
-            activeTab === "profile" ? "border-blue-600 text-blue-600 font-bold" : "border-transparent text-gray-600"
+          className={`block w-full text-left py-2 px-4 mb-2 border-l-4 cursor-pointer ${
+            activeTab === "profile" ? "border-pblue  text-pblue font-bold" : "border-transparent text-gray-600"
           }`}
           onClick={() => navigate("/profileedit")}
         >
           Thông tin cơ bản
         </button>
         <button
-          className={`block w-full text-left py-2 px-4 border-l-4 ${
-            activeTab === "password" ? "border-blue-600 text-blue-600 font-bold" : "border-transparent text-gray-600"
+          className={`block w-full text-left py-2 px-4 border-l-4 cursor-pointer ${
+            activeTab === "password" ? "border-pblue text-pblue font-bold" : "border-transparent text-gray-600"
           }`}
           onClick={() => navigate("/changepassword")}
         >
