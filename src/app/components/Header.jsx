@@ -10,7 +10,7 @@ import {
   Settings,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-export default function Header() {
+export default function Header({ textColor }) {
   const nav = useNavigate();
   const [isShowMenu, setIsShowMenu] = useState(false);
   const handleClickLogo = () => {
@@ -47,23 +47,46 @@ export default function Header() {
             <img
               className="h-12 cursor-pointer"
               onClick={handleClickLogo}
-              src="./logoFull.svg"
+              src="/logoFull.svg"
             />
           </div>
           {isLoggedIn ? (
             <div className="flex items-center">
               <div className="">
-                <Search className="text-text2 h-[25px] w-[25px] cursor-pointer hover:text-pblue" />
+                <Search
+                  className={`${
+                    textColor === "white" ? "text-white" : "text-text2"
+                  } h-[25px] w-[25px] cursor-pointer hover:text-pblue`}
+                />
               </div>
               <div className="ml-4">
-                <MessageSquareMore className="text-text2 h-[25px] w-[25px] cursor-pointer hover:text-pblue" />
+                <MessageSquareMore
+                  className={`${
+                    textColor === "white" ? "text-white" : "text-text2"
+                  } h-[25px] w-[25px] cursor-pointer hover:text-pblue`}
+                />
               </div>
               <div className="ml-4">
-                <Bell className="text-text2 h-[25px] w-[25px] cursor-pointer hover:text-pblue" />
+                <Bell
+                  className={`${
+                    textColor === "white" ? "text-white" : "text-text2"
+                  } h-[25px] w-[25px] cursor-pointer hover:text-pblue`}
+                />
               </div>
               <div className="ml-4  cursor-pointer ">
-                <div className="border-text2 border-2 px-4 py-1.5 rounded-3xl flex text-text2 hover:text-pblue">
-                  <Feather className="text-text2 h-6 w-6 mr-2 hover:text-pblue" />
+                <div
+                  className={`${
+                    textColor === "white"
+                      ? "text-white border-white"
+                      : "text-text2 border-text2"
+                  } border-2 px-4 py-1.5 rounded-3xl flex hover:text-pblue`}
+                >
+                  <Feather
+                    className={`${
+                      textColor === "white" ? "text-white" : "text-text2"
+                    } h-6 w-6 cursor-pointer mr-1 hover:text-pblue`}
+                  />
+
                   <p className="font-medium pr-[4px] ">Viết bài</p>
                 </div>
               </div>
@@ -74,7 +97,7 @@ export default function Header() {
                 <div className="">
                   <img
                     className="rounded-full h-10 w-10 object-cover"
-                    src="./src/app/assets/images/daisy.jpg"
+                    src="/src/app/assets/images/daisy.jpg"
                   />
                 </div>
                 <ChevronDown className="text-text2 h-5 w-5" />

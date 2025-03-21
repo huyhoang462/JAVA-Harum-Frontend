@@ -10,6 +10,8 @@ import { ToastContainer } from "react-toastify";
 import PrivatePart from "./app/components/PrivatePart";
 import ProfileLayout from "./app/layouts/ProfileLayout";
 import ProfileSetting from "./app/pages/ProfileEdit/ProfileSetting";
+import ProfileEdit from "./app/pages/ProfileEdit/ProfileEdit";
+import Topic from "./app/pages/Topic/Topic";
 function App() {
   return (
     <>
@@ -34,12 +36,14 @@ function App() {
                 </PrivatePart>
               }
             />
+            <Route path="/topic/:topicName" element={<Topic />} />
           </Route>
           <Route element={<AccessLayout />}>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
           </Route>
           <Route element={<ProfileLayout />}>
+            <Route path="/edit-profile" element={<ProfileEdit />} />
             <Route
               path="/profile"
               element={
