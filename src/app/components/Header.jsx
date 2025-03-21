@@ -31,11 +31,11 @@ export default function Header() {
       title: "Trang cá nhân",
       icon: <CircleUserRound className="h-6 text-text2 mr-2" />,
       path: "/profile",
-    },
+    },  
     {
       title: "Chỉnh sửa thông tin",
       icon: <Settings className="h-6 text2-text mr-2" />,
-      path: "/profile",
+      path: "/profileedit",
     },
   ];
   const isLoggedIn = !!localStorage.getItem("user_id");
