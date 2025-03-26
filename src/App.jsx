@@ -11,6 +11,7 @@ import PrivatePart from "./app/components/PrivatePart";
 import ProfileLayout from "./app/layouts/ProfileLayout";
 import ProfileEdit from "./app/pages/ProfileEdit/ProfileEdit";
 import Topic from "./app/pages/Topic/Topic";
+import Search from "./app/pages/Search/Search";
 function App() {
   return (
     <>
@@ -19,6 +20,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
           <Route element={<DefaultLayout />}>
             <Route path="/" element={<Home />} />
+            <Route path="/search" element={<Search />} />
             <Route path="/topic/:topicName" element={<Topic />} />
           </Route>
           <Route element={<AccessLayout />}>
