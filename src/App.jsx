@@ -13,6 +13,7 @@ import ProfileSetting from "./app/pages/ProfileEdit/ProfileSetting";
 import ProfileEdit from "./app/pages/ProfileEdit/ProfileEdit";
 import Topic from "./app/pages/Topic/Topic";
 import Search from "./app/pages/Search/Search";
+import PostDetail from "./app/pages/PostDetail/PostDetail";
 function App() {
   return (
     <>
@@ -22,6 +23,7 @@ function App() {
           <Route element={<DefaultLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/search" element={<Search />} />
+            <Route path="/post-detail" element={<PostDetail />} />
             <Route
               path="/profileedit"
               element={
