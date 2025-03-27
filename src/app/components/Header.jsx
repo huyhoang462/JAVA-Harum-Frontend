@@ -50,7 +50,7 @@ export default function Header({ textColor }) {
       title: "Trang cá nhân",
       icon: <CircleUserRound className="h-6 text-text2 mr-2" />,
       path: "/profile",
-    },  
+    },
     {
       title: "Chỉnh sửa thông tin",
       icon: <Settings className="h-6 text2-text mr-2" />,
@@ -77,13 +77,13 @@ export default function Header({ textColor }) {
               <Search
                 className={`${
                   textColor === "white" ? "text-text" : "text-text2"
-                } h-6 w-6 cursor-pointer hover:text-pblue absolute top-1.5 left-1`}
+                } h-6 w-6 cursor-pointer hover:text-pblue absolute top-1.5 left-2`}
                 onClick={handleSearch}
               />
               <input
                 type="text"
                 placeholder="Tìm kiếm..."
-                className="bg-gray-100 lg:w-md h-9 pr-2 pl-8 text-text focus:outline-pblue focus:bg-bgblue rounded-sm"
+                className="bg-gray-50 border-1 border-gray-200 lg:w-md h-9 pr-2 pl-9 text-text focus:outline-pblue focus:bg-bgblue rounded-sm"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyDown={handleKeyDown}
