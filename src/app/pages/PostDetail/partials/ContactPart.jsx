@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  Bookmark,
   BookMarked,
   MessageSquare,
   ThumbsDown,
@@ -34,7 +35,7 @@ export default function ContactPart({ post }) {
           </div>
         </div>
         <div className="mt-2">
-          <BookMarked
+          <Bookmark
             className="h-5 cursor-pointer hover:text-pblue"
             strokeWidth={2.5}
           />

@@ -23,7 +23,7 @@ export default function Profile() {
             <div>
               <div
                 className="border-1 border-text  mt-2.5 mb-4 text-text hover:border-pblue hover:text-pblue cursor-pointer rounded-lg flex items-center h-8 font-medium justify-center text-sm "
-                onClick={() => nav("/edit-profile")}
+                onClick={() => nav("/profileedit")}
               >
                 Chỉnh sửa thông tin cá nhân
               </div>
