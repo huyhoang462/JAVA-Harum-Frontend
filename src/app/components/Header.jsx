@@ -113,6 +113,7 @@ export default function Header({ textColor }) {
                       ? "text-white border-white"
                       : "text-text2 border-text2"
                   } border-2 px-4 py-1.5 rounded-3xl flex hover:text-pblue`}
+                  onClick={() => nav("/write-post")}
                 >
                   <Feather
                     className={`${

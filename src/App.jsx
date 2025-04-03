@@ -14,6 +14,8 @@ import ProfileEdit from "./app/pages/ProfileEdit/ProfileEdit";
 import Topic from "./app/pages/Topic/Topic";
 import Search from "./app/pages/Search/Search";
 import PostDetail from "./app/pages/PostDetail/PostDetail";
+import WritePost from "./app/pages/WritePost/WritePost";
+import WriteLayout from "./app/layouts/WriteLayout";
 function App() {
   return (
     <>
@@ -24,6 +26,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/search" element={<Search />} />
             <Route path="/post-detail" element={<PostDetail />} />
+
             <Route
               path="/profileedit"
               element={
@@ -53,6 +56,16 @@ function App() {
               element={
                 <PrivatePart>
                   <Profile />
+                </PrivatePart>
+              }
+            />
+          </Route>
+          <Route element={<WriteLayout />}>
+            <Route
+              path="/write-post"
+              element={
+                <PrivatePart>
+                  <WritePost />
                 </PrivatePart>
               }
             />

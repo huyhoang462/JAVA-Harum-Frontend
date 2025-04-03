@@ -1,76 +1,93 @@
 import React, { useState } from "react";
+import { handleForgotPasswordApi } from "../loginService";
 
 export default function ForgetPassword({ onBack }) {
   const [email, setEmail] = useState("");
-  const [isHideInfo, setIsHideInfo] = useState(true);
-  const [isHideError, setIsHideError] = useState(true);
-  const handleForgetPasswordApi = () => {
-    return email === "hh@gmail.com";
-  };
-  const handleForgetPassword = () => {
-    let isSucceed = handleForgetPasswordApi();
+  const [message, setMessage] = useState({ type: "", text: "" }); // Lưu trạng thái thông báo
+  const [loading, setLoading] = useState(false); // Trạng thái loading
 
-    if (isSucceed) {
-      setIsHideInfo(false);
-      setIsHideError(true);
-      setEmail("");
-    } else {
-      setIsHideInfo(true);
-      setIsHideError(false);
+  const forgotPassword = async () => {
+    if (!email.trim()) {
+      setMessage({ type: "error", text: "Vui lòng nhập email" });
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setMessage({ type: "", text: "" }); // Xóa thông báo cũ trước khi gửi
+
+      const res = await handleForgotPasswordApi(email);
+
+      if (res?.status === 200) {
+        setMessage({
+          type: "success",
+          text: "Chúng tôi đã gửi mật khẩu mới đến email của bạn. Vui lòng kiểm tra email.",
+        });
+        setEmail(""); // Xóa input sau khi gửi thành công
+      } else {
+        setMessage({
+          type: "error",
+          text: res?.data?.message || "Email chưa đăng ký tài khoản.",
+        });
+      }
+    } catch (error) {
+      setMessage({
+        type: "error",
+        text: "Lỗi kết nối. Vui lòng thử lại.",
+      });
+    } finally {
+      setLoading(false);
     }
   };
+
   return (
     <div className="absolute top-0 left-0 w-full h-full bg-white backdrop-opacity-30 flex items-center justify-center">
-      <div className="p-10 rounded-sm  shadow-lg w-full max-w-md ">
+      <div className="p-10 rounded-sm shadow-lg w-full max-w-md">
         <div className="flex flex-col items-center">
           <div className="font-semibold text-sblue text-xl mb-3">
             Quên mật khẩu
           </div>
-          <div className="mb-4">
-            {" "}
-            <p className="text-text font-medium text-sm mr-1">
-              Nhập Email của bạn để nhận liên kết đặt lại mật khẩu
-            </p>
-          </div>
-          <div>
-            <p className="text-text font-medium">Email</p>
+          <p className="text-text font-medium text-sm mb-4">
+            Nhập Email của bạn để nhận liên kết đặt lại mật khẩu
+          </p>
+          <div className="w-full">
+            <label className="text-text font-medium">Email</label>
             <input
-              className="w-[336px] h-9 mt-2 mb-2 px-2 border-2 border-text rounded-md focus:outline-sblue"
+              type="email"
+              className="w-full h-9 mt-2 px-2 border-2 border-text rounded-md focus:outline-sblue"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              disabled={loading}
             />
           </div>
-          <div className="w-[336px]">
-            {isHideInfo ? (
-              <></>
-            ) : (
-              <p className="text-green-500 text-sm">
-                Chúng tôi đã gửi mật khẩu mới đến email của bạn. Vui lòng kiểm
-                tra email.
-              </p>
-            )}
-            {isHideError ? (
-              <></>
-            ) : (
-              <p className="text-red-500 text-sm">
-                Email chưa đăng ký tài khoản
-              </p>
-            )}
-          </div>
-          <div
-            className="bg-sblue rounded-md cursor-pointer flex justify-center items-center mb-5 mt-2 w-[336px] h-9 hover:bg-pblue"
-            onClick={handleForgetPassword}
-          >
-            <p className=" font-medium text-white">Xác nhận</p>
-          </div>
-          <div className="flex ">
+
+          {/* Hiển thị thông báo */}
+          {message.text && (
             <p
-              className="text-sblue text-sm mr-1 font-medium cursor-pointer"
-              onClick={onBack}
+              className={`text-sm mt-2 ${
+                message.type === "success" ? "text-green-500" : "text-red-500"
+              }`}
             >
-              Quay lại đăng nhập
+              {message.text}
             </p>
-          </div>
+          )}
+
+          {/* Nút xác nhận */}
+          <button
+            className="bg-sblue text-white font-medium rounded-md w-full h-9 mt-4 hover:bg-pblue disabled:bg-gray-400"
+            onClick={forgotPassword}
+            disabled={loading}
+          >
+            {loading ? "Đang gửi..." : "Xác nhận"}
+          </button>
+
+          {/* Nút quay lại */}
+          <p
+            className="text-sblue text-sm mt-4 font-medium cursor-pointer"
+            onClick={onBack}
+          >
+            Quay lại đăng nhập
+          </p>
         </div>
       </div>
     </div>

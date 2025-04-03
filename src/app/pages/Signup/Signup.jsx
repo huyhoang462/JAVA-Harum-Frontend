@@ -47,6 +47,7 @@ export default function Signup() {
     try {
       const res = await handleSignUpApi(username, email, password);
       if (res.status === 200) {
+        toast.success(res.data);
         setShowOtpModal(true);
       } else {
         toast.error("Đăng ký thất bại. Vui lòng thử lại.");
