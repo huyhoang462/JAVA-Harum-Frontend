@@ -18,6 +18,7 @@ export default function Login() {
   useEffect(() => {
     const accounts = JSON.parse(localStorage.getItem("accounts")) || [];
     setSavedAccounts(accounts);
+    console.log("accuont: ", accounts);
   }, []);
 
   const handleForgotPassword = () => {
@@ -61,6 +62,7 @@ export default function Login() {
     if (selectedAccount) {
       setEmail(selectedAccount.email);
       setPassword(selectedAccount.password);
+      () => console.log("acount: ", email, ", ", password);
     }
     setShowDropdown(false);
   };
@@ -88,7 +90,7 @@ export default function Login() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             onFocus={() => setShowDropdown(true)}
-            onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+            onBlur={() => setTimeout(() => setShowDropdown(false), 100)}
           />
           {showDropdown && savedAccounts.length > 0 && (
             <div className="absolute w-full z-1 bg-white border border-gray-300 rounded-md shadow-lg mt-1">
@@ -97,7 +99,7 @@ export default function Login() {
                   key={index}
                   className="p-2 flex justify-between items-center hover:bg-gray-100 cursor-pointer"
                 >
-                  <span onClick={() => handleSelectAccount(acc.email)}>
+                  <span onMouseDown={() => handleSelectAccount(acc.email)}>
                     {acc.email}
                   </span>
                   <X
@@ -155,7 +157,7 @@ export default function Login() {
           className="bg-sblue rounded-md cursor-pointer flex justify-center items-center w-[316px] h-9 hover:bg-pblue"
           onClick={handleLogin}
         >
-          <p className="font-medium text-white">Đăng nhập</p>
+          <p className="font-medium text-white"> Đăng nhập</p>
         </div>
         <div className="flex mt-2">
           <p className="text-text text-sm mr-1 ">Chưa có tài khoản?</p>
