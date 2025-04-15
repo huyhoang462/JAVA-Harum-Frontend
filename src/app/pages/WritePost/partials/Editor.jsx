@@ -1,7 +1,6 @@
 import React, { memo, useEffect, useRef } from "react";
 import EditorJS from "@editorjs/editorjs";
 import ImageTool from "@editorjs/image";
-import Quote from "@editorjs/quote";
 import SimpleQuoteBlock from "./CustomQuotePlugin.js";
 import DragDrop from "editorjs-drag-drop";
 
@@ -11,9 +10,23 @@ const Editor = ({ data, onChange, editorBlock }) => {
     if (!ref.current) {
       const editor = new EditorJS({
         holder: editorBlock,
+        placeholder: "Nội dung",
         data: data,
         onReady: () => {
           new DragDrop(editor);
+          const observer = new MutationObserver(() => {
+            const editableElements = document.querySelectorAll(
+              '[contenteditable="true"]'
+            );
+            editableElements.forEach((el) => {
+              el.setAttribute("spellcheck", "false");
+            });
+          });
+
+          observer.observe(document.getElementById(editorBlock), {
+            childList: true,
+            subtree: true,
+          });
         },
         tools: {
           image: {

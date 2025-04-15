@@ -1,98 +1,143 @@
-// import React, { useState } from "react";
-// import Editor from "./partials/Editor";
-
-// export default function WritePost() {
-//   const [title, setTitle] = useState("");
-
-//   return (
-//     <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg">
-//       {/* Tiêu đề bài viết */}
-//       <input
-//         type="text"
-//         placeholder="Enter your title here..."
-//         className="w-full text-3xl font-bold p-3 mb-4 border-b focus:outline-none focus:border-blue-500"
-//         value={title}
-//         onChange={(e) => setTitle(e.target.value)}
-//       />
-
-//       {/* Vùng Editor */}
-//       <Editor />
-//     </div>
-//   );
-// }
-
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Editor from "./partials/Editor";
+import { createPostApi, getTopics } from "./writePostService";
+
+const DEFAULT_THUMBNAIL = "./src/app/assets/images/img1.jpg"; // Ảnh mặc định
 
 export default function WritePost() {
-  const [data, setData] = useState({});
+  const [data, setData] = useState(null);
   const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [topics, setTopics] = useState([]);
+  const [selectedTopic, setSelectedTopic] = useState("");
+  const [imageUrl, setImageUrl] = useState(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState(DEFAULT_THUMBNAIL);
+
+  const editorDataRef = useRef(null); // Lưu data editor không gây re-render
+
+  useEffect(() => {
+    const fetchTopics = async () => {
+      const res = await getTopics();
+      if (res?.data) {
+        setTopics(res.data); // res.data là mảng topics từ API
+      }
+    };
+
+    fetchTopics();
+  }, []);
+
+  const handleThumbnailChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageUrl(file);
+      setThumbnailPreview(URL.createObjectURL(file));
+    } else {
+      setImageUrl(null);
+      setThumbnailPreview(DEFAULT_THUMBNAIL);
+    }
+  };
+
+  const handleEditorChange = (editorData) => {
+    editorDataRef.current = editorData; // Không re-render
+  };
+
+  const handleSubmit = async () => {
+    const post = {
+      title,
+      // description,
+      topic: selectedTopic,
+      imageUrl,
+      content: editorDataRef.current,
+    };
+
+    console.log("Submit post:", post);
+    // Gửi dữ liệu lên API ở đây
+    try {
+      const response = await createPostApi({ post });
+      console.log("Tạo bài viết thành công:", response);
+      // điều hướng, thông báo, v.v...
+    } catch (error) {
+      console.error("Gửi bài viết thất bại:", error);
+      // hiện thông báo lỗi nếu cần
+    }
+  };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg">
-      {/* Tiêu đề bài viết */}
+    <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg space-y-6">
+      {/* Tiêu đề */}
       <input
         type="text"
-        placeholder="Enter your title here..."
-        className="w-full text-3xl font-bold p-3 mb-4 border-b focus:outline-none focus:border-blue-500"
+        placeholder="Nhập tiêu đề bài viết..."
+        className="w-full text-3xl font-bold p-3 border-b focus:outline-none focus:border-sblue"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
 
-      {/* Vùng Editor */}
-      <Editor data={data} onChange={setData} editorBlock="editorjs-container" />
+      {/* Mô tả */}
+      <textarea
+        placeholder="Mô tả bài viết..."
+        className="w-full p-3 border rounded-md focus:outline-none focus:ring"
+        rows={3}
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+      />
 
-      {/* Xem trước JSON data (chỉ để debug) */}
-      {/* <pre className="mt-4 p-2 text-sm bg-gray-100 rounded">
-          {JSON.stringify(data, null, 2)}
-        </pre> */}
+      {/* Chọn topic */}
+      <select
+        className="w-full p-2 border rounded-md bg-white focus:outline-none focus:ring"
+        value={selectedTopic}
+        onChange={(e) => setSelectedTopic(e.target.value)}
+      >
+        <option value="">-- Chọn chủ đề --</option>
+        {topics.map((topic) => (
+          <option key={topic.id} value={topic.id}>
+            {topic.name}
+          </option>
+        ))}
+      </select>
 
-      {/* Hiển thị nội dung dưới dạng HTML */}
-      <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
-        <h2 className="text-xl font-semibold mb-3">📖 Nội dung hiển thị:</h2>
-        <RenderContent data={data} />
+      {/* Ảnh đại diện */}
+      <div className="space-y-2">
+        <label className="font-medium block">Ảnh đại diện</label>
+
+        {/* Input file bị ẩn */}
+        <input
+          type="file"
+          accept="image/*"
+          id="thumbnail-upload"
+          onChange={handleThumbnailChange}
+          className="hidden"
+        />
+
+        {/* Click vào ảnh sẽ mở input file */}
+        <label htmlFor="thumbnail-upload" className="cursor-pointer block">
+          <img
+            src={thumbnailPreview || "/default-thumbnail.jpg"}
+            alt="Thumbnail Preview"
+            className="w-full h-56 object-cover rounded-md border hover:opacity-90 transition"
+          />
+        </label>
+      </div>
+
+      {/* EditorJS */}
+      <div>
+        <Editor
+          data={data}
+          placeholder="Nội dung"
+          onChange={handleEditorChange}
+          editorBlock="editorjs-container"
+        />
+      </div>
+
+      {/* Submit */}
+      <div className="text-right pt-4">
+        <button
+          onClick={handleSubmit}
+          className="bg-sblue text-white px-6 py-2 rounded hover:bg-blue-700 cursor-pointer"
+        >
+          Đăng bài
+        </button>
       </div>
     </div>
   );
 }
-
-const RenderContent = ({ data }) => {
-  if (!data || !data.blocks)
-    return <p className="text-gray-500">Chưa có nội dung.</p>;
-
-  return (
-    <div className="space-y-4">
-      {data.blocks.map((block, index) => {
-        switch (block.type) {
-          case "paragraph":
-            return (
-              <p
-                key={index}
-                className="text-gray-700"
-                dangerouslySetInnerHTML={{ __html: block.data.text }}
-              />
-            );
-          case "quote":
-            return (
-              <blockquote
-                key={index}
-                className="border-l-4 border-gray-400 pl-4 italic text-gray-600"
-                dangerouslySetInnerHTML={{ __html: block.data.text }}
-              />
-            );
-          case "image":
-            return (
-              <img
-                key={index}
-                src={block.data.file.url}
-                alt=""
-                className="rounded-lg shadow-md"
-              />
-            );
-          default:
-            return null;
-        }
-      })}
-    </div>
-  );
-};
