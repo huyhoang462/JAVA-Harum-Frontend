@@ -2,31 +2,10 @@ import { Menu } from "lucide-react";
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-export default function Navbar() {
+export default function Navbar({ topics }) {
   const nav = useNavigate();
   const location = useLocation(); // Lấy đường dẫn hiện tại
   const [isOpen, setIsOpen] = useState(false);
-
-  const topics = [
-    { name: "quan_diem_tranh_luan", label: "QUAN ĐIỂM - TRANH LUẬN" },
-    { name: "khoa_hoc_cong_nghe", label: "KHOA HỌC CÔNG NGHỆ" },
-    { name: "phat_trien_ban_than", label: "PHÁT TRIỂN BẢN THÂN" },
-    { name: "tai_chinh", label: "TÀI CHÍNH" },
-    { name: "yeu", label: "YÊU" },
-    { name: "giao_duc", label: "GIÁO DỤC" },
-    { name: "the_thao", label: "THỂ THAO" },
-    { name: "phim_anh", label: "PHIM ẢNH" },
-    { name: "thoi_trang", label: "THỜI TRANG" },
-    { name: "lich_su", label: "LỊCH SỬ" },
-    { name: "o_to", label: "Ô TÔ" },
-    { name: "tam_ly_hoc", label: "TÂM LÝ HỌC" },
-    { name: "chuyen_tham_kin", label: "CHUYỆN THẦM KÍN" },
-    { name: "game", label: "GAME" },
-    { name: "chuyen_hoc_duong", label: "CHUYỆN HỌC ĐƯỜNG" },
-    { name: "nghe_thuat_am_nhac", label: "NGHỆ THUẬT - ÂM NHẠC" },
-    { name: "suc_khoe", label: "SỨC KHỎE" },
-    { name: "ki_nang_mem", label: "KĨ NĂNG MỀM" },
-  ];
 
   const handleClickToggle = () => {
     setIsOpen(!isOpen);
@@ -39,17 +18,17 @@ export default function Navbar() {
           <div className="flex">
             {topics.slice(0, 5).map((topic) => (
               <div
-                key={topic.name}
+                key={topic.id}
                 className={`flex items-center text-sm h-14 px-8 font-medium cursor-pointer
                 hover:bg-bgblue hover:text-pblue 
                 ${
-                  location.pathname === `/topic/${topic.name}`
+                  location.pathname === `/topic/${topic.id}`
                     ? "bg-bgblue text-pblue"
                     : "text-text"
                 }`}
-                onClick={() => nav(`/topic/${topic.name}`)}
+                onClick={() => nav(`/topic/${topic.id}`, { state: { topic } })}
               >
-                {topic.label}
+                {topic.name?.toString().toUpperCase()}
               </div>
             ))}
           </div>
@@ -66,16 +45,16 @@ export default function Navbar() {
                     className={`flex items-center py-3 px-4 cursor-pointer 
                     hover:bg-bgblue hover:text-pblue 
                     ${
-                      location.pathname === `/topic/${topic.name}`
+                      location.pathname === `/topic/${topic.id}`
                         ? "bg-bgblue text-pblue"
                         : "text-text"
                     }`}
                     onClick={() => {
-                      nav(`/topic/${topic.name}`);
+                      nav(`/topic/${topic.id}`, { state: { topic } });
                       setIsOpen(false); // Ẩn menu sau khi chọn
                     }}
                   >
-                    {topic.label}
+                    {topic.name?.toString().toUpperCase()}
                   </div>
                 ))}
               </div>

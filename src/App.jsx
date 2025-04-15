@@ -43,7 +43,7 @@ function App() {
                 </PrivatePart>
               }
             />
-            <Route path="/topic/:topicName" element={<Topic />} />
+            <Route path="/topic/:id" element={<Topic />} />
           </Route>
           <Route element={<AccessLayout />}>
             <Route path="/login" element={<Login />} />

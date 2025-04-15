@@ -19,6 +19,7 @@
     "@editorjs/list": "^2.0.6",
     "@editorjs/quote": "^2.7.6",
     "@tailwindcss/vite": "^4.0.9",
+    "@tanstack/react-query": "^5.74.3",
     "@tiptap/react": "^2.11.7",
     "@tiptap/starter-kit": "^2.11.7",
     "axios": "^1.8.1",
