@@ -7,7 +7,7 @@ export const handleLoginApi = async (email, password) => {
       email: email,
       passwordHash: password,
     });
-    console.log(response);
+    console.log("dữ liệ: ", response.data);
     return response.data;
   } catch (error) {
     console.error("Lỗi khi đăng nhập:", error);
@@ -16,10 +16,11 @@ export const handleLoginApi = async (email, password) => {
 export const handleForgotPasswordApi = async (email) => {
   try {
     const response = await axios.post(
-      `${API_URL}/auth/forgot-password/${email}`
+      `${API_URL}/auth/forgot-password?email=${email}`
     );
     console.log(response);
-    return response.data;
+
+    return response;
   } catch (error) {
     console.error("Lỗi ", error);
   }

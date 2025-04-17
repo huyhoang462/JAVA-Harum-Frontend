@@ -9,6 +9,7 @@ export default function Login() {
   const nav = useNavigate();
   const [isShowModal, setIsShowModal] = useState(false);
   const [isRememberPassword, setIsRememberPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isHidePassword, setIsHidePassword] = useState(true);
@@ -34,7 +35,7 @@ export default function Login() {
     if (!res) {
       toast.error("Sai thông tin đăng nhập");
     } else {
-      localStorage.setItem("user_id", email);
+      localStorage.setItem("user_id", res?.id);
 
       if (isRememberPassword) {
         const updatedAccounts = [
@@ -45,9 +46,11 @@ export default function Login() {
       }
       nav("/");
     }
+    setIsLoading(false);
   };
 
   const handleLogin = () => {
+    setIsLoading(true);
     if (!password || !email) {
       toast.error("Vui lòng điền đủ thông tin");
       return;
@@ -154,11 +157,17 @@ export default function Login() {
         </div>
 
         <div
-          className="bg-sblue rounded-md cursor-pointer flex justify-center items-center w-[316px] h-9 hover:bg-pblue"
-          onClick={handleLogin}
+          className={`rounded-md cursor-pointer flex justify-center items-center w-[316px] h-9 
+    ${
+      isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-sblue hover:bg-pblue"
+    }`}
+          onClick={!isLoading ? handleLogin : undefined}
         >
-          <p className="font-medium text-white"> Đăng nhập</p>
+          <p className="font-medium text-white">
+            {isLoading ? "Đang đăng nhập..." : "Đăng nhập"}
+          </p>
         </div>
+
         <div className="flex mt-2">
           <p className="text-text text-sm mr-1 ">Chưa có tài khoản?</p>
           <p

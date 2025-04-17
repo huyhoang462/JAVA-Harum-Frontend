@@ -15,11 +15,13 @@ export const handleSignUpApi = async (username, email, password) => {
     return error;
   }
 };
-export const handleVerifyOtpApi = async (email, otp) => {
+export const handleVerifyOtpApi = async (email, otp, user) => {
   try {
-    const response = await axios.post(
-      `${API_URL}/auth/verify-otp/?email=${email}&otp=${otp}`
-    );
+    const response = await axios.post(`${API_URL}/auth/verify-otp`, {
+      email: email,
+      otp: otp,
+      user: user,
+    });
     console.log(response);
     return response;
   } catch (error) {

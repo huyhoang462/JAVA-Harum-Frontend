@@ -27,6 +27,10 @@ export default function Signup() {
       toast.error("Vui lòng nhập đủ thông tin");
       return false;
     }
+    if (username?.length < 6) {
+      toast.error("Tên người dùng phải từ 6 kí tự trở lên");
+      return false;
+    }
     if (!isValidEmail(email)) {
       toast.error("Email không hợp lệ");
       return false;
@@ -50,7 +54,8 @@ export default function Signup() {
         toast.success(res.data);
         setShowOtpModal(true);
       } else {
-        toast.error("Đăng ký thất bại. Vui lòng thử lại.");
+        console.log("lỗi là:", res?.response?.data?.message);
+        toast.error(res?.response?.data?.message);
       }
     } catch (error) {
       toast.error("Có lỗi xảy ra. Vui lòng thử lại.");
@@ -64,11 +69,16 @@ export default function Signup() {
   };
 
   const handleVerifyOtp = (otp) => {
-    const res = handleVerifyOtpApi(email, otp);
+    const user = {
+      username: username,
+      email: email,
+      passwordHash: password,
+    };
+    const res = handleVerifyOtpApi(email, otp, user);
     console.log("res: ", res);
-    // setShowOtpModal(false);
-    // toast.success("Xác thực thành công!");
-    // nav("/login");
+    setShowOtpModal(false);
+    toast.success("Xác thực thành công!");
+    nav("/login");
   };
 
   return (

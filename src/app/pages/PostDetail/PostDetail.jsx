@@ -38,7 +38,7 @@ export default function PostDetail() {
 
   return (
     <div>
-      <div className="flex mx-auto flex-col max-w-6xl">
+      <div className="flex mx-auto flex-col max-w-7xl">
         {/* ContactPart */}
         <div
           className={`fixed top-1/3 left-50 transition-opacity duration-300 ${
@@ -52,7 +52,7 @@ export default function PostDetail() {
         <PostContent post={post} />
 
         {/* Bài viết liên quan */}
-        <RelatedPosts post={post} />
+        {/* <RelatedPosts post={post} /> */}
 
         {/* Phần bình luận */}
         <div ref={commentRef}>

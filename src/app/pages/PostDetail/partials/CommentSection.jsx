@@ -120,7 +120,7 @@ const CommentSection = () => {
   };
 
   return (
-    <div className="mx-auto mt-5  bg-white mb-10 w-[700px] shadow-sm">
+    <div className="mx-auto mt-5  bg-white mb-10 w-[800px] shadow-sm">
       <div className="p-4 border-b">
         <h2 className="text-lg font-semibold text-gray-800">Bình luận</h2>
       </div>

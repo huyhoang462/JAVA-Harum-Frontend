@@ -2,7 +2,7 @@ import React from "react";
 
 export default function PostContent({ post }) {
   return (
-    <div className="mx-auto w-[700px]">
+    <div className="mx-auto w-[800px]">
       <div className="mt-4">
         <p className="text-sm text-text">{post.topic}</p>
         <p className="text-[40px] leading-tight my-4 text-text font-semibold">
