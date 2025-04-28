@@ -7,12 +7,11 @@ const DEFAULT_THUMBNAIL = "./src/app/assets/images/img1.jpg"; // Ảnh mặc đ�
 export default function WritePost() {
   const [data, setData] = useState(null);
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
   const [topics, setTopics] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState("");
   const [imageUrl, setImageUrl] = useState(null);
   const [thumbnailPreview, setThumbnailPreview] = useState(DEFAULT_THUMBNAIL);
-
+  const userId = localStorage.getItem("user_id");
   const editorDataRef = useRef(null); // Lưu data editor không gây re-render
 
   useEffect(() => {
@@ -43,22 +42,19 @@ export default function WritePost() {
 
   const handleSubmit = async () => {
     const post = {
-      title,
-      // description,
+      title: title,
       topic: selectedTopic,
-      imageUrl,
+      imageUrl: imageUrl,
+      userId: userId,
       content: editorDataRef.current,
     };
 
     console.log("Submit post:", post);
-    // Gửi dữ liệu lên API ở đây
     try {
-      const response = await createPostApi({ post });
+      const response = await createPostApi(post);
       console.log("Tạo bài viết thành công:", response);
-      // điều hướng, thông báo, v.v...
     } catch (error) {
       console.error("Gửi bài viết thất bại:", error);
-      // hiện thông báo lỗi nếu cần
     }
   };
 
@@ -71,15 +67,6 @@ export default function WritePost() {
         className="w-full text-3xl font-bold p-3 border-b focus:outline-none focus:border-sblue"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-      />
-
-      {/* Mô tả */}
-      <textarea
-        placeholder="Mô tả bài viết..."
-        className="w-full p-3 border rounded-md focus:outline-none focus:ring"
-        rows={3}
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
       />
 
       {/* Chọn topic */}

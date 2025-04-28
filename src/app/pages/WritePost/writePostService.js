@@ -13,7 +13,7 @@ export const getTopics = async () => {
 };
 export const createPostApi = async (post) => {
   try {
-    const res = await axios.post(`${API_URL}/post`, { post: post });
+    const res = await axios.post(`${API_URL}/posts`, post);
     console.log("postsss:  ", res);
     return res;
   } catch (error) {

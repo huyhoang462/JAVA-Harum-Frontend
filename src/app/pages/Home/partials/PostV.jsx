@@ -6,11 +6,12 @@ export default function PostV({ post }) {
     <div className="flex w-full cursor-pointer  ">
       <img src={post.image} className="h-40 w-64 " />
       <div className="flex flex-col justify-between w-full ml-4">
-        <div className="text-ssm ">{post.topic}</div>
-        <div className="text-xl font-medium line-clamp-2 min-h-14 ">
-          {post.title}
+        <div>
+          <div className="text-ssm mb-1">{post.topic}</div>
+          <div className="text-xl font-medium line-clamp-2 min-h-14 ">
+            {post.title}
+          </div>
         </div>
-        <div className=" line-clamp-1 ">{post.subTitle}</div>
         <div className="flex justify-between items-center">
           <div className=" flex items-center ">
             <img
