@@ -12,6 +12,8 @@ import ProfileLayout from "./app/layouts/ProfileLayout";
 import ProfileSetting from "./app/pages/ProfileEdit/ProfileSetting";
 import ProfileEdit from "./app/pages/ProfileEdit/ProfileEdit";
 import Topic from "./app/pages/Topic/Topic";
+import OtherProfile from "./app/pages/OtherProfile/OtherProfile";
+import Message from "./app/pages/messages/Messages";
 function App() {
   return (
     <>
@@ -37,10 +39,12 @@ function App() {
               }
             />
             <Route path="/topic/:topicName" element={<Topic />} />
+            
           </Route>
           <Route element={<AccessLayout />}>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            
           </Route>
           <Route element={<ProfileLayout />}>
             <Route path="/edit-profile" element={<ProfileEdit />} />
@@ -52,7 +56,22 @@ function App() {
                 </PrivatePart>
               }
             />
-            
+            <Route
+              path="/otherprofile"
+              element={
+                <PrivatePart>
+                  <OtherProfile />
+                </PrivatePart>
+              }
+            />
+            <Route
+              path="/message"
+              element={
+                <PrivatePart>
+                  < Message/>
+                </PrivatePart>
+              }
+            />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -1,0 +1,42 @@
+import React, { useState } from "react";
+import { Bookmark, FileText, UserCheck, Users } from "lucide-react";
+import Post from "./Post"; 
+const TabSection = ({ posts }) => {
+  const [activeTab, setActiveTab] = useState("posts");
+
+  const filteredPosts = {
+    posts: posts, 
+    saved: posts.filter((post) => post.saved), 
+    followers: [], 
+    following: [],
+  };
+
+  return (
+    <div className="w-full max-w-3xl mx-auto">
+      {/* Thanh tab */}
+      <div className="flex text-lg mb-4 border-b mt-6">
+        <button
+          className={`flex items-center gap-2 pb-2 px-4 transition bg-transparent ${
+            activeTab === "posts" ? "border-b-2 border-pblue text-pblue" : "text-gray-600"
+          }`}
+          onClick={() => setActiveTab("posts")}
+        >
+          <FileText size={18} />
+          Bài viết ({filteredPosts.posts.length})
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-30 gap-y-10">
+        {filteredPosts[activeTab].length > 0 ? (
+          filteredPosts[activeTab].map((post, index) => (
+            <Post key={index} post={post} />
+          ))
+        ) : (
+          <p className="text-gray-500 text-center"></p>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default TabSection;

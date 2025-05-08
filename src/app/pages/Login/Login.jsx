@@ -43,7 +43,7 @@ export default function Login() {
     <div className="p-10 rounded-sm  shadow-lg w-full max-w-sm">
       <div className="flex flex-col items-center">
         <div>
-          <img className="h-12  " src="/logoFull.svg" />
+          {/* <img className="h-12  " src="/logoFull.svg" /> */}
         </div>
         <div className="font-semibold text-sblue text-xl">Đăng nhập</div>
         <div>

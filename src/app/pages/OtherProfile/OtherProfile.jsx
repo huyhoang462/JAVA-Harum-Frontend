@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import TabSection from "./partical/TabSection";
 import Post from "./partical/Post";
 
-export default function Profile() {
+export default function OtherProfile() {
   const nav = useNavigate();
   const user = {
     userName: "Lewy Hoang",
@@ -82,10 +82,10 @@ export default function Profile() {
             <div className="font-medium">{user.userName}</div>
             <div>
               <div
-                className="border-1 border-text  mt-2.5 mb-4 text-text hover:border-pblue hover:text-pblue cursor-pointer rounded-lg flex items-center h-8 font-medium justify-center text-sm "
-                onClick={() => nav("/edit-profile")}
+                className="border-1  mt-2.5 mb-4 text-tex border-pblue text-pblue cursor-pointer rounded-lg flex items-center h-8 font-medium justify-center text-sm "
+                
               >
-                Chỉnh sửa thông tin cá nhân
+               Theo dõi
               </div>
             </div>
             <div className="flex justify-between items-center text-text mb-4 text-sm">
