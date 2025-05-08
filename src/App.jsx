@@ -14,6 +14,8 @@ import ProfileEdit from "./app/pages/ProfileEdit/ProfileEdit";
 import Topic from "./app/pages/Topic/Topic";
 import OtherProfile from "./app/pages/OtherProfile/OtherProfile";
 import Message from "./app/pages/messages/Messages";
+import Search from "./app/pages/Search/Search";
+import PostDetail from "./app/pages/PostDetail/PostDetail";
 function App() {
   return (
     <>
@@ -22,6 +24,8 @@ function App() {
           <Route path="*" element={<NotFound />} />
           <Route element={<DefaultLayout />}>
             <Route path="/" element={<Home />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/post-detail" element={<PostDetail />} />
             <Route
               path="/profileedit"
               element={
