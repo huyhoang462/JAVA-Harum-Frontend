@@ -70,6 +70,28 @@ export default function Profile() {
       comments: 29,
     },
   ];
+  const followings = [
+  {
+    avatar: "./src/app/assets/images/daisy.jpg",
+    name: "Lewy Hoang",
+    description: "Chuyên gia lập trình web",
+  },
+  {
+    avatar: "./src/app/assets/images/daisy.jpg",
+    name: "Lewy Hoang",
+    description: "Chuyên gia marketing",
+  },
+  {
+    avatar: "./src/app/assets/images/daisy.jpg",
+    name: "Lewy Hoang",
+    description: "Chuyên gia marketing",
+  },
+  {
+    avatar: "./src/app/assets/images/daisy.jpg",
+    name: "Lewy Hoang",
+    description: "Chuyên gia marketing",
+  },
+];
   return (
     <div className="flex  min-h-screen ">
       <div className="w-6xl mx-auto">
@@ -107,7 +129,7 @@ export default function Profile() {
             </div>
           </div>
           <div>
-          <TabSection posts={posts} />
+          <TabSection posts={posts} followings={followings} />
           </div>
         </div>
       </div>
