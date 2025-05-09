@@ -27,7 +27,7 @@ function App() {
           <Route element={<DefaultLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/search" element={<Search />} />
-            <Route path="/post-detail" element={<PostDetail />} />
+            <Route path="/post-detail/:id" element={<PostDetail />} />
 
             <Route
               path="/profileedit"
@@ -69,14 +69,6 @@ function App() {
                 </PrivatePart>
               }
             />
-            <Route
-              path="/message"
-              element={
-                <PrivatePart>
-                  <Message />
-                </PrivatePart>
-              }
-            />
           </Route>
           <Route element={<WriteLayout />}>
             <Route
@@ -84,6 +76,14 @@ function App() {
               element={
                 <PrivatePart>
                   <WritePost />
+                </PrivatePart>
+              }
+            />
+            <Route
+              path="/message"
+              element={
+                <PrivatePart>
+                  <Message />
                 </PrivatePart>
               }
             />

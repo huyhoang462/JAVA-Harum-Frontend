@@ -12,22 +12,23 @@ export default function ContactPart({ post }) {
     <div>
       {" "}
       <div className="  text-text2 flex flex-col gap-y-4 items-center">
-        <div className="">
+        <div className="mb-[-8px]">
           <ThumbsUp
             className="h-5 cursor-pointer hover:text-pblue"
             strokeWidth={2.5}
           />
         </div>
-        <p>1120</p>
-        <div className="">
+        <p>{post?.countLike}</p>
+        <div className="mb-[-8px]">
           <ThumbsDown
             className="h-5 cursor-pointer hover:text-pblue"
             strokeWidth={2.5}
           />
         </div>
+        <p>{post?.countDislike}</p>
         <div className="relative cursor-pointer">
           <img
-            src={post?.user?.avatar}
+            src={post?.user?.avatar || "/src/app/assets/images/daisy.jpg"}
             className="w-14 h-14  object-cover rounded-full "
           />
           <div className=" h-5 w-5 flex items-center justify-center bg-white rounded-full shadow-md absolute bottom-[-7px] left-1/3">
@@ -45,7 +46,7 @@ export default function ContactPart({ post }) {
             className="h-5 cursor-pointer hover:text-pblue"
             strokeWidth={2.5}
           />
-          29
+          <p>{post?.countView}</p>
         </div>
       </div>
     </div>

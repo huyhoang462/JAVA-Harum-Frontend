@@ -13,7 +13,11 @@ export const getTopics = async () => {
 };
 export const createPostApi = async (post) => {
   try {
-    const res = await axios.post(`${API_URL}/posts`, post);
+    const res = await axios.post(`${API_URL}/posts/with-blocks`, post, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     console.log("postsss:  ", res);
     return res;
   } catch (error) {

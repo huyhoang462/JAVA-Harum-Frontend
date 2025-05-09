@@ -4,7 +4,7 @@ import ImageTool from "@editorjs/image";
 import SimpleQuoteBlock from "./CustomQuotePlugin.js";
 import DragDrop from "editorjs-drag-drop";
 
-const Editor = ({ data, onChange, editorBlock }) => {
+const Editor = ({ data, onChange, editorBlock, onImageUpload }) => {
   const ref = useRef();
   useEffect(() => {
     if (!ref.current) {
@@ -37,9 +37,16 @@ const Editor = ({ data, onChange, editorBlock }) => {
                   return new Promise((resolve, reject) => {
                     const reader = new FileReader();
                     reader.onloadend = () => {
+                      // 👇 Gửi file gốc ra ngoài cho component cha
+                      if (onImageUpload) {
+                        onImageUpload(file);
+                      }
                       resolve({
                         success: 1,
-                        file: { url: reader.result }, // Trả về URL file đã tải lên
+                        file: {
+                          url: reader.result,
+                          name: file.name,
+                        },
                       });
                     };
                     reader.onerror = reject;

@@ -1,16 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
+/* eslint-disable no-unused-vars */
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Editor from "./partials/Editor";
 import { createPostApi, getTopics } from "./writePostService";
-
-const DEFAULT_THUMBNAIL = "./src/app/assets/images/img1.jpg"; // Ảnh mặc định
 
 export default function WritePost() {
   const [data, setData] = useState(null);
   const [title, setTitle] = useState("");
   const [topics, setTopics] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState("");
-  const [imageUrl, setImageUrl] = useState(null);
-  const [thumbnailPreview, setThumbnailPreview] = useState(DEFAULT_THUMBNAIL);
+  const [images, setImages] = useState([]);
   const userId = localStorage.getItem("user_id");
   const editorDataRef = useRef(null); // Lưu data editor không gây re-render
 
@@ -18,41 +16,61 @@ export default function WritePost() {
     const fetchTopics = async () => {
       const res = await getTopics();
       if (res?.data) {
-        setTopics(res.data); // res.data là mảng topics từ API
+        setTopics(res.data);
       }
     };
 
     fetchTopics();
   }, []);
 
-  const handleThumbnailChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImageUrl(file);
-      setThumbnailPreview(URL.createObjectURL(file));
-    } else {
-      setImageUrl(null);
-      setThumbnailPreview(DEFAULT_THUMBNAIL);
-    }
-  };
-
   const handleEditorChange = (editorData) => {
-    editorDataRef.current = editorData; // Không re-render
+    editorDataRef.current = editorData;
   };
-
+  const handleImageUpload = useCallback((file) => {
+    console.log("LOG TỪ WritePost: Ảnh đã được chọn:", file.name);
+    setImages((prevImages) => [...prevImages, file]);
+  }, []);
   const handleSubmit = async () => {
+    const blocks = editorDataRef.current?.blocks || [];
+
+    const formattedContent = blocks.map((block) => {
+      let value = "";
+
+      if (block.type === "image") {
+        value = "";
+      } else if (block.data.text) {
+        value = block.data.text;
+      } else {
+        // fallback nếu không có text
+        value = JSON.stringify(block.data);
+      }
+
+      return {
+        type: block.type,
+        value,
+      };
+    });
+
     const post = {
       title: title,
       topic: selectedTopic,
-      imageUrl: imageUrl,
       userId: userId,
-      content: editorDataRef.current,
+      blocks: formattedContent,
+      images: images,
     };
-
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("userId", userId);
+    formData.append("topicId", selectedTopic);
+    formData.append("blocks", JSON.stringify(formattedContent));
+    images.forEach((imageFile) => {
+      formData.append("images", imageFile);
+    });
     console.log("Submit post:", post);
     try {
-      const response = await createPostApi(post);
-      console.log("Tạo bài viết thành công:", response);
+      const response = await createPostApi(formData);
+      if (response?.status === 200)
+        console.log("Tạo bài viết thành công:", response);
     } catch (error) {
       console.error("Gửi bài viết thất bại:", error);
     }
@@ -83,29 +101,6 @@ export default function WritePost() {
         ))}
       </select>
 
-      {/* Ảnh đại diện */}
-      <div className="space-y-2">
-        <label className="font-medium block">Ảnh đại diện</label>
-
-        {/* Input file bị ẩn */}
-        <input
-          type="file"
-          accept="image/*"
-          id="thumbnail-upload"
-          onChange={handleThumbnailChange}
-          className="hidden"
-        />
-
-        {/* Click vào ảnh sẽ mở input file */}
-        <label htmlFor="thumbnail-upload" className="cursor-pointer block">
-          <img
-            src={thumbnailPreview || "/default-thumbnail.jpg"}
-            alt="Thumbnail Preview"
-            className="w-full h-56 object-cover rounded-md border hover:opacity-90 transition"
-          />
-        </label>
-      </div>
-
       {/* EditorJS */}
       <div>
         <Editor
@@ -113,6 +108,7 @@ export default function WritePost() {
           placeholder="Nội dung"
           onChange={handleEditorChange}
           editorBlock="editorjs-container"
+          onImageUpload={handleImageUpload}
         />
       </div>
 
