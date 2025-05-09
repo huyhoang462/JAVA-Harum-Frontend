@@ -1,15 +1,17 @@
 import React from "react";
 import TabSection from "./partials/TabSection";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 export default function Topic() {
-  const { topicName } = useParams();
-  const topicEx = {
-    topicName: "quan_diem_tranh_luan",
-    label: "QUAN ĐIỂM - TRANH LUẬN",
-    description:
-      "Các nội dung thể hiện góc nhìn, quan điểm đa chiều về các vấn đề kinh tế, văn hoá – xã hội trong và ngoài nước.",
-  };
+  const location = useLocation();
+
+  const topic = location.state?.topic;
+
+  if (!topic) {
+    return (
+      <div className="text-center mt-10 text-xl">Không tìm thấy topic!</div>
+    );
+  }
   const posts = [
     {
       id: "jawefdjaw",
@@ -72,7 +74,7 @@ export default function Topic() {
     <div>
       <div className="relative">
         <div className="absolute inset-0 bg-black/50 flex justify-center items-center text-white text-5xl font-semibold">
-          {topicEx.label}
+          {topic?.name?.toString().toUpperCase()}
         </div>
         <img src="/src/app/assets/images/qđtl.png" className="w-full h-96" />
       </div>
@@ -83,9 +85,11 @@ export default function Topic() {
           </div>
           <div className="col-span-4 mt-0 text-text">
             <div className="p-4 border-1 h-fit  border-text2">
-              <div className="text-xl font-medium">{topicEx.label}</div>
+              <div className="text-xl font-medium">
+                {topic?.name?.toString().toUpperCase()}
+              </div>
               <div className="font-medium mb-1 mt-4">Nội dung cho phép</div>
-              <div className="text-sm">{topicEx.description}</div>
+              <div className="text-sm">{topic?.description}</div>
               <div className="font-medium mb-1 mt-4">Quy định</div>
               <ul className="text-sm list-disc pl-5">
                 <li>

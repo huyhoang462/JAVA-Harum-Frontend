@@ -14,7 +14,6 @@ export default function PostH({ post }) {
             <Bookmark className="h-6" />
           </div>
         </div>
-        <div className="text-sm mb-2.5 line-clamp-1">{post?.subTitle}</div>
         <div className="flex items-center">
           <div className="flex items-center">
             <div className="mr-2">

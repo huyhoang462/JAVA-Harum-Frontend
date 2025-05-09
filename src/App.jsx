@@ -16,6 +16,8 @@ import OtherProfile from "./app/pages/OtherProfile/OtherProfile";
 import Message from "./app/pages/messages/Messages";
 import Search from "./app/pages/Search/Search";
 import PostDetail from "./app/pages/PostDetail/PostDetail";
+import WritePost from "./app/pages/WritePost/WritePost";
+import WriteLayout from "./app/layouts/WriteLayout";
 function App() {
   return (
     <>
@@ -26,6 +28,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/search" element={<Search />} />
             <Route path="/post-detail" element={<PostDetail />} />
+
             <Route
               path="/profileedit"
               element={
@@ -42,13 +45,11 @@ function App() {
                 </PrivatePart>
               }
             />
-            <Route path="/topic/:topicName" element={<Topic />} />
-            
+            <Route path="/topic/:id" element={<Topic />} />
           </Route>
           <Route element={<AccessLayout />}>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            
           </Route>
           <Route element={<ProfileLayout />}>
             <Route path="/edit-profile" element={<ProfileEdit />} />
@@ -72,7 +73,27 @@ function App() {
               path="/message"
               element={
                 <PrivatePart>
-                  < Message/>
+                  <Message />
+                </PrivatePart>
+              }
+            />
+          </Route>
+          <Route element={<WriteLayout />}>
+            <Route
+              path="/write-post"
+              element={
+                <PrivatePart>
+                  <WritePost />
+                </PrivatePart>
+              }
+            />
+          </Route>
+          <Route element={<WriteLayout />}>
+            <Route
+              path="/write-post"
+              element={
+                <PrivatePart>
+                  <WritePost />
                 </PrivatePart>
               }
             />
