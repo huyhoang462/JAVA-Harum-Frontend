@@ -3,7 +3,7 @@ import ContactPart from "./partials/ContactPart";
 import PostContent from "./partials/PostContent";
 import CommentSection from "./partials/CommentSection";
 import { useParams } from "react-router-dom";
-import { getTopicbyId } from "./postDetailService"; // đúng đường dẫn đến service
+import { getPosticbyId } from "./postDetailService";
 
 export default function PostDetail() {
   const { id } = useParams();
@@ -11,12 +11,14 @@ export default function PostDetail() {
   const [isHidden, setIsHidden] = useState(false);
   const commentRef = useRef(null);
 
+  const hasFetchedRef = useRef(false); // ✅ biến cờ
+
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const res = await getTopicbyId(id);
+        const res = await getPosticbyId(id);
         if (res.status === 200) {
-          setPost(res.data); // gán dữ liệu bài viết vào state
+          setPost(res.data);
         } else {
           console.error("Lỗi: Không lấy được bài viết");
         }
@@ -25,7 +27,10 @@ export default function PostDetail() {
       }
     };
 
-    if (id) fetchPost();
+    if (id && !hasFetchedRef.current) {
+      hasFetchedRef.current = true; // ✅ chỉ cho gọi một lần
+      fetchPost();
+    }
   }, [id]);
 
   useEffect(() => {

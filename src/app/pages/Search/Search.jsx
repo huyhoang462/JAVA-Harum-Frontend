@@ -12,7 +12,7 @@ export default function Search() {
         <div className="text-center font-medium text-3xl py-8">
           Kết quả tìm kiếm: "<span className="italic">{query}</span>"
         </div>
-        <TabSection />
+        <TabSection query={query} />
       </div>
     </div>
   );

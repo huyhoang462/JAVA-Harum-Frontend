@@ -1,102 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PostV from "./PostV";
 import { FileText, UserRound } from "lucide-react";
-const TabSection = () => {
-  const users = [
-    {
-      id: 1,
-      avatar: "./src/app/assets/images/daisy.jpg",
-      name: "Daisy",
-    },
-    {
-      id: 2,
-      avatar: "./src/app/assets/images/daisy.jpg",
-      name: "Chill guy",
-    },
-    {
-      id: 3,
-      avatar: "./src/app/assets/images/daisy.jpg",
-      name: "Hoa cỏ lau",
-    },
-    {
-      id: 4,
-      avatar: "./src/app/assets/images/daisy.jpg",
-      name: "Trịnh Trần Phương Tuấn",
-    },
-    {
-      id: 5,
-      avatar: "./src/app/assets/images/daisy.jpg",
-      name: "Bà già nghèo khổ giữa trời đông cô đơn",
-    },
-    {
-      id: 6,
-      avatar: "./src/app/assets/images/daisy.jpg",
-      name: "Daisy",
-    },
-    {
-      id: 7,
-      avatar: "./src/app/assets/images/daisy.jpg",
-      name: "Daisy",
-    },
-  ];
-  const posts = [
-    {
-      id: "jawefdjaw",
-      image: "./src/app/assets/images/img1.jpg",
-      title: "Bạn có tin vào những điều kì diệu không như bầu trời này ấy?",
-      subTitle: "Có những ngày bình yên đến lạ",
-      date: "14-02-1025",
-      user: {
-        avatar: "./src/app/assets/images/daisy.jpg",
-        name: "Daisy",
-      },
-      topic: "QUAN ĐIỂM - TRANH LUẬN",
-      likes: 100,
-      comments: 29,
-    },
-    {
-      id: "sdqw",
-      image: "./src/app/assets/images/img1.jpg",
-      title: "Bạn có tin vào những điều kì diệu không như bầu trời này ấy?",
-      subTitle: "Có những ngày bình yên đến lạ Có những ngày bình yên đến lạ",
-      date: "14-02-1025",
-      user: {
-        avatar: "./src/app/assets/images/daisy.jpg",
-        name: "Daisy",
-      },
-      topic: "QUAN ĐIỂM - TRANH LUẬN",
-      likes: 100,
-      comments: 29,
-    },
-    {
-      id: "sdqw",
-      image: "./src/app/assets/images/img1.jpg",
-      title: "Bạn có tin?",
-      subTitle: "Có những ngày bình yên đến lạ Có những ngày bình yên đến lạ",
-      date: "14-02-1025",
-      user: {
-        avatar: "./src/app/assets/images/daisy.jpg",
-        name: "Daisy",
-      },
-      topic: "QUAN ĐIỂM - TRANH LUẬN",
-      likes: 100,
-      comments: 29,
-    },
-    {
-      id: "sdqw",
-      image: "./src/app/assets/images/img1.jpg",
-      title: "Bạn có tin vào những điều kì diệu không như bầu trời này ấy?",
-      subTitle: "Có những ngày bình yên đến lạ Có những ngày bình yên đến lạ",
-      date: "14-02-1025",
-      user: {
-        avatar: "./src/app/assets/images/daisy.jpg",
-        name: "Daisy",
-      },
-      topic: "QUAN ĐIỂM - TRANH LUẬN",
-      likes: 100,
-      comments: 29,
-    },
-  ];
+import { getSearchResult } from "../searchService";
+const TabSection = ({ query }) => {
+  const [posts, setPosts] = useState([]);
+  const [users, setUsers] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!query) return;
+      try {
+        const res = await getSearchResult(query);
+
+        console.log("ess:", res);
+        setPosts(res?.posts?.content);
+        setUsers(res?.users?.content);
+      } catch (err) {
+        console.error("Lỗi khi tìm kiếm:", err);
+      }
+    };
+
+    fetchData();
+  }, [query]);
   const [activeTab, setActiveTab] = useState("posts");
 
   return (
@@ -127,23 +51,31 @@ const TabSection = () => {
       </div>
       {activeTab === "posts" ? (
         <div className="flex flex-col  gap-y-4 ">
-          {posts.map((post, index) => (
-            <PostV key={index} post={post} />
-          ))}
+          {posts.length > 0 ? (
+            posts.map((post, index) => <PostV key={index} post={post} />)
+          ) : (
+            <p>Không tìm thấy bài viết liên quan</p>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-2 gap-10">
-          {users.map((user, index) => (
-            <div key={index} className="flex ">
-              <div className="w-80 h-16 border-1 border-text2 rounded-sm flex items-center ">
-                <img
-                  src={user.avatar}
-                  className="w-12 h-12 object-cover rounded-full mx-4 shrink-0"
-                />
-                <div className="font-semibold text-text mr-2">{user.name}</div>
+          {users.length > 0 ? (
+            users.map((user, index) => (
+              <div key={index} className="flex ">
+                <div className="w-80 h-16 border-1 border-text2 rounded-sm flex items-center ">
+                  <img
+                    src={user?.avatarUrl}
+                    className="w-12 h-12 object-cover rounded-full mx-4 shrink-0"
+                  />
+                  <div className="font-semibold text-text mr-2">
+                    {user?.username}
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p>Không tìm thấy người dùng liên quan</p>
+          )}
         </div>
       )}
     </div>
