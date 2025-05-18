@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
 import ContactPart from "./partials/ContactPart";
 import PostContent from "./partials/PostContent";

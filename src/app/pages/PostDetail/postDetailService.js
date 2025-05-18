@@ -53,3 +53,27 @@ export const doSave = async (save) => {
     return error;
   }
 };
+export const checkFollow = async (followerId, followedId) => {
+  try {
+    const res = await axios.get(
+      `${API_URL}/follow/check/${followerId}/${followedId}`
+    );
+    console.log("check follow này: ", res);
+    return res;
+  } catch (error) {
+    console.error("Lỗi khi xem follow:", error);
+    return error;
+  }
+};
+export const doFollow = async (followerId, followedId) => {
+  try {
+    const res = await axios.post(
+      `${API_URL}/follow/interact/${followerId}/${followedId}`
+    );
+    console.log("do follow này: ", res);
+    return res;
+  } catch (error) {
+    console.error("Lỗi khi follow:", error);
+    return error;
+  }
+};

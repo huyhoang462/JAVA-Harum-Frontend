@@ -1,8 +1,23 @@
-import React, { useEffect, useState } from "react";
 import formatDate from "../../../utils/formatDate";
+import { sFollow } from "../followStore";
+import { doFollow } from "../postDetailService";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 export default function PostContent({ post }) {
-  const [isFollowing, setIsFollowing] = useState(false);
-  useEffect(() => {}, []);
+  const isFollowing = sFollow.use();
+  const userID = localStorage.getItem("user_id");
+  const nav = useNavigate();
+
+  const handleFollow = async () => {
+    if (userID) {
+      const res = await doFollow(userID, post?.userId);
+      if (res?.status === 200) {
+        toast.success(isFollowing ? "Đã bỏ theo dõi!" : "Đã theo dõi!");
+        sFollow.set((pre) => (pre.value = !pre.value));
+        console.log("done: ", res);
+      }
+    } else nav("/login");
+  };
   return (
     <div className="mx-auto w-[800px]">
       <div className="mt-4">
@@ -24,11 +39,17 @@ export default function PostContent({ post }) {
             </div>
           </div>
           {isFollowing ? (
-            <div className="border border-pblue  cursor-pointer text-pblue px-8 py-2 font-semibold text-sm rounded-3xl flex items-center justify-center">
+            <div
+              className="border border-pblue  cursor-pointer text-pblue px-8 py-2 font-semibold text-sm rounded-3xl flex items-center justify-center"
+              onClick={() => handleFollow()}
+            >
               Đang theo dõi
             </div>
           ) : (
-            <div className="border border-text2  cursor-pointer text-text2 px-8 py-2 font-semibold text-sm rounded-3xl flex items-center justify-center">
+            <div
+              className="border border-text2  cursor-pointer text-text2 px-8 py-2 font-semibold text-sm rounded-3xl flex items-center justify-center"
+              onClick={() => handleFollow()}
+            >
               Theo dõi
             </div>
           )}
