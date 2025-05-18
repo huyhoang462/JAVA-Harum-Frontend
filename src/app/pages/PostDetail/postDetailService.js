@@ -31,3 +31,25 @@ export const doVote = async (vote) => {
     return error;
   }
 };
+export const checkSave = async (userId, postId) => {
+  try {
+    const res = await axios.get(
+      `${API_URL}/saved-posts/check/${userId}/${postId}`
+    );
+    console.log("checksave này: ", res);
+    return res;
+  } catch (error) {
+    console.error("Lỗi khi xem lưu:", error);
+    return error;
+  }
+};
+export const doSave = async (save) => {
+  try {
+    const res = await axios.post(`${API_URL}/saved-posts/interact`, save);
+    console.log("dosave này: ", res);
+    return res;
+  } catch (error) {
+    console.error("Lỗi khi save:", error);
+    return error;
+  }
+};

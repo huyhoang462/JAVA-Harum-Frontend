@@ -11,10 +11,8 @@ export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Kiểm tra trạng thái đăng nhập
     const checkLoginStatus = () => {
-      // Kiểm tra từ localStorage, cookie hoặc state management
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("user_id");
       setIsLoggedIn(token !== null);
     };
 

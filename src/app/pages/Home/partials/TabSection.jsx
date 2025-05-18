@@ -19,7 +19,6 @@ const TabSection = ({ isLoggedIn }) => {
 
         switch (activeTab) {
           case "forYou": {
-            // Gọi API "Dành cho bạn"
             const forYouResponse = await getTopPosts();
             if (forYouResponse.status === 200) {
               result = forYouResponse.data?.content || [];
@@ -27,7 +26,6 @@ const TabSection = ({ isLoggedIn }) => {
             break;
           }
           case "following":
-            // Chỉ gọi API "Đang theo dõi" khi đã đăng nhập
             if (isLoggedIn) {
               const followingResponse = await getTopPosts();
               if (followingResponse.status === 200) {
@@ -73,28 +71,15 @@ const TabSection = ({ isLoggedIn }) => {
           Dành cho bạn
         </button>
 
-        {isLoggedIn && (
-          <button
-            className={`pb-2 cursor-pointer px-4 ${
-              activeTab === "following"
-                ? "border-b-2 border-pblue text-pblue"
-                : "text-text"
-            }`}
-            onClick={() => setActiveTab("following")}
-          >
-            Đang theo dõi
-          </button>
-        )}
-
         <button
           className={`pb-2 cursor-pointer px-4 ${
-            activeTab === "topRated"
+            activeTab === "following"
               ? "border-b-2 border-pblue text-pblue"
               : "text-text"
           }`}
-          onClick={() => setActiveTab("topRated")}
+          onClick={() => setActiveTab("following")}
         >
-          Đánh giá cao nhất
+          Đang theo dõi
         </button>
       </div>
 

@@ -12,21 +12,19 @@ export default function PostDetail() {
   const commentRef = useRef(null);
 
   const hasFetchedRef = useRef(false); // ✅ biến cờ
-
-  useEffect(() => {
-    const fetchPost = async () => {
-      try {
-        const res = await getPosticbyId(id);
-        if (res.status === 200) {
-          setPost(res.data);
-        } else {
-          console.error("Lỗi: Không lấy được bài viết");
-        }
-      } catch (error) {
-        console.error("Lỗi gọi API:", error);
+  const fetchPost = async () => {
+    try {
+      const res = await getPosticbyId(id);
+      if (res.status === 200) {
+        setPost(res.data);
+      } else {
+        console.error("Lỗi: Không lấy được bài viết");
       }
-    };
-
+    } catch (error) {
+      console.error("Lỗi gọi API:", error);
+    }
+  };
+  useEffect(() => {
     if (id && !hasFetchedRef.current) {
       hasFetchedRef.current = true; // ✅ chỉ cho gọi một lần
       fetchPost();
@@ -56,7 +54,7 @@ export default function PostDetail() {
             isHidden ? "opacity-0 pointer-events-none" : "opacity-100"
           }`}
         >
-          <ContactPart post={post} />
+          <ContactPart post={post} refreshPost={fetchPost} />
         </div>
 
         {/* Nội dung bài viết */}
