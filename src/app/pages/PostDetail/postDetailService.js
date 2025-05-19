@@ -87,3 +87,26 @@ export const getComment = async (postId) => {
     return error;
   }
 };
+export const postComment = async (comment) => {
+  try {
+    const res = await axios.post(`${API_URL}/comment`, comment);
+    console.log("Post comment này: ", res);
+    return res;
+  } catch (error) {
+    console.error("Lỗi khi post comment:", error);
+    return error;
+  }
+};
+export const postReply = async (parentId, comment) => {
+  try {
+    const res = await axios.post(
+      `${API_URL}/comment/${parentId}/reply`,
+      comment
+    );
+    console.log("Post reply này: ", res);
+    return res;
+  } catch (error) {
+    console.error("Lỗi khi post reply:", error);
+    return error;
+  }
+};

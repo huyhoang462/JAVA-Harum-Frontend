@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { Send, MoreHorizontal, Reply } from "lucide-react";
-import { getComment } from "../postDetailService";
+import { getComment, postComment, postReply } from "../postDetailService";
 import groupCommentsFlat from "../../../utils/groupComment";
 import { toast } from "react-toastify";
 const CommentSection = ({ postId }) => {
@@ -10,23 +10,21 @@ const CommentSection = ({ postId }) => {
   const [replyContent, setReplyContent] = useState("");
   const [currentComment, setCurrentComment] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(-1);
-
+  const fetchComment = async () => {
+    try {
+      const res = await getComment(postId);
+      if (res.status === 200) {
+        console.log("xem comment này: ", groupCommentsFlat(res?.data));
+        setComments(groupCommentsFlat(res?.data));
+      } else {
+        console.error("Lỗi: Không lấy được comment");
+      }
+    } catch (error) {
+      console.error("Lỗi gọi API:", error);
+    }
+  };
   const [isReply, setIsReply] = useState(false);
   useEffect(() => {
-    const fetchComment = async () => {
-      try {
-        const res = await getComment(postId);
-        if (res.status === 200) {
-          console.log("xem comment này: ", groupCommentsFlat(res?.data));
-          setComments(groupCommentsFlat(res?.data));
-        } else {
-          console.error("Lỗi: Không lấy được comment");
-        }
-      } catch (error) {
-        console.error("Lỗi gọi API:", error);
-      }
-    };
-
     fetchComment();
   }, []);
 
@@ -38,14 +36,29 @@ const CommentSection = ({ postId }) => {
     setCurrentComment(commentId);
     console.log("id này: ", commentId);
   };
-  const handleComment = (content) => {
+  const handleComment = async (content) => {
     if (!content) {
       toast.warn("Vui lòng nhập nội dung để bình luận!");
       return;
     }
+    const data = {
+      userId: localStorage.getItem("user_id"),
+      postId: postId,
+      content: content,
+    };
     console.log("nộ dung này: ", content);
+    if (currentComment) {
+      const response = await postReply(currentComment, data);
+      if (response?.status === 200)
+        toast.success("Bạn đã phản hồi một bình luận");
+    } else {
+      const response = await postComment(data);
+      if (response?.status === 200) toast.success("Bạn đã bình luận bài viết");
+    }
     setCommentContent("");
     setReplyContent("");
+    setCurrentIndex(-1);
+    fetchComment();
   };
   return (
     <div className="w-[800px] mx-auto mt-10 bg-white rounded-lg shadow-sm">
