@@ -63,7 +63,7 @@ export default function PostDetail() {
 
         {/* Phần bình luận */}
         <div ref={commentRef}>
-          <CommentSection />
+          <CommentSection postId={post?.id} />
         </div>
       </div>
     </div>
