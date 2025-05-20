@@ -78,12 +78,14 @@ export default function PostContent({ post }) {
                 );
               case "image":
                 return (
-                  <img
-                    key={index}
-                    src={block?.value}
-                    alt=""
-                    className="rounded-lg shadow-md"
-                  />
+                  <div className="w-full flex justify-center">
+                    <img
+                      key={index}
+                      src={block?.value}
+                      alt=""
+                      className="rounded-lg shadow-md"
+                    />
+                  </div>
                 );
               default:
                 return null;

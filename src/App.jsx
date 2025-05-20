@@ -18,6 +18,7 @@ import Search from "./app/pages/Search/Search";
 import PostDetail from "./app/pages/PostDetail/PostDetail";
 import WritePost from "./app/pages/WritePost/WritePost";
 import WriteLayout from "./app/layouts/WriteLayout";
+import EditPost from "./app/pages/EditPost/EditPost";
 function App() {
   return (
     <>
@@ -87,13 +88,11 @@ function App() {
                 </PrivatePart>
               }
             />
-          </Route>
-          <Route element={<WriteLayout />}>
             <Route
-              path="/write-post"
+              path="/edit-post/:id"
               element={
                 <PrivatePart>
-                  <WritePost />
+                  <EditPost />
                 </PrivatePart>
               }
             />

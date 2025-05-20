@@ -80,9 +80,10 @@ export default function WritePost() {
     <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg space-y-6">
       {/* Tiêu đề */}
       <input
+        spellCheck="false"
         type="text"
         placeholder="Nhập tiêu đề bài viết..."
-        className="w-full text-3xl font-bold p-3 border-b focus:outline-none focus:border-sblue"
+        className="w-full text-[28px] font-bold p-2 border-b focus:outline-none focus:border-sblue"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
