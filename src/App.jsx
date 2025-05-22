@@ -19,6 +19,10 @@ import PostDetail from "./app/pages/PostDetail/PostDetail";
 import WritePost from "./app/pages/WritePost/WritePost";
 import WriteLayout from "./app/layouts/WriteLayout";
 import EditPost from "./app/pages/EditPost/EditPost";
+import AdminLayout from "./app/layouts/AdminLayout";
+import UserPage from "./app/pages/AdminUser/AdminUser";
+import PostPage from "./app/pages/AdminPost/AdminPost";
+import CommentPage from "./app/pages/AdminComment/AdminComment";
 function App() {
   return (
     <>
@@ -96,6 +100,11 @@ function App() {
                 </PrivatePart>
               }
             />
+          </Route>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route path="users" element={<UserPage />} />
+            <Route path="posts" element={<PostPage />} />
+            <Route path="comments" element={<CommentPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
