@@ -29,7 +29,10 @@ export default function PostH({ post }) {
             <div className="flex items-center">
               <div className="mr-2">
                 <img
-                  src={post?.userImage}
+                  src={
+                    post?.userImage ||
+                    "/src/app/assets/images/defaultAvatar.jpg"
+                  }
                   className="h-8 w-8 object-cover rounded-full "
                 />
               </div>

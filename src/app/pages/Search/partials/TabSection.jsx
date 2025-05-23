@@ -24,7 +24,7 @@ const TabSection = ({ query }) => {
   const [activeTab, setActiveTab] = useState("posts");
 
   return (
-    <div className="py-4 px-8 mt-4 border-2 border-gray-200 rounded-xl">
+    <div className="py-4 px-8 mt-4 mb-10 border-2 border-gray-200 rounded-xl">
       <div className="flex  font-bold mb-5 justify-center">
         <button
           className={` flex items-center pb-2 cursor-pointer px-6 ${
@@ -50,7 +50,7 @@ const TabSection = ({ query }) => {
         </button>
       </div>
       {activeTab === "posts" ? (
-        <div className="flex flex-col  gap-y-4 ">
+        <div className="grid grid-cols-2 gap-10 ">
           {posts.length > 0 ? (
             posts.map((post, index) => <PostV key={index} post={post} />)
           ) : (
@@ -64,7 +64,10 @@ const TabSection = ({ query }) => {
               <div key={index} className="flex ">
                 <div className="w-80 h-16 border-1 border-text2 rounded-sm flex items-center ">
                   <img
-                    src={user?.avatarUrl}
+                    src={
+                      user?.avatarUrl ||
+                      "/src/app/assets/images/defaultAvatar.jpg"
+                    }
                     className="w-12 h-12 object-cover rounded-full mx-4 shrink-0"
                   />
                   <div className="font-semibold text-text mr-2">

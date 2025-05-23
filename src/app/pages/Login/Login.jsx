@@ -4,7 +4,7 @@ import ForgetPassword from "./partials/ForgetPassword";
 import { Eye, EyeClosed, X } from "lucide-react";
 import { toast } from "react-toastify";
 import { handleLoginApi } from "./loginService";
-
+import { sGlobalInfo } from "../../stores/globalStore";
 export default function Login() {
   const nav = useNavigate();
   const [isShowModal, setIsShowModal] = useState(false);
@@ -36,7 +36,10 @@ export default function Login() {
       toast.error("Sai thông tin đăng nhập");
     } else {
       localStorage.setItem("user_id", res?.id);
-
+      sGlobalInfo.set((pre) => {
+        pre.value.userId = res?.id;
+        pre.value.userName = res?.username;
+      });
       if (isRememberPassword) {
         const updatedAccounts = [
           ...savedAccounts.filter((acc) => acc.email !== email),

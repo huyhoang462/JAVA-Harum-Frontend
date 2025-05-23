@@ -26,7 +26,7 @@ export default function SideBar() {
     },
   ];
   return (
-    <div className="w-wsidebar bg-gray-300 text-text fixed  border-[#A19393] font-bold text-lg  h-screen ">
+    <div className="w-wsidebar bg-gray-300 text-text fixed  border-[#A19393] font-bold text-md  h-screen ">
       <div className="  py-4">
         <img src="/logo.svg" className="h-24 mx-auto" />
       </div>
@@ -39,7 +39,7 @@ export default function SideBar() {
               `h-16 px-8 cursor-pointer flex items-center ${
                 isActive
                   ? "bg-gray-200 text-pblue  text-primary"
-                  : "hover:bg-gray-200 hover:text-pblue"
+                  : "hover:bg-gray-200 font-semibold hover:text-pblue"
               }`
             }
           >

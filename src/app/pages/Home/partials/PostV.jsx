@@ -19,7 +19,9 @@ export default function PostV({ post }) {
         <div className="flex justify-between items-center">
           <div className=" flex items-center ">
             <img
-              src={post?.userImage}
+              src={
+                post?.userImage || "/src/app/assets/images/defaultAvatar.jpg"
+              }
               className="rounded-full h-10 w-10 object-cover mr-2.5"
             />
             <div className="font-bold text-sm mr-5">{post?.username}</div>
