@@ -1,7 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./app/pages/Home/Home";
 import DefaultLayout from "./app/layouts/DefaultLayout";
-import Profile from "./app/pages/Profile/Profile";
 import NotFound from "./app/pages/NotFound/NotFound";
 import AccessLayout from "./app/layouts/AccessLayout";
 import Login from "./app/pages/Login/Login";
@@ -12,12 +11,12 @@ import ProfileLayout from "./app/layouts/ProfileLayout";
 import ProfileSetting from "./app/pages/ProfileEdit/ProfileSetting";
 import ProfileEdit from "./app/pages/ProfileEdit/ProfileEdit";
 import Topic from "./app/pages/Topic/Topic";
-import OtherProfile from "./app/pages/OtherProfile/OtherProfile";
 import Message from "./app/pages/messages/Messages";
 import Search from "./app/pages/Search/Search";
 import PostDetail from "./app/pages/PostDetail/PostDetail";
 import WritePost from "./app/pages/WritePost/WritePost";
 import WriteLayout from "./app/layouts/WriteLayout";
+import ProfileRouter from "./app/pages/ProfileRoute/ProfileRoute";
 function App() {
   return (
     <>
@@ -53,22 +52,28 @@ function App() {
           </Route>
           <Route element={<ProfileLayout />}>
             <Route path="/edit-profile" element={<ProfileEdit />} />
+            <Route path="/profile/:id" element={<ProfileRouter />} />
+          </Route>
+          <Route element={<WriteLayout />}>
             <Route
-              path="/profile"
+              path="/write-post"
               element={
                 <PrivatePart>
-                  <Profile />
+                  <WritePost />
                 </PrivatePart>
               }
             />
+          </Route>
+          <Route element={<WriteLayout />}>
             <Route
-              path="/otherprofile"
+              path="/write-post"
               element={
                 <PrivatePart>
-                  <OtherProfile />
+                  <WritePost />
                 </PrivatePart>
               }
             />
+            <Route element={<WriteLayout />}>
             <Route
               path="/message"
               element={
@@ -78,25 +83,6 @@ function App() {
               }
             />
           </Route>
-          <Route element={<WriteLayout />}>
-            <Route
-              path="/write-post"
-              element={
-                <PrivatePart>
-                  <WritePost />
-                </PrivatePart>
-              }
-            />
-          </Route>
-          <Route element={<WriteLayout />}>
-            <Route
-              path="/write-post"
-              element={
-                <PrivatePart>
-                  <WritePost />
-                </PrivatePart>
-              }
-            />
           </Route>
         </Routes>
       </BrowserRouter>

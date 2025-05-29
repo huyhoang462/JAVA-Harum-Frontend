@@ -1,7 +1,6 @@
 import Sidebar from "./partical/Sidebar";
 import chatData from "./partical/data";
 import ChatWindow from "./partical/ChatWindow";
-import InfoBar from "./partical/Inforbar";
 import React, { useState } from "react";
 
 export default function Message() {
@@ -17,7 +16,6 @@ export default function Message() {
         selectedUserId={selectedUserId}
       />
       <ChatWindow user={selectedUser} />
-      <InfoBar user={selectedUser} />
     </div>
   );
 }

@@ -158,12 +158,12 @@ export default function Header({ textColor }) {
       createdAt: "2025-04-08T15:10:00Z",
     },
   ];
-
+const userId = localStorage.getItem("user_id");
   const menuItems = [
     {
       title: "Trang cá nhân",
       icon: <CircleUserRound className="h-6 text-text2 mr-2" />,
-      path: "/profile",
+      path: `/profile/${userId}`,
     },
     {
       title: "Chỉnh sửa thông tin",

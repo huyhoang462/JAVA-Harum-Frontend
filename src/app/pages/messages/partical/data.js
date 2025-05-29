@@ -2,7 +2,7 @@ const chatData = [
   {
     id: 1,
     name: "Trương Văn C",
-    avatar: "https://via.placeholder.com/40/0000FF/FFFFFF?text=L",
+    avatar: "https://res.cloudinary.com/dgwokfdvm/image/upload/v1744937153/yhpbjkafu9btqpfheu2z.png",
     lastMessage: "T2 đi xem đca đá bóng m",
     messages: [
       { fromMe: false, text: "Buồn thiu" },
@@ -13,7 +13,7 @@ const chatData = [
   {
     id: 2,
     name: "Nguyễn Văn A",
-    avatar: "https://via.placeholder.com/40/FF0000/FFFFFF?text=A",
+    avatar: "https://res.cloudinary.com/dgwokfdvm/image/upload/v1744937153/yhpbjkafu9btqpfheu2z.png",
     lastMessage: "Đã gửi ảnh cho bạn",
     messages: [
       { fromMe: true, text: "Ảnh đẹp không?" },
@@ -24,7 +24,7 @@ const chatData = [
   {
     id: 3,
     name: "Lê Thị B",
-    avatar: "https://via.placeholder.com/40/00FF00/FFFFFF?text=B",
+    avatar: "https://res.cloudinary.com/dgwokfdvm/image/upload/v1744937153/yhpbjkafu9btqpfheu2z.png",
     lastMessage: "Mai đi học nhé",
     messages: [
       { fromMe: false, text: "Mai đi học nhé" },

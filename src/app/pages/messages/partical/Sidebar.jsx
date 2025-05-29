@@ -1,7 +1,17 @@
+import { useNavigate } from "react-router-dom";
+
 export default function Sidebar({ users, onSelectUser, selectedUserId }) {
+  const navigate = useNavigate();
+
   return (
     <div className="w-1/4 border-r overflow-y-auto bg-white">
-      <h2 className="text-xl font-bold p-4 border-b">Đoạn chat</h2>
+      <div 
+        className="p-4 border-b cursor-pointer flex items-center justify-center"
+        onClick={() => navigate("/")}
+      >
+      <img src="/logoFull.svg" alt="Logo" className="w-28 h-auto" />
+      </div>
+
       {users.map((user) => (
         <div
           key={user.id}
