@@ -10,18 +10,18 @@ export default function PostH({ post }) {
   ).value;
   return (
     <div
-      className="w-[276px]  flex flex-col cursor-pointer"
+      className=" flex flex-col cursor-pointer w-full "
       onClick={() => nav(`/post-detail/${post?.id}`)}
     >
-      <div className="mb-2 flex items-center">
+      <div className="mb-2 w-full">
         <img
           src={imageUrl || "/src/app/assets/images/defaultImage.png"}
-          className="rounded-sm h-[172px] w-[276px] object-cover"
+          className="rounded-sm h-[172px] w-full object-cover"
         />
       </div>
-      <div>
+      <div className="">
         <div className="flex mb-2 justify-between">
-          <div className="font-medium line-clamp-2 min-h-12">{post?.title}</div>
+          <div className="font-medium line-clamp-1 min-h-6">{post?.title}</div>
           <div>{/* <Bookmark className="h-6" /> */}</div>
         </div>
         <div className="flex justify-between">

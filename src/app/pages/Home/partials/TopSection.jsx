@@ -19,7 +19,7 @@ function TopSection() {
   return (
     <section className="flex flex-col my-4">
       <div className="text-text font-medium">BÀI VIẾT NỔI BẬT</div>
-      <div className=" grid grid-cols-4 gap-x-2 mt-5">
+      <div className=" grid grid-cols-4 gap-x-6 mt-5">
         {isLoading ? (
           <div className="flex items-center h-[268px] justify-center col-span-4">
             <LoadingSpinner />
