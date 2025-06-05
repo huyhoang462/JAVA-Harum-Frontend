@@ -1,28 +1,28 @@
-import { Bookmark, BookMarked, Eye } from "lucide-react";
+import { Bookmark, BookMarked, Eye, ThumbsUp } from "lucide-react";
 import React from "react";
 import formatDate from "../../../utils/formatDate";
 import { useNavigate } from "react-router-dom";
 
 export default function PostH({ post }) {
   const nav = useNavigate();
-
+  const imageUrl = post?.contentBlock.find(
+    (block) => block.type === "image"
+  ).value;
   return (
     <div
       className="w-[276px]  flex flex-col cursor-pointer"
       onClick={() => nav(`/post-detail/${post?.id}`)}
     >
-      <div className="mb-2">
+      <div className="mb-2 flex items-center">
         <img
-          src={post?.imageUrl || "/src/app/assets/images/defaultImage.png"}
-          className="rounded-sm h-[172px] object-cover"
+          src={imageUrl || "/src/app/assets/images/defaultImage.png"}
+          className="rounded-sm h-[172px] w-[276px] object-cover"
         />
       </div>
       <div>
         <div className="flex mb-2 justify-between">
           <div className="font-medium line-clamp-2 min-h-12">{post?.title}</div>
-          <div>
-            <Bookmark className="h-6" />
-          </div>
+          <div>{/* <Bookmark className="h-6" /> */}</div>
         </div>
         <div className="flex justify-between">
           <div className="flex items-center">
@@ -44,8 +44,8 @@ export default function PostH({ post }) {
             </div>
           </div>
           <div className="flex  items-center">
-            <Eye className="h-6" />
-            <p className="h-6 ml-2 text-sm"> {post?.countView}</p>
+            <ThumbsUp className="h-4" />
+            <p className="4 ml-1 text-sm"> {post?.countLike}</p>
           </div>
         </div>
       </div>

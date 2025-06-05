@@ -1,17 +1,27 @@
 import { MessageCircleMore, ThumbsUp } from "lucide-react";
 import React from "react";
 import formatDate from "../../../utils/formatDate";
+import { useNavigate } from "react-router-dom";
 
 export default function PostV({ post }) {
+  const nav = useNavigate();
+  const imageUrl = post?.contentBlock.find(
+    (block) => block.type === "image"
+  ).value;
   return (
-    <div className="flex w-full cursor-pointer  ">
-      <img
-        src={post?.image || "/src/app/assets/images/defaultImage.png"}
-        className="h-40 w-64 object-cover"
-      />
+    <div
+      className="flex w-full cursor-pointer  "
+      onClick={() => nav(`/post-detail/${post?.id}`)}
+    >
+      <div>
+        <img
+          src={imageUrl || "/src/app/assets/images/defaultImage.png"}
+          className="h-40 w-72 object-cover"
+        />
+      </div>
       <div className="flex flex-col justify-between w-full ml-4">
         <div>
-          <div className="text-ssm mb-1">{post?.topicName?.toUpperCase()}</div>
+          <div className="text-ssm mb-1">{post?.topics}</div>
           <div className="text-xl font-medium line-clamp-2 min-h-14 ">
             {post?.title}
           </div>

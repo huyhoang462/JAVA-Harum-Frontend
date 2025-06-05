@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import Editor from "./partials/Editor";
 import { getTopics, getPostById, updatePostApi } from "./editPostService";
 import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function EditPost() {
   const { id: postId } = useParams();
@@ -121,11 +122,11 @@ export default function EditPost() {
       return;
     }
     if (!selectedTopic) {
-      alert("Vui lòng chọn chủ đề cho bài viết.");
+      toast.warn("Vui lòng chọn chủ đề cho bài viết.");
       return;
     }
     if (!title.trim()) {
-      alert("Vui lòng nhập tiêu đề cho bài viết.");
+      toast.warn("Vui lòng nhập tiêu đề cho bài viết.");
       return;
     }
 
@@ -177,7 +178,8 @@ export default function EditPost() {
     try {
       const responseData = await updatePostApi(postId, formData); // postId dùng cho URL
 
-      alert("Cập nhật bài viết thành công!");
+      toast.success("Cập nhật bài viết thành công!");
+      navigate(`/post-detail/${postId}`);
       console.log("Phản hồi từ API cập nhật:", responseData);
     } catch (error) {
       console.error("Lỗi khi gọi API cập nhật bài viết:", error);
@@ -237,10 +239,10 @@ export default function EditPost() {
       <div className="text-right pt-4">
         <button /* ...submit... */
           onClick={handleUpdate}
-          className={`text-white px-6 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-opacity-50 ${
+          className={`text-white px-6 py-2 rounded-md focus:outline-none focus:ring-2  cursor-pointer focus:ring-opacity-50 ${
             isSubmitting || isLoading || !editorDataForLoad
               ? "bg-gray-400 cursor-not-allowed"
-              : "bg-green-600 hover:bg-green-700 focus:ring-green-500"
+              : "bg-sblue hover:bg-pblue "
           }`}
           disabled={isSubmitting || isLoading || !editorDataForLoad}
         >

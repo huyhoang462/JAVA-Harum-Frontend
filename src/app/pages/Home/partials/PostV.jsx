@@ -1,14 +1,24 @@
 import { MessageCircleMore, ThumbsUp } from "lucide-react";
 import React from "react";
 import formatDate from "../../../utils/formatDate";
+import { useNavigate } from "react-router-dom";
 
 export default function PostV({ post }) {
+  const nav = useNavigate();
+  const imageUrl = post?.contentBlock.find(
+    (block) => block.type === "image"
+  ).value;
   return (
-    <div className="flex w-full cursor-pointer  ">
-      <img
-        src={post?.imageUrl || "/src/app/assets/images/defaultImage.png"}
-        className="h-40 w-64 object-cover "
-      />
+    <div
+      className="flex w-full cursor-pointer  "
+      onClick={() => nav(`/post-detail/${post?.id}`)}
+    >
+      <div>
+        <img
+          src={imageUrl || "/src/app/assets/images/defaultImage.png"}
+          className="h-40 w-72 object-cover "
+        />
+      </div>
       <div className="flex flex-col justify-between w-full ml-4">
         <div>
           <div className="text-ssm mb-1">{post?.topic}</div>
@@ -30,11 +40,11 @@ export default function PostV({ post }) {
           <div className=" flex">
             <div className="text-ssm flex items-center mr-2.5">
               <ThumbsUp className="h-4  text-text2" />
-              {post?.likes}
+              {post?.countLike}
             </div>
             <div className="text-ssm flex items-center">
               <MessageCircleMore className="h-4  text-text2" />
-              {post?.comments}
+              {post?.countView}
             </div>
           </div>
         </div>

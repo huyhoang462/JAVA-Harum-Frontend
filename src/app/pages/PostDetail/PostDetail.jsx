@@ -62,7 +62,7 @@ export default function PostDetail() {
         <PostContent post={post} />
 
         {/* Phần bình luận */}
-        <div ref={commentRef}>
+        <div ref={commentRef} className="mb-10">
           <CommentSection postId={post?.id} />
         </div>
       </div>

@@ -66,7 +66,8 @@ const TabSection = () => {
     if (status === "pending" && !allPosts.length)
       return (
         <div className="flex flex-col items-center justify-center">
-          <LoadingSpinner />;<p className="mt-2">Đang tải bài viết...</p>
+          <LoadingSpinner />
+          <p className="mt-2">Đang tải bài viết...</p>
         </div>
       );
     if (status === "error")
