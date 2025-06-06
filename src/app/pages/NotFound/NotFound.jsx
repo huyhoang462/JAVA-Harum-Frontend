@@ -1,135 +1,37 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { Link } from "react-router-dom";
 
 const NotFound = () => {
-  const [playerX, setPlayerX] = useState(250);
-  const [bullets, setBullets] = useState([]);
-  const [enemies, setEnemies] = useState([]);
-  const [score, setScore] = useState(0);
-  const [enemySpeed, setEnemySpeed] = useState(1); // Tốc độ kẻ địch ban đầu
-
-  // Xử lý phím bấm (di chuyển tàu và bắn)
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === "ArrowLeft") setPlayerX((prev) => Math.max(0, prev - 20));
-      if (e.key === "ArrowRight")
-        setPlayerX((prev) => Math.min(480, prev + 20));
-      if (e.key === " ") {
-        setBullets((prev) => [...prev, { x: playerX + 20, y: 450 }]);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [playerX]);
-
-  // Di chuyển đạn
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setBullets((prev) =>
-        prev.map((b) => ({ ...b, y: b.y - 10 })).filter((b) => b.y > 0)
-      );
-    }, 50);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Sinh kẻ địch mới sau mỗi giây
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setEnemies((prev) => [...prev, { x: Math.random() * 450, y: 0 }]);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // Di chuyển kẻ địch và kiểm tra va chạm
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setEnemies(
-        (prev) =>
-          prev
-            .map((enemy) => ({ ...enemy, y: enemy.y + enemySpeed })) // Điều chỉnh tốc độ kẻ địch
-            .filter((enemy) => enemy.y < 500) // Xóa kẻ địch khi xuống dưới
-      );
-
-      // Kiểm tra va chạm giữa đạn và kẻ địch
-      setBullets((prevBullets) =>
-        prevBullets.filter((bullet) => {
-          const hitEnemyIndex = enemies.findIndex(
-            (enemy) =>
-              bullet.x > enemy.x &&
-              bullet.x < enemy.x + 40 &&
-              bullet.y < enemy.y + 40
-          );
-
-          if (hitEnemyIndex !== -1) {
-            setEnemies((prevEnemies) =>
-              prevEnemies.filter((_, index) => index !== hitEnemyIndex)
-            );
-            setScore((prevScore) => prevScore + 10); // Tăng điểm
-            return false;
-          }
-          return true;
-        })
-      );
-    }, 50);
-    return () => clearInterval(interval);
-  }, [enemies, bullets, enemySpeed]);
-
-  // Tăng tốc kẻ địch sau mỗi 10 giây
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setEnemySpeed((prev) => prev + 0.5);
-    }, 10000);
-    return () => clearInterval(interval);
-  }, []);
-
   return (
-    <div
-      style={{
-        position: "relative",
-        width: 500,
-        height: 500,
-        backgroundColor: "black",
-      }}
-    >
-      <h2 style={{ color: "white", position: "absolute", top: 10, left: 10 }}>
-        Score: {score}
-      </h2>
-      <div
-        style={{
-          position: "absolute",
-          left: playerX,
-          bottom: 20,
-          width: 40,
-          height: 40,
-          backgroundColor: "blue",
-        }}
-      ></div>
-      {bullets.map((bullet, index) => (
-        <div
-          key={index}
-          style={{
-            position: "absolute",
-            left: bullet.x,
-            top: bullet.y,
-            width: 5,
-            height: 10,
-            backgroundColor: "red",
-          }}
-        ></div>
-      ))}
-      {enemies.map((enemy, index) => (
-        <div
-          key={index}
-          style={{
-            position: "absolute",
-            left: enemy.x,
-            top: enemy.y,
-            width: 40,
-            height: 40,
-            backgroundColor: "green",
-          }}
-        ></div>
-      ))}
+    <div className="flex flex-col items-center justify-center min-h-screen bg-bgblue text-gray-800 px-4">
+      <div className="text-center max-w-md">
+        <h1 className="text-6xl md:text-8xl font-bold text-sblue mb-4">404</h1>
+        <h2 className="text-2xl md:text-4xl font-semibold text-gray-700 mb-6">
+          Oops! Trang không tồn tại
+        </h2>
+        <p className="text-md md:text-lg text-gray-600 mb-8">
+          Có vẻ như bạn đã đi lạc đường. Trang bạn đang tìm kiếm không có ở đây
+          hoặc đã được di chuyển.
+        </p>
+        <Link
+          to="/"
+          className="px-8 py-3 bg-pblue text-white text-lg font-semibold rounded-lg shadow-md hover:bg-sblue transition-colors duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-pblue focus:ring-opacity-50"
+        >
+          Quay về Trang Chủ
+        </Link>
+        <p className="mt-12 text-sm text-gray-500">
+          Nếu bạn nghĩ đây là một lỗi, vui lòng liên hệ chúng tôi qua email{" "}
+          <a
+            href="mailto:harumuit@gm.com"
+            className="font-medium text-pblue hover:text-sblue hover:underline transition-colors duration-200"
+            target="_blank" // Mở ứng dụng email trong tab/cửa sổ mới (tùy trình duyệt)
+            rel="noopener noreferrer" // Bảo mật khi dùng target="_blank"
+          >
+            harumuit@gm.com
+          </a>
+          .
+        </p>
+      </div>
     </div>
   );
 };

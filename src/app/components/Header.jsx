@@ -10,6 +10,7 @@ import {
   Settings,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import NotificationMenu from "./NotificationMenu";
 
 export default function Header({ textColor }) {
   const nav = useNavigate();
@@ -45,120 +46,6 @@ export default function Header({ textColor }) {
       handleSearch();
     }
   };
-
-  const notifications = [
-    {
-      id: "1",
-      userId: "user1",
-      message: "Alice đã bình luận về bài viết của bạn.",
-      isRead: false,
-      type: "COMMENT",
-      postId: "post123",
-      commentId: "comment456",
-      followId: null,
-      createdAt: "2025-04-15T10:00:00Z",
-    },
-    {
-      id: "2",
-      userId: "user2",
-      message: "Bob đã theo dõi bạn.",
-      isRead: false,
-      type: "FOLLOW",
-      postId: null,
-      commentId: null,
-      followId: "follow789",
-      createdAt: "2025-04-14T12:30:00Z",
-    },
-    {
-      id: "3",
-      userId: "user3",
-      message: "Charlie đã đăng một bài viết mới.",
-      isRead: true,
-      type: "POST",
-      postId: "post987",
-      commentId: null,
-      followId: null,
-      createdAt: "2025-04-13T09:15:00Z",
-    },
-    {
-      id: "4",
-      userId: "user4",
-      message: "David đã bình luận về bài viết của bạn.",
-      isRead: false,
-      type: "COMMENT",
-      postId: "post321",
-      commentId: "comment654",
-      followId: null,
-      createdAt: "2025-04-12T17:45:00Z",
-    },
-    {
-      id: "5",
-      userId: "user5",
-      message: "Eve đã theo dõi bạn.",
-      isRead: true,
-      type: "FOLLOW",
-      postId: null,
-      commentId: null,
-      followId: "follow321",
-      createdAt: "2025-04-12T08:00:00Z",
-    },
-    {
-      id: "6",
-      userId: "user6",
-      message: "Frank đã đăng một bài viết mới.",
-      isRead: false,
-      type: "POST",
-      postId: "post654",
-      commentId: null,
-      followId: null,
-      createdAt: "2025-04-11T11:20:00Z",
-    },
-    {
-      id: "7",
-      userId: "user7",
-      message: "Grace đã bình luận về bài viết của bạn.",
-      isRead: false,
-      type: "COMMENT",
-      postId: "post789",
-      commentId: "comment987",
-      followId: null,
-      createdAt: "2025-04-11T13:45:00Z",
-    },
-    {
-      id: "8",
-      userId: "user8",
-      message: "Henry đã theo dõi bạn.",
-      isRead: false,
-      type: "FOLLOW",
-      postId: null,
-      commentId: null,
-      followId: "follow654",
-      createdAt: "2025-04-10T19:30:00Z",
-    },
-    {
-      id: "9",
-      userId: "user9",
-      message: "Ivy đã đăng một bài viết mới.",
-      isRead: true,
-      type: "POST",
-      postId: "post222",
-      commentId: null,
-      followId: null,
-      createdAt: "2025-04-09T06:50:00Z",
-    },
-    {
-      id: "10",
-      userId: "user10",
-      message: "Jack đã bình luận về bài viết của bạn.",
-      isRead: false,
-      type: "COMMENT",
-      postId: "post111",
-      commentId: "comment333",
-      followId: null,
-      createdAt: "2025-04-08T15:10:00Z",
-    },
-  ];
-const userId = localStorage.getItem("user_id");
   const menuItems = [
     {
       title: "Trang cá nhân",
@@ -220,49 +107,16 @@ const userId = localStorage.getItem("user_id");
                   } h-[25px] w-[25px] cursor-pointer hover:text-pblue`}
                   onClick={() => setIsShowNotifiaction(!isShowNotifiaction)}
                 />
-                {isShowNotifiaction && (
-                  <div className="w-96 max-h-[400px] overflow-y-auto p-2 flex flex-col absolute right-0 top-10 rounded-lg shadow-xl z-50 bg-white  custom-scrollbar">
-                    {notifications.length === 0 ? (
-                      <div className="flex items-center justify-center h-24 text-gray-500 text-sm">
-                        Chưa có thông báo nào
-                      </div>
-                    ) : (
-                      notifications.map((noti) => (
-                        <div
-                          key={noti.id}
-                          className={`p-3 rounded-md mb-2 cursor-pointer transition-all hover:bg-gray-100 ${
-                            !noti.isRead ? "bg-blue-50" : "bg-white"
-                          }`}
-                        >
-                          <div className="flex items-start gap-2">
-                            <div className="mt-1">
-                              {noti.type === "COMMENT" && "💬"}
-                              {noti.type === "FOLLOW" && "👤"}
-                              {noti.type === "POST" && "📝"}
-                            </div>
-                            <div className="flex-1">
-                              <p className="text-sm text-gray-800">
-                                {noti.message}
-                              </p>
-                              <p className="text-xs text-gray-500 mt-1">
-                                {new Date(noti.createdAt).toLocaleString(
-                                  "vi-VN",
-                                  {
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                    day: "2-digit",
-                                    month: "2-digit",
-                                    year: "numeric",
-                                  }
-                                )}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                )}
+                {/* {isShowNotifiaction && ( */}
+                <div
+                  className={`${
+                    isShowNotifiaction ? "" : "hidden"
+                  } w-96 max-h-[400px] overflow-y-auto p-2 flex flex-col absolute right-0 top-10 rounded-lg shadow-xl z-50 bg-white  custom-scrollbar`}
+                >
+                  <NotificationMenu />
+                </div>
+
+                {/* )} */}
               </div>
               <div className="ml-4 cursor-pointer">
                 <div

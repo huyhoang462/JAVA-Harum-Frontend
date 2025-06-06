@@ -1,40 +1,50 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from "react";
 import ContactPart from "./partials/ContactPart";
-import PostH from "./partials/PostH";
 import PostContent from "./partials/PostContent";
-import RelatedPosts from "./partials/RelatedPosts";
 import CommentSection from "./partials/CommentSection";
+import { useParams } from "react-router-dom";
+import { getPosticbyId } from "./postDetailService";
 
 export default function PostDetail() {
-  const post = {
-    id: "jawefdjaw",
-    image: "./src/app/assets/images/img1.jpg",
-    title: "Bạn có tin vào những điều kì diệu không như bầu trời này ấy?",
-    subTitle: "Có những ngày bình yên đến lạ",
-    date: "14-02-1025",
-    user: {
-      avatar: "./src/app/assets/images/daisy.jpg",
-      isFollowing: false,
-      name: "Daisy",
-    },
-    topic: "QUAN ĐIỂM - TRANH LUẬN",
-    likes: 100,
-    comments: 29,
-  };
+  const { id } = useParams();
+  const [post, setPost] = useState(null);
   const [isHidden, setIsHidden] = useState(false);
   const commentRef = useRef(null);
+
+  const hasFetchedRef = useRef(false); // ✅ biến cờ
+  const fetchPost = async () => {
+    try {
+      const res = await getPosticbyId(id);
+      if (res.status === 200) {
+        setPost(res.data);
+      } else {
+        console.error("Lỗi: Không lấy được bài viết");
+      }
+    } catch (error) {
+      console.error("Lỗi gọi API:", error);
+    }
+  };
+  useEffect(() => {
+    if (id && !hasFetchedRef.current) {
+      hasFetchedRef.current = true; // ✅ chỉ cho gọi một lần
+      fetchPost();
+    }
+  }, [id]);
 
   useEffect(() => {
     const handleScroll = () => {
       if (commentRef.current) {
         const commentTop = commentRef.current.getBoundingClientRect().top;
-        setIsHidden(commentTop <= 290); // Nếu phần bình luận xuất hiện ở trên màn hình
+        setIsHidden(commentTop <= 290);
       }
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  if (!post) return <p className="text-center mt-10">Đang tải bài viết...</p>;
 
   return (
     <div>
@@ -45,18 +55,15 @@ export default function PostDetail() {
             isHidden ? "opacity-0 pointer-events-none" : "opacity-100"
           }`}
         >
-          <ContactPart post={post} />
+          <ContactPart post={post} refreshPost={fetchPost} />
         </div>
 
         {/* Nội dung bài viết */}
         <PostContent post={post} />
 
-        {/* Bài viết liên quan */}
-        {/* <RelatedPosts post={post} /> */}
-
         {/* Phần bình luận */}
-        <div ref={commentRef}>
-          <CommentSection />
+        <div ref={commentRef} className="mb-10">
+          <CommentSection postId={post?.id} />
         </div>
       </div>
     </div>

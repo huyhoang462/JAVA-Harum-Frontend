@@ -1,129 +1,166 @@
-import React, { useState, useEffect, useRef } from "react";
+/* eslint-disable no-unused-vars */
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Editor from "./partials/Editor";
 import { createPostApi, getTopics } from "./writePostService";
-
-const DEFAULT_THUMBNAIL = "./src/app/assets/images/img1.jpg"; // Ảnh mặc định
+import { ArrowLeft, Send } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export default function WritePost() {
   const [data, setData] = useState(null);
   const [title, setTitle] = useState("");
   const [topics, setTopics] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState("");
-  const [imageUrl, setImageUrl] = useState(null);
-  const [thumbnailPreview, setThumbnailPreview] = useState(DEFAULT_THUMBNAIL);
+  const [images, setImages] = useState([]);
   const userId = localStorage.getItem("user_id");
-  const editorDataRef = useRef(null); // Lưu data editor không gây re-render
+  const editorDataRef = useRef(null);
 
   useEffect(() => {
     const fetchTopics = async () => {
       const res = await getTopics();
       if (res?.data) {
-        setTopics(res.data); // res.data là mảng topics từ API
+        setTopics(res.data);
       }
     };
-
     fetchTopics();
   }, []);
 
-  const handleThumbnailChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImageUrl(file);
-      setThumbnailPreview(URL.createObjectURL(file));
-    } else {
-      setImageUrl(null);
-      setThumbnailPreview(DEFAULT_THUMBNAIL);
-    }
+  const handleEditorChange = (editorData) => {
+    editorDataRef.current = editorData;
   };
 
-  const handleEditorChange = (editorData) => {
-    editorDataRef.current = editorData; // Không re-render
-  };
+  const handleImageUpload = useCallback((file) => {
+    console.log("LOG TỪ WritePost: Ảnh đã được chọn:", file.name);
+    setImages((prevImages) => [...prevImages, file]);
+  }, []);
 
   const handleSubmit = async () => {
-    const post = {
-      title: title,
-      topic: selectedTopic,
-      imageUrl: imageUrl,
-      userId: userId,
-      content: editorDataRef.current,
-    };
+    const blocks = editorDataRef.current?.blocks || [];
 
-    console.log("Submit post:", post);
+    const formattedContent = blocks.map((block) => {
+      let value = "";
+
+      if (block.type === "image") {
+        value = "";
+      } else if (block.data.text) {
+        value = block.data.text;
+      } else {
+        value = JSON.stringify(block.data);
+      }
+      return { type: block.type, value };
+    });
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("userId", userId);
+    formData.append("topicId", selectedTopic);
+    formData.append("blocks", JSON.stringify(formattedContent));
+    images.forEach((imageFile) => {
+      formData.append("images", imageFile);
+    });
+    console.log("Submit post with FormData:", Object.fromEntries(formData));
     try {
-      const response = await createPostApi(post);
-      console.log("Tạo bài viết thành công:", response);
+      const response = await createPostApi(formData);
+      if (response?.status === 200)
+        console.log("Tạo bài viết thành công:", response);
     } catch (error) {
       console.error("Gửi bài viết thất bại:", error);
     }
   };
 
+  const canSubmit =
+    title.trim() !== "" &&
+    selectedTopic !== "" &&
+    (editorDataRef.current?.blocks?.length > 0 || images.length > 0);
+
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg space-y-6">
-      {/* Tiêu đề */}
-      <input
-        type="text"
-        placeholder="Nhập tiêu đề bài viết..."
-        className="w-full text-3xl font-bold p-3 border-b focus:outline-none focus:border-sblue"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
+    <div className="min-h-screen bg-bgblue py-8 px-4 sm:px-6 lg:px-8">
+      {" "}
+      <div className="max-w-3xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
+          <Link
+            to="/"
+            className="flex items-center text-sblue hover:text-pblue transition-colors duration-200 p-2 rounded-md hover:bg-pblue/10"
+            aria-label="Quay về trang chủ"
+          >
+            <ArrowLeft size={24} className="mr-2" />
+            <span className="font-medium">Về Trang Chủ</span>
+          </Link>
+          <h1 className="text-3xl font-bold text-gray-800">Tạo bài viết mới</h1>
+        </div>
 
-      {/* Chọn topic */}
-      <select
-        className="w-full p-2 border rounded-md bg-white focus:outline-none focus:ring"
-        value={selectedTopic}
-        onChange={(e) => setSelectedTopic(e.target.value)}
-      >
-        <option value="">-- Chọn chủ đề --</option>
-        {topics.map((topic) => (
-          <option key={topic.id} value={topic.id}>
-            {topic.name}
-          </option>
-        ))}
-      </select>
+        <div className="bg-white shadow-xl rounded-lg p-6 sm:p-8 space-y-6">
+          <div>
+            <label
+              htmlFor="post-title"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Tiêu đề bài viết <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="post-title"
+              spellCheck="false"
+              type="text"
+              placeholder="Nhập tiêu đề ..."
+              className="w-full text-xl font-semibold p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pblue focus:border-pblue transition-shadow"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
 
-      {/* Ảnh đại diện */}
-      <div className="space-y-2">
-        <label className="font-medium block">Ảnh đại diện</label>
+          {/* Chọn topic */}
+          <div>
+            <label
+              htmlFor="topic-select"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Chọn chủ đề <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="topic-select"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-pblue focus:border-pblue appearance-none"
+              value={selectedTopic}
+              onChange={(e) => setSelectedTopic(e.target.value)}
+            >
+              <option value="" disabled>
+                -- Vui lòng chọn một chủ đề --
+              </option>
+              {topics.map((topic) => (
+                <option key={topic.id} value={topic.id}>
+                  {topic.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        {/* Input file bị ẩn */}
-        <input
-          type="file"
-          accept="image/*"
-          id="thumbnail-upload"
-          onChange={handleThumbnailChange}
-          className="hidden"
-        />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Nội dung bài viết <span className="text-red-500">*</span>
+            </label>
+            <div className="border border-gray-300 rounded-md  min-h-[300px] focus-within:ring-2 focus-within:ring-pblue focus-within:border-pblue">
+              <Editor
+                data={data}
+                placeholder="Viết nội dung sáng tạo của bạn ở đây..."
+                onChange={handleEditorChange}
+                editorBlock="editorjs-container"
+                onImageUpload={handleImageUpload}
+              />
+            </div>
+          </div>
 
-        {/* Click vào ảnh sẽ mở input file */}
-        <label htmlFor="thumbnail-upload" className="cursor-pointer block">
-          <img
-            src={thumbnailPreview || "/default-thumbnail.jpg"}
-            alt="Thumbnail Preview"
-            className="w-full h-56 object-cover rounded-md border hover:opacity-90 transition"
-          />
-        </label>
-      </div>
-
-      {/* EditorJS */}
-      <div>
-        <Editor
-          data={data}
-          placeholder="Nội dung"
-          onChange={handleEditorChange}
-          editorBlock="editorjs-container"
-        />
-      </div>
-
-      {/* Submit */}
-      <div className="text-right pt-4">
-        <button
-          onClick={handleSubmit}
-          className="bg-sblue text-white px-6 py-2 rounded hover:bg-blue-700 cursor-pointer"
-        >
-          Đăng bài
-        </button>
+          <div className="flex justify-end pt-4 border-t border-gray-200 mt-8">
+            <button
+              onClick={handleSubmit}
+              disabled={!canSubmit}
+              className={`flex items-center cursor-pointer bg-sblue text-white px-8 py-2 rounded-lg font-semibold text-lg
+                hover:bg-pblue transition-all duration-200 ease-in-out
+                focus:outline-none focus:ring-2 focus:ring-sblue focus:ring-offset-2
+                disabled:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-70`}
+            >
+              <Send size={20} className="mr-2 ml-[-10px]" />
+              Đăng bài
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

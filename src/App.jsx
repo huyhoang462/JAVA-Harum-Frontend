@@ -16,6 +16,11 @@ import Search from "./app/pages/Search/Search";
 import PostDetail from "./app/pages/PostDetail/PostDetail";
 import WritePost from "./app/pages/WritePost/WritePost";
 import WriteLayout from "./app/layouts/WriteLayout";
+import EditPost from "./app/pages/EditPost/EditPost";
+import AdminLayout from "./app/layouts/AdminLayout";
+import UserPage from "./app/pages/AdminUser/AdminUser";
+import PostPage from "./app/pages/AdminPost/AdminPost";
+import CommentPage from "./app/pages/AdminComment/AdminComment";
 import ProfileRouter from "./app/pages/ProfileRoute/ProfileRoute";
 function App() {
   return (
@@ -26,7 +31,7 @@ function App() {
           <Route element={<DefaultLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/search" element={<Search />} />
-            <Route path="/post-detail" element={<PostDetail />} />
+            <Route path="/post-detail/:id" element={<PostDetail />} />
 
             <Route
               path="/profileedit"
@@ -52,6 +57,7 @@ function App() {
           </Route>
           <Route element={<ProfileLayout />}>
             <Route path="/edit-profile" element={<ProfileEdit />} />
+
             <Route path="/profile/:id" element={<ProfileRouter />} />
           </Route>
           <Route element={<WriteLayout />}>
@@ -63,17 +69,6 @@ function App() {
                 </PrivatePart>
               }
             />
-          </Route>
-          <Route element={<WriteLayout />}>
-            <Route
-              path="/write-post"
-              element={
-                <PrivatePart>
-                  <WritePost />
-                </PrivatePart>
-              }
-            />
-            <Route element={<WriteLayout />}>
             <Route
               path="/message"
               element={
@@ -82,7 +77,19 @@ function App() {
                 </PrivatePart>
               }
             />
+            <Route
+              path="/edit-post/:id"
+              element={
+                <PrivatePart>
+                  <EditPost />
+                </PrivatePart>
+              }
+            />
           </Route>
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route path="users" element={<UserPage />} />
+            <Route path="posts" element={<PostPage />} />
+            <Route path="comments" element={<CommentPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -1,97 +1,85 @@
 import React from "react";
 import TabSection from "./partials/TabSection";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { getTopicDetails } from "./topicService";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 export default function Topic() {
-  const location = useLocation();
+  const { id: topicIdFromParams } = useParams();
+  console.log("id này:", topicIdFromParams);
 
-  const topic = location.state?.topic;
+  const {
+    data: topic,
+    isLoading: isLoadingTopic,
+    isError: isErrorTopic,
+    error: errorTopic,
+  } = useQuery({
+    queryKey: ["topic", topicIdFromParams],
+    queryFn: async () => {
+      const fetchedTopic = await getTopicDetails(topicIdFromParams);
+      console.log("[Topic.js] useQuery: Fetched topic data:", fetchedTopic);
+      if (!fetchedTopic || typeof fetchedTopic.id === "undefined") {
+        console.error(
+          "[Topic.js] useQuery: Fetched topic data is missing 'id'.",
+          fetchedTopic
+        );
+        throw new Error("Fetched topic data is invalid (missing id).");
+      }
+      return fetchedTopic;
+    },
+    enabled: !!topicIdFromParams,
+    staleTime: 5 * 60 * 1000,
+  });
 
-  if (!topic) {
+  if (isErrorTopic) console.log("[Topic.js] Query error:", errorTopic?.message);
+  console.log("[Topic.js] Current 'topic' data from useQuery:", topic);
+
+  if (isLoadingTopic) {
     return (
-      <div className="text-center mt-10 text-xl">Không tìm thấy topic!</div>
+      <div className="flex flex-col  items-center justify-center">
+        <div className="w-full h-96 mb-6 bg-black/50 flex justify-center items-center text-white text-5xl font-semibold">
+          {}
+        </div>
+        <LoadingSpinner />
+        <p className="mt-2">Đang tải dữ liệu...</p>
+      </div>
     );
   }
-  const posts = [
-    {
-      id: "jawefdjaw",
-      image: "/src/app/assets/images/img1.jpg",
-      title: "Bạn có tin vào những điều kì diệu không như bầu trời này ấy?",
-      subTitle: "Có những ngày bình yên đến lạ",
-      date: "14-02-1025",
-      user: {
-        avatar: "/src/app/assets/images/daisy.jpg",
-        name: "Daisy",
-      },
-      topic: "QUAN ĐIỂM - TRANH LUẬN",
-      likes: 100,
-      comments: 29,
-    },
-    {
-      id: "sdqw",
-      image: "/src/app/assets/images/img1.jpg",
-      title: "Bạn có tin vào những điều kì diệu không như bầu trời này ấy?",
-      subTitle: "Có những ngày bình yên đến lạ Có những ngày bình yên đến lạ",
-      date: "14-02-1025",
-      user: {
-        avatar: "/src/app/assets/images/daisy.jpg",
-        name: "Daisy",
-      },
-      topic: "QUAN ĐIỂM - TRANH LUẬN",
-      likes: 100,
-      comments: 29,
-    },
-    {
-      id: "sdqw",
-      image: "/src/app/assets/images/img1.jpg",
-      title: "Bạn có tin?",
-      subTitle: "Có những ngày bình yên đến lạ Có những ngày bình yên đến lạ",
-      date: "14-02-1025",
-      user: {
-        avatar: "/src/app/assets/images/daisy.jpg",
-        name: "Daisy",
-      },
-      topic: "QUAN ĐIỂM - TRANH LUẬN",
-      likes: 100,
-      comments: 29,
-    },
-    {
-      id: "sdqw",
-      image: "/src/app/assets/images/img1.jpg",
-      title: "Bạn có tin vào những điều kì diệu không như bầu trời này ấy?",
-      subTitle: "Có những ngày bình yên đến lạ Có những ngày bình yên đến lạ",
-      date: "14-02-1025",
-      user: {
-        avatar: "/src/app/assets/images/daisy.jpg",
-        name: "Daisy",
-      },
-      topic: "QUAN ĐIỂM - TRANH LUẬN",
-      likes: 100,
-      comments: 29,
-    },
-  ];
+
+  console.log(
+    "[Topic.js] Render: Rendering page with valid topicId:",
+    topic.id,
+    "Topic Name:",
+    topic.name
+  );
+
   return (
     <div>
       <div className="relative">
         <div className="absolute inset-0 bg-black/50 flex justify-center items-center text-white text-5xl font-semibold">
-          {topic?.name?.toString().toUpperCase()}
+          {topic.name?.toString().toUpperCase()}
         </div>
-        <img src="/src/app/assets/images/qđtl.png" className="w-full h-96" />
+        <img
+          src={topic.imageUrl || "/src/app/assets/images/qđtl.png"}
+          alt={topic.name || "Topic image"}
+          className="w-full h-96 object-cover"
+        />
       </div>
-      <div className="mx-auto w-6xl mt-4">
-        <div className="grid grid-cols-13 gap-x-10 w-full mb-10">
-          <div className="col-span-9 ">
-            <TabSection posts={posts} />
+      <div className="mx-auto max-w-6xl mt-4">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-x-10 w-full mb-10">
+          <div className="lg:col-span-8">
+            <TabSection topicId={topic?.id} />
           </div>
-          <div className="col-span-4 mt-0 text-text">
-            <div className="p-4 border-1 h-fit  border-text2">
+          <div className="lg:col-span-4 mt-6 lg:mt-0 text-text">
+            <div className="p-4 border border-gray-300 rounded-md h-fit">
               <div className="text-xl font-medium">
-                {topic?.name?.toString().toUpperCase()}
+                {topic.name?.toString().toUpperCase()}
               </div>
-              <div className="font-medium mb-1 mt-4">Nội dung cho phép</div>
-              <div className="text-sm">{topic?.description}</div>
+              <div className="font-medium mb-1 mt-4">Nội dung</div>
+              <div className="text-sm">{topic.des || "Không có mô tả."}</div>
               <div className="font-medium mb-1 mt-4">Quy định</div>
-              <ul className="text-sm list-disc pl-5">
+              <ul className="text-sm list-disc pl-5 space-y-1">
                 <li>
                   Những nội dung không thuộc phạm trù của danh mục sẽ bị nhắc
                   nhở và xoá (nếu không thay đổi thích hợp)

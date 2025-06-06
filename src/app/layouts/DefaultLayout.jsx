@@ -1,3 +1,4 @@
+// DefaultLayout.js
 import React from "react";
 import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
@@ -9,7 +10,7 @@ import { API_URL } from "../../bkUrl";
 
 const getTopics = async () => {
   const res = await axios.get(`${API_URL}/topics`);
-  return res.data;
+  return res.data; // Giả sử res.data là một mảng các topics
 };
 
 export default function DefaultLayout() {
@@ -17,18 +18,28 @@ export default function DefaultLayout() {
     data: topics,
     isLoading,
     isError,
+    error, // Thêm error để có thể hiển thị chi tiết lỗi nếu cần
   } = useQuery({
     queryKey: ["topics"],
     queryFn: getTopics,
   });
 
-  if (isLoading) return <div>Đang tải thanh điều hướng...</div>;
-  if (isError) return <div>Lỗi khi tải topics</div>;
+  if (isLoading)
+    return (
+      <div className="text-center py-10">Đang tải thanh điều hướng...</div>
+    );
+  if (isError)
+    return (
+      <div className="text-center py-10 text-red-500">
+        Lỗi khi tải topics: {error?.message || "Unknown error"}
+      </div>
+    );
 
   return (
     <div className="bg-white">
       <Header textColor="text2" />
-      <Navbar topics={topics} />
+      {/* Chỉ render Navbar nếu có topics */}
+      {topics && topics.length > 0 && <Navbar topics={topics} />}
       <div className="min-h-[calc(100svh-var(--spacing-hheader)-var(--spacing-hnavbar))]">
         <Outlet />
       </div>
