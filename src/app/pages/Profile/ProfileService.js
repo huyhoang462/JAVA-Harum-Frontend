@@ -15,6 +15,8 @@ export const getPostsByUserApi = async (userId, page = 1, size = 10) => {
     const response = await axios.get(`${API_URL}/posts/user/${userId}`, {
       params: { page, size },
     });
+    console.log("bài viết stoi: ", response.data);
+
     return response.data;
   } catch (error) {
     console.error("Lỗi khi lấy danh sách bài viết của user:", error);
@@ -23,7 +25,10 @@ export const getPostsByUserApi = async (userId, page = 1, size = 10) => {
 };
 export const getFollowedByUserApi = async (userId, page = 0, size = 10) => {
   try {
-    const response = await axios.get(`${API_URL}/follow/followed-users/${userId}/${page}/${size}`);
+    const response = await axios.get(
+      `${API_URL}/follow/followed-users/${userId}/${page}/${size}`
+    );
+    console.log("follow  stoi: ", response.data);
     return response.data;
   } catch (error) {
     console.error("Lỗi khi lấy danh sách người theo dõi của user:", error);

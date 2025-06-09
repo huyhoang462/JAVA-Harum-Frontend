@@ -34,7 +34,7 @@ export default function PostV({ post }) {
           <div className=" flex items-center ">
             <img
               src={
-                post?.user?.avatar || "/src/app/assets/images/defaultAvatar.jpg"
+                post?.userImage || "/src/app/assets/images/defaultAvatar.jpg"
               }
               className="rounded-full h-10 w-10 object-cover mr-2.5"
             />

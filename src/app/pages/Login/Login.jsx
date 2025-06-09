@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ForgetPassword from "./partials/ForgetPassword";
 import { Eye, EyeClosed, X } from "lucide-react";
 import { toast } from "react-toastify";
-import { handleLoginApi } from "./loginService";
+import { getUserById, handleLoginApi } from "./loginService";
 import { sGlobalInfo } from "../../stores/globalStore";
 export default function Login() {
   const nav = useNavigate();
@@ -47,6 +47,8 @@ export default function Login() {
         ];
         localStorage.setItem("accounts", JSON.stringify(updatedAccounts));
       }
+      const resUser = await getUserById(res?.id);
+      localStorage.setItem("avatarUrl", resUser.avatarUrl);
       nav("/");
     }
     setIsLoading(false);

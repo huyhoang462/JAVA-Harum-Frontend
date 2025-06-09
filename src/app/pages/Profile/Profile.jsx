@@ -10,7 +10,7 @@ import {
 
 export default function Profile() {
   const nav = useNavigate();
-  const { id } = useParams(); 
+  const { id } = useParams();
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const [followings, setFollowings] = useState([]);
@@ -20,10 +20,10 @@ export default function Profile() {
       try {
         const userRes = await getUserProfileApi(id);
         const postsRes = await getPostsByUserApi(id);
-        const followedRes = await getFollowedByUserApi(id,0,10);
+        const followedRes = await getFollowedByUserApi(id, 0, 10);
 
         setUser(userRes);
-        setPosts(postsRes?.data || []); 
+        setPosts(postsRes?.content || []);
         setFollowings(followedRes || []);
       } catch (error) {
         console.error("Lỗi khi fetch dữ liệu Profile:", error);
@@ -56,10 +56,12 @@ export default function Profile() {
             </div>
             <div className="flex justify-between items-center text-text mb-4 text-sm">
               <div>
-                <span className="font-medium mr-1">{user.followers}</span>followers
+                <span className="font-medium mr-1">{user.followers}</span>
+                followers
               </div>
               <div>
-                <span className="font-medium mr-1">{user.followings}</span>followings
+                <span className="font-medium mr-1">{user.followings}</span>
+                followings
               </div>
             </div>
             <div className="text-sm whitespace-pre-line text-text">

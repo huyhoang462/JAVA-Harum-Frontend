@@ -21,7 +21,9 @@ export default function PostV({ post }) {
       </div>
       <div className="flex flex-col justify-between w-full ml-4">
         <div>
-          <div className="text-ssm mb-1">{post?.topics}</div>
+          <div className="text-ssm mt-1 mb-1">
+            {post?.topicName.toUpperCase()}
+          </div>
           <div className="text-xl font-medium line-clamp-2 min-h-14 ">
             {post?.title}
           </div>

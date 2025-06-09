@@ -36,7 +36,7 @@ export default function PostDetail() {
     const handleScroll = () => {
       if (commentRef.current) {
         const commentTop = commentRef.current.getBoundingClientRect().top;
-        setIsHidden(commentTop <= 290);
+        setIsHidden(commentTop <= 300);
       }
     };
 

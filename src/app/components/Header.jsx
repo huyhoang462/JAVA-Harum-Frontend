@@ -17,6 +17,7 @@ export default function Header({ textColor }) {
   const [isShowMenu, setIsShowMenu] = useState(false);
   const [isShowNotifiaction, setIsShowNotifiaction] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const userId = localStorage.getItem("user_id");
 
   const handleClickLogo = () => {
     nav("/");
@@ -32,6 +33,7 @@ export default function Header({ textColor }) {
 
   const handleLogout = () => {
     localStorage.removeItem("user_id");
+    localStorage.removeItem("avatarUrl");
     nav("/");
   };
 
@@ -142,7 +144,11 @@ export default function Header({ textColor }) {
                 <div>
                   <img
                     className="rounded-full h-10 w-10 object-cover"
-                    src="/src/app/assets/images/daisy.jpg"
+                    src={
+                      localStorage.getItem("avatarUrl") !== "null"
+                        ? localStorage.getItem("avatarUrl")
+                        : "/src/app/assets/images/defaultAvatar.jpg"
+                    }
                     alt="Avatar"
                   />
                 </div>

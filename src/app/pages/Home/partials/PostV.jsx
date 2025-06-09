@@ -1,4 +1,4 @@
-import { MessageCircleMore, ThumbsUp } from "lucide-react";
+import { Eye, MessageCircleMore, ThumbsUp } from "lucide-react";
 import React from "react";
 import formatDate from "../../../utils/formatDate";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +21,9 @@ export default function PostV({ post }) {
       </div>
       <div className="flex flex-col justify-between w-full ml-4">
         <div>
-          <div className="text-ssm mb-1">{post?.topic}</div>
+          <div className="text-ssm font-medium mb-1">
+            {post?.topicName.toUpperCase()}
+          </div>
           <div className="text-xl font-medium line-clamp-2 min-h-14 ">
             {post?.title}
           </div>
@@ -43,7 +45,7 @@ export default function PostV({ post }) {
               {post?.countLike}
             </div>
             <div className="text-ssm flex items-center">
-              <MessageCircleMore className="h-4  text-text2" />
+              <Eye  className="h-4  text-text2" />
               {post?.countView}
             </div>
           </div>

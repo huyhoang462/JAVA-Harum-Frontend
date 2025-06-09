@@ -21,7 +21,7 @@ function PopularSection() {
       <div className="text-text font-medium">BÀI VIẾT PHỔ BIẾN</div>
       <div className=" grid grid-cols-4 gap-x-6 mt-5">
         {isLoading ? (
-          <div className="flex flex-col items-center h-[268px] justify-center col-span-4">
+          <div className="flex items-center h-[268px] justify-center col-span-4">
             <LoadingSpinner />
             <p className="mt-2"> Đang tải bài viết...</p>
           </div>

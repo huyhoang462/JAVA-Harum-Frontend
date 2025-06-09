@@ -46,6 +46,35 @@ export default function Topic() {
       </div>
     );
   }
+  const getImageName = (topicIdFromParams) => {
+    switch (topicIdFromParams) {
+      case "67f357e280e7a31c46a4e333":
+        return "/src/app/assets/images/thethao.jpg";
+      case "67f3584980e7a31c46a4e334":
+        return "/src/app/assets/images/tamly.jpg";
+      case "67f3585d80e7a31c46a4e335":
+        return "/src/app/assets/images/giaoduc.png";
+      case "67f3587d80e7a31c46a4e336":
+        return "/src/app/assets/images/tranhluan.jpg";
+      case "67f3589080e7a31c46a4e337":
+        return "/src/app/assets/images/khoahoc.jpg";
+      case "67f358a780e7a31c46a4e338":
+        return "/src/app/assets/images/lichsu.jpg";
+      case "67f3591980e7a31c46a4e339":
+        return "/src/app/assets/images/nghethuat.jpg";
+      case "67f3593780e7a31c46a4e33a":
+        return "/src/app/assets/images/sach.jpg";
+      case "67f3594480e7a31c46a4e33b":
+        return "/src/app/assets/images/tinhyeu.jpg";
+      case "67f3596980e7a31c46a4e33c":
+        return "/src/app/assets/images/xahoi.png";
+      default:
+        return "/src/app/assets/images/defaultImage.png"; // nếu không khớp thì trả về ảnh mặc định
+    }
+  };
+
+  // Sử dụng trong component:
+  const imageName = getImageName(topicIdFromParams);
 
   console.log(
     "[Topic.js] Render: Rendering page with valid topicId:",
@@ -61,7 +90,7 @@ export default function Topic() {
           {topic.name?.toString().toUpperCase()}
         </div>
         <img
-          src={topic.imageUrl || "/src/app/assets/images/qđtl.png"}
+          src={imageName || "/src/app/assets/images/qđtl.png"}
           alt={topic.name || "Topic image"}
           className="w-full h-96 object-cover"
         />
