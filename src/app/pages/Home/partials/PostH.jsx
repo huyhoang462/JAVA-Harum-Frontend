@@ -2,16 +2,19 @@ import { Bookmark, BookMarked, Eye, ThumbsUp } from "lucide-react";
 import React from "react";
 import formatDate from "../../../utils/formatDate";
 import { useNavigate } from "react-router-dom";
+import { navToDetail } from "../../../utils/navToDetail";
 
 export default function PostH({ post }) {
   const nav = useNavigate();
+  const userId = localStorage.getItem("user_id");
+
   const imageUrl = post?.contentBlock.find(
     (block) => block.type === "image"
   ).value;
   return (
     <div
       className=" flex flex-col cursor-pointer w-full "
-      onClick={() => nav(`/post-detail/${post?.id}`)}
+      onClick={() => navToDetail(nav, userId, post?.id)}
     >
       <div className="mb-2 w-full">
         <img

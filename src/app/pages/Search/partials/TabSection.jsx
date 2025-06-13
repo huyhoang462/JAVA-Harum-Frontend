@@ -39,7 +39,7 @@ const PostSkeleton = () => {
   return (
     <div className="flex w-full bg-white p-3 rounded-lg shadow-sm animate-pulse">
       {" "}
-      <div className="h-40 w-60 bg-gray-300 rounded shrink-0"></div>
+      <div className="h-40 w-40 bg-gray-300 rounded shrink-0"></div>
       <div className="flex flex-col justify-between w-full ml-4">
         <div>
           <div className="h-4 bg-gray-300 rounded w-1/4 mb-2"></div>
@@ -50,9 +50,9 @@ const PostSkeleton = () => {
         <div className="flex justify-between items-center mt-2">
           {" "}
           <div className="flex items-center">
-            <div className="rounded-full h-10 w-10 bg-gray-300 mr-2.5 shrink-0"></div>
-            <div className="h-4 bg-gray-300 rounded w-20 mr-5"></div>
-            <div className="h-3 bg-gray-300 rounded w-16"></div>
+            <div className="rounded-full h-10  bg-gray-300 mr-2.5 shrink-0"></div>
+            <div className="h-4 bg-gray-300 rounded  mr-5"></div>
+            <div className="h-3 bg-gray-300 rounded "></div>
           </div>
           <div className="flex">
             <div className="h-4 bg-gray-300 rounded w-8 mr-2.5"></div>

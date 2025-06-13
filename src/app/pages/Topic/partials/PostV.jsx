@@ -1,17 +1,20 @@
-import { MessageCircleMore, ThumbsUp } from "lucide-react";
+import { Eye, MessageCircleMore, ThumbsUp } from "lucide-react";
 import React from "react";
 import formatDate from "../../../utils/formatDate";
 import { useNavigate } from "react-router-dom";
+import { navToDetail } from "../../../utils/navToDetail";
 
 export default function PostV({ post }) {
   const nav = useNavigate();
+  const userId = localStorage.getItem("user_id");
+
   const imageUrl = post?.contentBlock.find(
     (block) => block.type === "image"
   ).value;
   return (
     <div
       className="flex w-full cursor-pointer  "
-      onClick={() => nav(`/post-detail/${post?.id}`)}
+      onClick={() => navToDetail(nav, userId, post?.id)}
     >
       <div>
         <img
@@ -45,7 +48,7 @@ export default function PostV({ post }) {
               {post?.countLike}
             </div>
             <div className="text-ssm flex items-center">
-              <MessageCircleMore className="h-4  text-text2" />
+              <Eye className="h-4  text-text2" />
               {post?.countView}
             </div>
           </div>

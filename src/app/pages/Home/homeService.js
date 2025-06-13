@@ -5,7 +5,6 @@ import { API_URL } from "../../../bkUrl";
 export const getTopPosts = async () => {
   try {
     const res = await axios.get(`${API_URL}/posts/top?page=1&size=4`);
-    console.log("Top post này: ", res.data);
     return res.data;
   } catch (error) {
     console.error("Lỗi khi lấy top post:", error);
@@ -15,7 +14,6 @@ export const getTopPosts = async () => {
 export const getPopularPosts = async () => {
   try {
     const res = await axios.get(`${API_URL}/posts/popular?page=1&size=4`);
-    console.log("Popular post này: ", res.data);
     return res.data;
   } catch (error) {
     console.error("Lỗi khi lấy popular post:", error);
@@ -27,7 +25,6 @@ export const getForYouPosts = async ({ userId, pageParam = 1 }) => {
     const res = await axios.get(
       `${API_URL}/posts/top?page=${pageParam}&size=8`
     );
-    console.log("For you này (page " + pageParam + "): ", res.data);
     return res.data;
   } catch (error) {
     console.error("Lỗi khi lấy for you:", error);
@@ -40,7 +37,6 @@ export const getFollowPosts = async ({ userId, pageParam = 1 }) => {
     const res = await axios.get(
       `${API_URL}/posts/popular?page=${pageParam}&size=8`
     );
-    console.log("Follow post này (page " + pageParam + "): ", res.data);
     return res.data;
   } catch (error) {
     console.error("Lỗi khi lấy follow:", error);

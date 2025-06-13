@@ -4,7 +4,7 @@ import { API_URL } from "../../../bkUrl";
 export const getPosticbyId = async (id) => {
   try {
     const res = await axios.get(`${API_URL}/posts/${id}`);
-    console.log("post này: ", res);
+
     return res;
   } catch (error) {
     console.error("Lỗi khi lấy post:", error);
@@ -14,7 +14,7 @@ export const getPosticbyId = async (id) => {
 export const getVote = async (userId, postId) => {
   try {
     const res = await axios.get(`${API_URL}/vote/check/${userId}/${postId}`);
-    console.log("Vote này: ", res);
+
     return res;
   } catch (error) {
     console.error("Lỗi khi lấy vote:", error);
@@ -24,7 +24,7 @@ export const getVote = async (userId, postId) => {
 export const doVote = async (vote) => {
   try {
     const res = await axios.post(`${API_URL}/vote/interact`, vote);
-    console.log("doVote này: ", res);
+
     return res;
   } catch (error) {
     console.error("Lỗi khi vote:", error);
@@ -36,7 +36,7 @@ export const checkSave = async (userId, postId) => {
     const res = await axios.get(
       `${API_URL}/saved-posts/check/${userId}/${postId}`
     );
-    console.log("checksave này: ", res);
+
     return res;
   } catch (error) {
     console.error("Lỗi khi xem lưu:", error);
@@ -46,7 +46,7 @@ export const checkSave = async (userId, postId) => {
 export const doSave = async (save) => {
   try {
     const res = await axios.post(`${API_URL}/saved-posts/interact`, save);
-    console.log("dosave này: ", res);
+
     return res;
   } catch (error) {
     console.error("Lỗi khi save:", error);
@@ -58,7 +58,7 @@ export const checkFollow = async (followerId, followedId) => {
     const res = await axios.get(
       `${API_URL}/follow/check/${followerId}/${followedId}`
     );
-    console.log("check follow này: ", res);
+
     return res;
   } catch (error) {
     console.error("Lỗi khi xem follow:", error);
@@ -70,7 +70,7 @@ export const doFollow = async (followerId, followedId) => {
     const res = await axios.post(
       `${API_URL}/follow/interact/${followerId}/${followedId}`
     );
-    console.log("do follow này: ", res);
+
     return res;
   } catch (error) {
     console.error("Lỗi khi follow:", error);
@@ -80,7 +80,7 @@ export const doFollow = async (followerId, followedId) => {
 export const getComment = async (postId) => {
   try {
     const res = await axios.get(`${API_URL}/comment/post/${postId}`);
-    console.log("check comment này: ", res);
+
     return res;
   } catch (error) {
     console.error("Lỗi khi lấy comment:", error);
@@ -90,7 +90,7 @@ export const getComment = async (postId) => {
 export const postComment = async (comment) => {
   try {
     const res = await axios.post(`${API_URL}/comment`, comment);
-    console.log("Post comment này: ", res);
+
     return res;
   } catch (error) {
     console.error("Lỗi khi post comment:", error);
@@ -103,7 +103,7 @@ export const postReply = async (parentId, comment) => {
       `${API_URL}/comment/${parentId}/reply`,
       comment
     );
-    console.log("Post reply này: ", res);
+
     return res;
   } catch (error) {
     console.error("Lỗi khi post reply:", error);

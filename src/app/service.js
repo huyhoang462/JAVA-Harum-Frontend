@@ -43,3 +43,25 @@ export const getCommentById = async (commentId) => {
     return error;
   }
 };
+export const isReadPost = async (userId, postId) => {
+  try {
+    const res = await axios.get(`${API_URL}/views/check/${userId}/${postId}`);
+    console.log("đọc chưa: ", res);
+
+    return res?.data;
+  } catch (error) {
+    console.error("Lỗi khi xem đọc chưa:", error);
+    return error;
+  }
+};
+export const setReadPost = async (views) => {
+  try {
+    const res = await axios.post(`${API_URL}/views`, views);
+    console.log("Đã đọc ", res);
+
+    return res?.data;
+  } catch (error) {
+    console.error("Lỗi khi set đọc:", error);
+    return error;
+  }
+};

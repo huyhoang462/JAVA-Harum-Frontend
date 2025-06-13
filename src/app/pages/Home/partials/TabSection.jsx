@@ -37,13 +37,10 @@ const TabSection = () => {
     initialPageParam: 1,
 
     getNextPageParam: (lastPage, allPages) => {
-      console.log("getNextPageParam - lastPage:", lastPage);
       if (lastPage && !lastPage.last) {
         const nextPageParam = lastPage.number + 2;
-        console.log("Next pageParam to fetch:", nextPageParam);
         return nextPageParam;
       }
-      console.log("No next page or lastPage undefined");
       return undefined;
     },
   });
