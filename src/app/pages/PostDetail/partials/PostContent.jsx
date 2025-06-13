@@ -97,8 +97,8 @@ export default function PostContent({ post }) {
                   <div className="w-full flex justify-center">
                     <img
                       key={index}
-                      src={block?.value}
-                      alt=""
+                      src={block?.value || ""}
+                      alt="Ảnh nội dung bài viết"
                       className="rounded-lg shadow-md"
                     />
                   </div>

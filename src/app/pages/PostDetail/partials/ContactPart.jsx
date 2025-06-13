@@ -87,11 +87,11 @@ export default function ContactPart({ post, refreshPost }) {
   };
   const handleSave = async () => {
     if (userID) {
-      const vote = {
+      const save = {
         userId: userID,
         postId: post.id,
       };
-      const res = await doSave(vote);
+      const res = await doSave(save);
       if (res?.status === 200) {
         toast.success(
           isSave ? "Bỏ lưu bài viết thành công!" : "Lưu bài viết thành công"
@@ -190,10 +190,10 @@ export default function ContactPart({ post, refreshPost }) {
           )}
         </div>
         <div className="flex items-center justify-center flex-col text-ssm  ">
-          <MessageSquare
+          {/* <MessageSquare
             className="h-5 cursor-pointer hover:text-pblue"
             strokeWidth={3}
-          />
+          /> */}
         </div>
       </div>
     </div>

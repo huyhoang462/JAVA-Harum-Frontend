@@ -19,7 +19,7 @@ export default function PostV({ post }) {
       <div>
         <img
           src={imageUrl || "/src/app/assets/images/defaultImage.png"}
-          className="h-40 w-60 object-cover"
+          className="h-40 w-60 rounded-md object-cover"
         />
       </div>
 
@@ -40,7 +40,9 @@ export default function PostV({ post }) {
               }
               className="rounded-full h-10 w-10 object-cover mr-2.5"
             />
-            <div className="font-bold text-sm mr-5">{post?.username}</div>
+            <div className="font-bold line-clamp-1 max-w-16 text-sm mr-2">
+              {post?.username}
+            </div>
             <div className="text-ssm ">{formatDate(post?.createdAt)}</div>
           </div>
           <div className=" flex">

@@ -122,17 +122,26 @@ export default function Header({ textColor }) {
               </div>
               <div className="ml-4 cursor-pointer">
                 <div
-                  className={`${
-                    textColor === "white"
-                      ? "text-white border-white"
-                      : "text-text2 border-text2"
-                  } border-2 px-4 py-1.5 rounded-3xl flex hover:text-pblue`}
+                  className={`
+    group 
+    border-2 px-4 py-1.5 rounded-3xl flex items-center cursor-pointer 
+    transition-colors duration-200
+    ${
+      textColor === "white"
+        ? "text-white border-white"
+        : "text-text2 border-text2"
+    }
+    hover:border-pblue hover:text-pblue
+  `}
                   onClick={() => nav("/write-post")}
                 >
                   <Feather
-                    className={`${
-                      textColor === "white" ? "text-white" : "text-text2"
-                    } h-6 w-6 cursor-pointer mr-1 hover:text-pblue`}
+                    className={`
+      h-6 w-6 mr-1
+      transition-colors duration-200
+      ${textColor === "white" ? "text-white" : "text-text2"}
+      group-hover:text-pblue
+    `}
                   />
                   <p className="font-medium pr-[4px]">Viết bài</p>
                 </div>

@@ -44,7 +44,8 @@ export default function PostDetail() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  if (!post) return <p className="text-center mt-10">Đang tải bài viết...</p>;
+  if (!post)
+    return <p className="text-center mt-10">Bài viết không còn khả dụng</p>;
 
   return (
     <div>

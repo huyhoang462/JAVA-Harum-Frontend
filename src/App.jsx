@@ -9,7 +9,6 @@ import { ToastContainer } from "react-toastify";
 import PrivatePart from "./app/components/PrivatePart";
 import ProfileLayout from "./app/layouts/ProfileLayout";
 import ProfileSetting from "./app/pages/ProfileEdit/ProfileSetting";
-import ProfileEdit from "./app/pages/ProfileEdit/ProfileEdit";
 import Topic from "./app/pages/Topic/Topic";
 import Message from "./app/pages/messages/Messages";
 import Search from "./app/pages/Search/Search";
@@ -33,6 +32,14 @@ function App() {
             <Route path="/search" element={<Search />} />
             <Route path="/post-detail/:id" element={<PostDetail />} />
 
+            <Route path="/topic/:id" element={<Topic />} />
+          </Route>
+          <Route element={<AccessLayout />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+          </Route>
+          <Route element={<ProfileLayout />}>
+            <Route path="/profile/:id" element={<ProfileRouter />} />
             <Route
               path="/profileedit"
               element={
@@ -49,16 +56,6 @@ function App() {
                 </PrivatePart>
               }
             />
-            <Route path="/topic/:id" element={<Topic />} />
-          </Route>
-          <Route element={<AccessLayout />}>
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-          </Route>
-          <Route element={<ProfileLayout />}>
-            <Route path="/edit-profile" element={<ProfileEdit />} />
-
-            <Route path="/profile/:id" element={<ProfileRouter />} />
           </Route>
           <Route element={<WriteLayout />}>
             <Route

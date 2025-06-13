@@ -1,42 +1,49 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 import PostV from "./PostV";
-import LoadingSpinner from "../../../components/LoadingSpinner";
 import { getForYouPosts, getPostsByTopic } from "../topicService";
+import formatDate from "../../../utils/formatDate"; // Import các hàm tiện ích
+import { navToDetail } from "../../../utils/navToDetail"; // Import các hàm tiện ích
+import { Eye, ThumbsUp } from "lucide-react";
+
+const PostVSkeleton = () => {
+  return (
+    <div className="flex w-full animate-pulse">
+      <div className="h-40 w-72 bg-gray-200 rounded-md flex-shrink-0"></div>
+      <div className="flex flex-col justify-between w-full ml-4 py-1">
+        <div className="space-y-2">
+          <div className="h-4 bg-gray-200 rounded w-1/4"></div>
+          <div className="space-y-2">
+            <div className="h-6 bg-gray-200 rounded w-full"></div>
+            <div className="h-6 bg-gray-200 rounded w-5/6"></div>
+          </div>
+        </div>
+        <div className="flex justify-between items-center mt-4">
+          <div className="flex items-center gap-2.5">
+            <div className="h-10 w-10 bg-gray-300 rounded-full"></div>
+            <div className="space-y-2">
+              <div className="h-4 bg-gray-200 rounded w-20"></div>
+              <div className="h-3 bg-gray-200 rounded w-24"></div>
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="h-5 bg-gray-200 rounded w-12"></div>
+            <div className="h-5 bg-gray-200 rounded w-12"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const TabSection = ({ topicId }) => {
   const [activeTab, setActiveTab] = useState("all");
 
-  console.log("id từ tab này:", typeof topicId);
-
-  useEffect(() => {
-    console.log(
-      "[TabSection.js] topicId prop changed or component mounted:",
-      topicId
-    );
-  }, [topicId]);
-
-  const {
-    data: allPostsData,
-    fetchNextPage: fetchNextAllPosts,
-    hasNextPage: hasNextAllPosts,
-    isLoading: isLoadingAllPosts,
-    isFetchingNextPage: isFetchingNextAllPosts,
-    isError: isErrorAllPosts,
-    error: errorAllPosts,
-    status,
-  } = useInfiniteQuery({
+  const allPostsQuery = useInfiniteQuery({
     queryKey: ["posts", topicId, "all"],
-    queryFn: ({ pageParam }) => {
-      if (!topicId) {
-        console.error(
-          "[TabSection.js] 'all' queryFn: topicId is undefined or null before calling API!"
-        );
-
-        return Promise.reject(new Error("topicId is missing in 'all' queryFn"));
-      }
-      return getPostsByTopic({ id: topicId, pageParam: pageParam });
-    },
+    queryFn: ({ pageParam = 1 }) => getPostsByTopic({ id: topicId, pageParam }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       if (lastPage && lastPage.number < lastPage.totalPages - 1) {
@@ -44,31 +51,12 @@ const TabSection = ({ topicId }) => {
       }
       return undefined;
     },
-
     enabled: !!topicId && activeTab === "all",
   });
 
-  const {
-    data: forYouPostsData,
-    fetchNextPage: fetchNextForYouPosts,
-    hasNextPage: hasNextForYouPosts,
-    isLoading: isLoadingForYouPosts,
-    isFetchingNextPage: isFetchingNextForYouPosts,
-    isError: isErrorForYouPosts,
-    error: errorForYouPosts,
-  } = useInfiniteQuery({
+  const forYouPostsQuery = useInfiniteQuery({
     queryKey: ["posts", topicId, "forYou"],
-    queryFn: ({ pageParam }) => {
-      if (!topicId) {
-        console.error(
-          "[TabSection.js] 'forYou' queryFn: topicId is undefined or null before calling API!"
-        );
-        return Promise.reject(
-          new Error("topicId is missing in 'forYou' queryFn")
-        );
-      }
-      return getForYouPosts(topicId, pageParam);
-    },
+    queryFn: ({ pageParam = 1 }) => getForYouPosts(topicId, pageParam),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       if (lastPage && lastPage.number < lastPage.totalPages - 1) {
@@ -79,40 +67,66 @@ const TabSection = ({ topicId }) => {
     enabled: !!topicId && activeTab === "forYou",
   });
 
-  const allPosts = allPostsData?.pages.flatMap((page) => page.content) || [];
-  const forYouPosts =
-    forYouPostsData?.pages.flatMap((page) => page.content) || [];
+  const activeQuery = activeTab === "all" ? allPostsQuery : forYouPostsQuery;
 
-  const postsToDisplay = activeTab === "all" ? allPosts : forYouPosts;
-  const isLoading =
-    activeTab === "all" ? isLoadingAllPosts : isLoadingForYouPosts;
-  const isFetchingNext =
-    activeTab === "all" ? isFetchingNextAllPosts : isFetchingNextForYouPosts;
-  const isError = activeTab === "all" ? isErrorAllPosts : isErrorForYouPosts;
-  const error = activeTab === "all" ? errorAllPosts : errorForYouPosts;
-  const fetchNextPage =
-    activeTab === "all" ? fetchNextAllPosts : fetchNextForYouPosts;
-  const hasNextPage =
-    activeTab === "all" ? hasNextAllPosts : hasNextForYouPosts;
+  const postsToDisplay =
+    activeQuery.data?.pages.flatMap((page) => page.content) || [];
+
+  const renderContent = () => {
+    if (activeQuery.isLoading) {
+      return (
+        <div className="flex flex-col gap-y-6">
+          {[...Array(5)].map((_, index) => (
+            <PostVSkeleton key={index} />
+          ))}
+        </div>
+      );
+    }
+
+    if (activeQuery.isError) {
+      return (
+        <div className="py-10 text-center text-red-500">
+          Lỗi khi tải bài viết:{" "}
+          {activeQuery.error?.message || "Đã có lỗi xảy ra."}
+        </div>
+      );
+    }
+
+    if (postsToDisplay.length === 0) {
+      return (
+        <div className="py-10 text-center text-gray-500">
+          Chưa có bài viết nào trong mục này.
+        </div>
+      );
+    }
+
+    return (
+      <div className="flex flex-col gap-y-6">
+        {postsToDisplay.map((post) => (
+          <PostV key={post?.id} post={post} />
+        ))}
+      </div>
+    );
+  };
 
   return (
     <div>
       <div className="flex text-lg mb-4 border-b border-gray-200">
         <button
-          className={`pb-2 cursor-pointer px-4 font-medium ${
+          className={`pb-2 cursor-pointer px-4 font-medium transition-colors duration-200 ${
             activeTab === "all"
               ? "border-b-2 border-pblue text-pblue"
-              : "text-text hover:text-pblue"
+              : "text-gray-500 hover:text-pblue border-b-2 border-transparent"
           }`}
           onClick={() => setActiveTab("all")}
         >
           Tất cả
         </button>
         <button
-          className={`pb-2 cursor-pointer px-4 font-medium ${
+          className={`pb-2 cursor-pointer px-4 font-medium transition-colors duration-200 ${
             activeTab === "forYou"
               ? "border-b-2 border-pblue text-pblue"
-              : "text-text hover:text-pblue"
+              : "text-gray-500 hover:text-pblue border-b-2 border-transparent"
           }`}
           onClick={() => setActiveTab("forYou")}
         >
@@ -120,51 +134,27 @@ const TabSection = ({ topicId }) => {
         </button>
       </div>
 
-      {isLoading && !postsToDisplay.length && (
-        <div className="flex flex-col mt-4 items-center justify-center">
-          <LoadingSpinner />
-          <p className="mt-2 text-gray-600">Đang tải bài viết...</p>
-        </div>
-      )}
+      <div className="mt-6">{renderContent()}</div>
 
-      {isError && (
-        <div className="py-5 text-center text-red-500">
-          Lỗi khi tải bài viết: {error?.message || "Đã có lỗi xảy ra."}
-        </div>
-      )}
-
-      {!isLoading && !isError && postsToDisplay.length === 0 && (
-        <div className="py-5 text-center text-gray-500">
-          Chưa có bài viết nào trong mục này.
-        </div>
-      )}
-
-      {postsToDisplay.length > 0 && (
-        <div className="flex flex-col gap-y-6">
-          {postsToDisplay.map((post) => (
-            <PostV key={post?.id} post={post} />
-          ))}
-        </div>
-      )}
-
-      {hasNextPage && (
+      {activeQuery.hasNextPage && (
         <div className="mt-6 text-center">
           <button
-            onClick={() => fetchNextPage()}
-            disabled={isFetchingNext}
-            className={`${
-              isFetchingNext ? "" : "underline italic hover:bg-bgblue "
-            } px-4 text-pblue py-2 rounded hover:text-sblue cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}
+            onClick={() => activeQuery.fetchNextPage()}
+            disabled={activeQuery.isFetchingNextPage}
+            className="px-6 py-2 cursor-pointer font-semibold text-pblue border-2 border-pblue rounded-full hover:bg-pblue hover:text-white transition-colors duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
           >
-            {isFetchingNext ? "Đang tải thêm..." : "Xem thêm"}
+            {activeQuery.isFetchingNextPage ? "Đang tải thêm..." : "Xem thêm"}
           </button>
         </div>
       )}
-      {!hasNextPage && allPosts.length > 0 && status === "success" && (
-        <p className="mt-6 text-center text-gray-500">
-          Đã hiển thị tất cả bài viết.
-        </p>
-      )}
+
+      {!activeQuery.hasNextPage &&
+        postsToDisplay.length > 0 &&
+        !activeQuery.isLoading && (
+          <p className="mt-6 text-center text-gray-500">
+            Đã hiển thị tất cả bài viết.
+          </p>
+        )}
     </div>
   );
 };

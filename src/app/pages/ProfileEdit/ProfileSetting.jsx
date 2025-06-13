@@ -5,16 +5,19 @@ import ChangePassword from "./partials/ChangePassword";
 const ProfileSetting = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const activeTab = location.pathname.includes("password") ? "password" : "profile";
+  const activeTab = location.pathname.includes("password")
+    ? "password"
+    : "profile";
 
- 
   return (
     <div className="max-w-6xl mx-auto p-6 flex">
       {/* Sidebar Tabs */}
       <div className="w-1/4 pr-4">
         <button
           className={`block w-full text-left py-2 px-4 mb-2 border-l-4 cursor-pointer ${
-            activeTab === "profile" ? "border-pblue  text-pblue font-bold" : "border-transparent text-gray-600"
+            activeTab === "profile"
+              ? "border-pblue  text-pblue font-bold"
+              : "border-transparent text-gray-600"
           }`}
           onClick={() => navigate("/profileedit")}
         >
@@ -22,7 +25,9 @@ const ProfileSetting = () => {
         </button>
         <button
           className={`block w-full text-left py-2 px-4 border-l-4 cursor-pointer ${
-            activeTab === "password" ? "border-pblue text-pblue font-bold" : "border-transparent text-gray-600"
+            activeTab === "password"
+              ? "border-pblue text-pblue font-bold"
+              : "border-transparent text-gray-600"
           }`}
           onClick={() => navigate("/changepassword")}
         >
@@ -37,7 +42,5 @@ const ProfileSetting = () => {
     </div>
   );
 };
-
-
 
 export default ProfileSetting;

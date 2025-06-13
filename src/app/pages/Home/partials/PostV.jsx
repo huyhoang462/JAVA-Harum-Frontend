@@ -38,8 +38,12 @@ export default function PostV({ post }) {
               }
               className="rounded-full h-10 w-10 object-cover mr-2.5"
             />
-            <div className="font-bold text-sm mr-5">{post?.username}</div>
-            <div className="text-ssm ">{formatDate(post?.createdAt)}</div>
+            <div className="font-bold line-clamp-1 w-20 text-sm mr-5">
+              {post?.username}
+            </div>
+            <div className="text-ssm font-medium   text-text2">
+              {formatDate(post?.createdAt)}
+            </div>
           </div>
           <div className=" flex">
             <div className="text-ssm flex items-center mr-2.5">
