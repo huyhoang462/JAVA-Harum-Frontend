@@ -40,7 +40,7 @@ const PostVSkeleton = () => {
 
 const TabSection = ({ topicId }) => {
   const [activeTab, setActiveTab] = useState("all");
-
+  const userId = localStorage.getItem("user_id");
   const allPostsQuery = useInfiniteQuery({
     queryKey: ["posts", topicId, "all"],
     queryFn: ({ pageParam = 1 }) => getPostsByTopic({ id: topicId, pageParam }),
@@ -73,6 +73,13 @@ const TabSection = ({ topicId }) => {
     activeQuery.data?.pages.flatMap((page) => page.content) || [];
 
   const renderContent = () => {
+    if (activeTab === "forYou" && !userId) {
+      return (
+        <p className="text-center text-gray-500 py-10">
+          Vui lòng đăng nhập để khám phá thêm.
+        </p>
+      );
+    }
     if (activeQuery.isLoading) {
       return (
         <div className="flex flex-col gap-y-6">

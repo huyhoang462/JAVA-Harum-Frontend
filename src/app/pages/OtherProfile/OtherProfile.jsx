@@ -1,111 +1,94 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import TabSection from "./partical/TabSection";
-import { getOtherUserProfileApi, getPostsByUserApi } from "./OtherProfileService";
+import TabSection from "./partical/TabSection"; // Giả định TabSection này có thể tự fetch dữ liệu
+import { getOtherUserProfileApi } from "./OtherProfileService";
+import { UserX, UserPlus } from "lucide-react";
+import Profile from "./partical/Profile";
+
+const OtherProfileSkeleton = () => (
+  <div className="w-full max-w-6xl mx-auto animate-pulse">
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-x-10 px-4">
+      {/* Sidebar giả */}
+      <div className="md:col-span-1 -mt-16">
+        <div className="h-36 w-36 bg-gray-300 rounded-full border-4 border-white"></div>
+        <div className="mt-4 space-y-3">
+          <div className="h-7 bg-gray-200 rounded w-3/4"></div>
+          <div className="h-9 bg-gray-200 rounded-lg w-full"></div>
+          <div className="flex justify-between items-center">
+            <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+          </div>
+          <div className="space-y-2 pt-2">
+            <div className="h-4 bg-gray-200 rounded"></div>
+            <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+          </div>
+        </div>
+      </div>
+      {/* Main content giả */}
+      <div className="md:col-span-3 mt-5">
+        <div className="flex border-b">
+          <div className="h-10 bg-gray-200 rounded-t-md w-28 mr-2"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const UserNotFound = () => (
+  <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
+    <UserX className="w-24 h-24 text-gray-400 mb-4" />
+    <h2 className="text-3xl font-bold text-gray-800">
+      Không tìm thấy người dùng
+    </h2>
+    <p className="mt-2 text-gray-500">
+      Người dùng bạn đang tìm kiếm không tồn tại hoặc đã bị xóa.
+    </p>
+  </div>
+);
 
 export default function OtherProfile() {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const [user, setUser] = useState(null);
-  const [postsPage, setPostsPage] = useState(null);
-  const [loadingUser, setLoadingUser] = useState(true);
-  const [loadingPosts, setLoadingPosts] = useState(true);
-
-  const [page, setPage] = useState(1);
-
+  const [loading, setLoading] = useState(true);
+  const fetchUserData = async () => {
+    setLoading(true);
+    try {
+      const res = await getOtherUserProfileApi(id);
+      setUser(res); // Giả định API trả về { data: userObject }
+    } catch (error) {
+      console.error("Lỗi khi tải thông tin người dùng:", error);
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    if (!id) return;
+    if (!id) {
+      setLoading(false);
+      return;
+    }
 
-    setLoadingUser(true);
-    getOtherUserProfileApi(id)
-      .then((data) => {
-        setUser(data);
-        setLoadingUser(false);
-      })
-      .catch(() => setLoadingUser(false));
+    fetchUserData();
   }, [id]);
 
-  useEffect(() => {
-    if (!id) return;
-
-    setLoadingPosts(true);
-    getPostsByUserApi(id, page, 10)
-      .then((data) => {
-        setPostsPage(data);
-        setLoadingPosts(false);
-      })
-      .catch(() => setLoadingPosts(false));
-  }, [id, page]);
-
-  if (loadingUser) {
-    return <div>Đang tải thông tin người dùng...</div>;
+  if (loading) {
+    return <OtherProfileSkeleton />;
   }
 
   if (!user) {
-    return <div>Không tìm thấy người dùng</div>;
+    return <UserNotFound />;
   }
 
   return (
-    <div className="flex min-h-screen">
-      <div className="w-6xl mx-auto">
-        <div className="flex gap-x-10">
-          <div className="w-64 pt-20 relative">
-            <img
-              className="rounded-full w-[140px] h-[140px] object-cover absolute left-0 top-[-70px]"
-              src={user.avatarUrl || "./src/app/assets/images/daisy.jpg"}
-              alt="Avatar"
-            />
-            <div className="font-medium">{user.username}</div>
-            <div>
-              <div
-                className="border-1 mt-2.5 mb-4 text-tex border-pblue text-pblue cursor-pointer rounded-lg flex items-center h-8 font-medium justify-center text-sm"
-              >
-                Theo dõi
-              </div>
-            </div>
-            <div className="flex justify-between items-center text-text mb-4 text-sm">
-              <div>
-                <div className="font-medium">{user.followers}</div>
-                followers
-              </div>
-              <div>
-                <div className="font-medium">{user.followings}</div>
-                following
-              </div>
-            </div>
-            <div className="text-sm whitespace-pre-line text-text">
-              {user.bio}
-            </div>
-          </div>
+    <div className="bg-gray-50 min-h-screen">
+      <div className="w-full max-w-6xl mx-auto pb-10">
+        <div className="grid mt-3 grid-cols-1 md:grid-cols-4 gap-x-10 px-4">
+          <Profile user={user} refresh={fetchUserData} />
 
-          <div className="flex-1">
-            {loadingPosts ? (
-              <div>Đang tải bài viết...</div>
-            ) : postsPage && postsPage.content.length > 0 ? (
-              <>
-                <TabSection posts={postsPage.content} />
-
-                {/* Nút phân trang đơn giản */}
-                <div className="flex gap-2 mt-4">
-                  <button
-                    onClick={() => setPage((p) => Math.max(1, p - 1))}
-                    disabled={postsPage.first}
-                    className="px-3 py-1 border rounded disabled:opacity-50"
-                  >
-                    Trang trước
-                  </button>
-                  <button
-                    onClick={() => setPage((p) => (!postsPage.last ? p + 1 : p))}
-                    disabled={postsPage.last}
-                    className="px-3 py-1 border rounded disabled:opacity-50"
-                  >
-                    Trang sau
-                  </button>
-                </div>
-              </>
-            ) : (
-              <div>Không có bài viết nào</div>
-            )}
-          </div>
+          {/* Main Content */}
+          <main className="md:col-span-3 ">
+            <TabSection userId={id} />
+          </main>
         </div>
       </div>
     </div>

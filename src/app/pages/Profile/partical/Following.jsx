@@ -18,7 +18,7 @@ export default function Following({ user, refresh }) {
     <div
       key={user.id}
       className="flex items-center w-full p-3 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer bg-white"
-      onClick={() => nav(`/otherprofile/${user.id}`)}
+      onClick={() => nav(`/profile/${user.id}`)}
     >
       <img
         src={user.avatarUrl || "/src/app/assets/images/defaultAvatar.jpg"}

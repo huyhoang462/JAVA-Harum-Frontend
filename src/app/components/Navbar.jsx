@@ -1,9 +1,7 @@
-// Navbar.js
 import { Menu } from "lucide-react";
-import React, { useState, memo } from "react"; // Thêm memo
-import { useNavigate, useLocation, Link } from "react-router-dom"; // Link có thể tốt hơn cho SEO
+import React, { useState, memo, useRef, useEffect } from "react";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 
-// Sử dụng memo để tránh re-render không cần thiết nếu prop 'topics' không thay đổi
 const Navbar = memo(function Navbar({ topics }) {
   const nav = useNavigate();
   const location = useLocation();
@@ -12,14 +10,27 @@ const Navbar = memo(function Navbar({ topics }) {
   const handleClickToggle = () => {
     setIsOpen(!isOpen);
   };
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleNavigate = (topic) => {
-    // Truyền state để Topic page có thể dùng ngay, nhưng URL vẫn là nguồn chân lý
     nav(`/topic/${topic.id}`);
-    setIsOpen(false); // Ẩn menu sau khi chọn (nếu đang mở)
+    setIsOpen(false);
   };
 
-  // Đảm bảo topics là mảng trước khi slice và map
   const validTopics = Array.isArray(topics) ? topics : [];
 
   return (
@@ -29,7 +40,7 @@ const Navbar = memo(function Navbar({ topics }) {
           <div className="flex">
             {validTopics.slice(0, 5).map((topic) => (
               <div
-                key={topic.id} // Sử dụng topic.id là key duy nhất
+                key={topic.id}
                 className={`flex items-center text-sm h-14 px-8 font-medium cursor-pointer
                 hover:bg-bgblue hover:text-pblue
                 ${
@@ -38,21 +49,21 @@ const Navbar = memo(function Navbar({ topics }) {
                     : "text-text"
                 }`}
                 onClick={() => handleNavigate(topic)}
-                role="button" // Thêm role cho accessibility
-                tabIndex={0} // Thêm tabIndex cho accessibility
-                onKeyPress={(e) => e.key === "Enter" && handleNavigate(topic)} // Accessibility
+                role="button"
+                tabIndex={0}
+                onKeyPress={(e) => e.key === "Enter" && handleNavigate(topic)}
               >
                 {topic.name?.toString().toUpperCase()}
               </div>
             ))}
           </div>
-          {validTopics.length > 5 && ( // Chỉ hiển thị nút Menu nếu có nhiều hơn 5 topics
-            <div>
+          {validTopics.length > 5 && (
+            <div ref={menuRef}>
               <Menu
-                className="text-text2 h-7 w-7 cursor-pointer hover:text-pblue" // Sửa w-h-7 thành w-7
+                className="text-text2 h-7 w-7 cursor-pointer hover:text-pblue"
                 onClick={handleClickToggle}
-                aria-expanded={isOpen} // Accessibility
-                aria-controls="topic-dropdown" // Accessibility
+                aria-expanded={isOpen}
+                aria-controls="topic-dropdown"
               />
               {isOpen && (
                 <div
@@ -61,7 +72,7 @@ const Navbar = memo(function Navbar({ topics }) {
                 >
                   {validTopics.slice(5).map((topic) => (
                     <div
-                      key={topic.id} // Sử dụng topic.id
+                      key={topic.id}
                       className={`flex items-center py-3 px-4 cursor-pointer
                       hover:bg-bgblue hover:text-pblue
                       ${
@@ -70,7 +81,7 @@ const Navbar = memo(function Navbar({ topics }) {
                           : "text-text"
                       }`}
                       onClick={() => handleNavigate(topic)}
-                      role="menuitem" // Accessibility
+                      role="menuitem"
                     >
                       {topic.name?.toString().toUpperCase()}
                     </div>

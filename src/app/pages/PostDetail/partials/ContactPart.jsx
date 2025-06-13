@@ -156,7 +156,8 @@ export default function ContactPart({ post, refreshPost }) {
         <div className="relative cursor-pointer">
           <img
             src={post?.avatarUrl || "/src/app/assets/images/defaultAvatar.jpg"}
-            className="w-14 h-14  object-cover rounded-full shadow-md"
+            className="w-14 h-14  object-cover rounded-full shadow-md cursor-pointer hover:scale-105"
+            onClick={() => nav(`/profile/${post?.userId}`)}
           />
           <div
             className=" h-5 w-5 flex items-center justify-center bg-white rounded-full shadow-md absolute bottom-[-7px] left-1/3"

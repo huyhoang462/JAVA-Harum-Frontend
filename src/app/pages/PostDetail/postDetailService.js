@@ -4,6 +4,7 @@ import { API_URL } from "../../../bkUrl";
 export const getPosticbyId = async (id) => {
   try {
     const res = await axios.get(`${API_URL}/posts/${id}`);
+    console.log("post này: ", res);
 
     return res;
   } catch (error) {
@@ -80,7 +81,6 @@ export const doFollow = async (followerId, followedId) => {
 export const getComment = async (postId) => {
   try {
     const res = await axios.get(`${API_URL}/comment/post/${postId}`);
-    console.log("comment này: ", res);
     return res;
   } catch (error) {
     console.error("Lỗi khi lấy comment:", error);

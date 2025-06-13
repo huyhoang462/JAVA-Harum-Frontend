@@ -119,7 +119,7 @@ const TabSection = () => {
     data,
     fetchNextPage,
     hasNextPage,
-    isFetching, // ✅ Lấy thêm cờ isFetching
+    isFetching,
     isFetchingNextPage,
     status,
     error,
@@ -145,11 +145,13 @@ const TabSection = () => {
   };
 
   const renderContent = () => {
-    // ✅ Sửa điều kiện hiển thị skeleton
-    // Hiển thị skeleton KHI VÀ CHỈ KHI:
-    // 1. Đang fetch dữ liệu (`isFetching` = true)
-    // 2. Không phải là fetch cho trang tiếp theo (`isFetchingNextPage` = false)
-    // 3. Chưa có bài viết nào để hiển thị (`allPosts.length` === 0)
+    if (!userId) {
+      return (
+        <p className="text-center text-gray-500 py-10">
+          Vui lòng đăng nhập để khám phá thêm.
+        </p>
+      );
+    }
     const isInitialLoading =
       isFetching && !isFetchingNextPage && allPosts.length === 0;
 
@@ -158,7 +160,6 @@ const TabSection = () => {
     }
 
     if (status === "error" && !isFetching) {
-      // Chỉ hiển thị lỗi khi không đang fetch
       return (
         <p className="text-center text-red-500">
           Lỗi: {error?.message || "Đã có lỗi xảy ra"}

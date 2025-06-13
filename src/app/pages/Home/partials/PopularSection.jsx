@@ -7,9 +7,6 @@ import formatDate from "../../../utils/formatDate";
 import { useNavigate } from "react-router-dom";
 import { navToDetail } from "../../../utils/navToDetail";
 
-// ===================================================================
-// 1. SKELETON COMPONENT: Giao diện chờ (Tái sử dụng từ lần trước)
-// ===================================================================
 const PostHSkeleton = () => {
   return (
     <div className="flex flex-col w-full animate-pulse">
@@ -34,9 +31,6 @@ const PostHSkeleton = () => {
   );
 };
 
-// ===================================================================
-// 2. POST COMPONENT: Giao diện bài viết (Tái sử dụng từ lần trước)
-// ===================================================================
 function PostH({ post }) {
   const nav = useNavigate();
   const userId = localStorage.getItem("user_id");
@@ -99,9 +93,6 @@ function PostH({ post }) {
   );
 }
 
-// ===================================================================
-// 3. MAIN SECTION: Component chính đã được cập nhật
-// ===================================================================
 function PopularSection() {
   const {
     data: popularPosts,

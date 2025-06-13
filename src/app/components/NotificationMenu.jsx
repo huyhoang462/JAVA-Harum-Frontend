@@ -38,7 +38,7 @@ export default function NotificationMenu() {
           nav(`/post-detail/${noti.postId}`);
           break;
         case "FOLLOW":
-          nav(`/otherprofile/${noti.followId}`);
+          nav(`/profile/${noti.followId}`);
           break;
         case "COMMENT":
           const resComment = await getCommentById(noti.commentId);
