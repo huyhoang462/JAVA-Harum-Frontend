@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Bookmark,
   BookMarked,
+  Flag,
   MessageSquare,
   ShieldUser,
   ThumbsDown,
@@ -13,6 +14,7 @@ import {
   checkFollow,
   checkSave,
   doFollow,
+  doReport,
   doSave,
   doVote,
   getVote,
@@ -21,12 +23,14 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { sFollow } from "../followStore";
 import { LoginRequiredModal } from "../../../components/LoginRequiredModal";
+import { ReportModal } from "./ReportModal";
 export default function ContactPart({ post, refreshPost }) {
   const isFollowing = sFollow.use();
   const userID = localStorage.getItem("user_id");
   const [voteType, setVoteType] = useState(null);
   const [isSave, setIsSave] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const nav = useNavigate();
   useEffect(() => {
     const fetchVote = async () => {
@@ -115,6 +119,30 @@ export default function ContactPart({ post, refreshPost }) {
       }
     } else setIsLoginModalOpen(true);
   };
+  const handleReportPost = async (postId, reason) => {
+    if (userID) {
+      console.log("user id ", userID);
+      if (userID === post?.userId) {
+        toast.warn("Không thể báo cáo bài viết của bản thân!");
+        setIsReportModalOpen(false);
+        return;
+      }
+      const report = {
+        reporterId: userID,
+        postId: postId,
+        reason: reason,
+        status: "PENDING",
+      };
+      const res = await doReport(report);
+      if (res?.status === 200) {
+        if (res?.data === "Already reported")
+          toast.info("Bạn đã từng báo cáo bài viết này!");
+        else if (res?.data === "Report submitted")
+          toast.success("Báo cáo thành công!");
+      }
+      setIsReportModalOpen(false);
+    } else setIsLoginModalOpen(true);
+  };
   return (
     <div>
       <LoginRequiredModal
@@ -122,6 +150,12 @@ export default function ContactPart({ post, refreshPost }) {
         onClose={() => setIsLoginModalOpen(false)}
         onLogin={() => nav("/login")}
       />{" "}
+      <ReportModal
+        type={"bài viết"}
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+        onConfirm={(reason) => handleReportPost(post.id, reason)}
+      />
       <div className="  text-text2 flex flex-col gap-y-4 items-center">
         <div className="mb-[-8px]">
           {voteType === "UPVOTE" ? (
@@ -191,10 +225,11 @@ export default function ContactPart({ post, refreshPost }) {
           )}
         </div>
         <div className="flex items-center justify-center flex-col text-ssm  ">
-          {/* <MessageSquare
+          <Flag
             className="h-5 cursor-pointer hover:text-pblue"
             strokeWidth={3}
-          /> */}
+            onClick={() => setIsReportModalOpen(true)}
+          />
         </div>
       </div>
     </div>

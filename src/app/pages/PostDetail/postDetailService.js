@@ -110,3 +110,23 @@ export const postReply = async (parentId, comment) => {
     return error;
   }
 };
+export const doReport = async (report) => {
+  try {
+    const res = await axios.post(`${API_URL}/post_reports`, report);
+
+    return res;
+  } catch (error) {
+    console.error("Lỗi khi report post:", error);
+    return error;
+  }
+};
+export const doReportComment = async (report) => {
+  try {
+    const res = await axios.post(`${API_URL}/comment_reports`, report);
+
+    return res;
+  } catch (error) {
+    console.error("Lỗi khi report comment:", error);
+    return error;
+  }
+};

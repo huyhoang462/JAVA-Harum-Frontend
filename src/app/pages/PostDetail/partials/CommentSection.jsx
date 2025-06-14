@@ -1,196 +1,23 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
+// src/features/postDetail/components/CommentSection.jsx
+
 import React, { useEffect, useState } from "react";
+import { Send } from "lucide-react";
 import {
-  Send,
-  MoreHorizontal,
-  Reply,
-  X,
-  ShieldAlert,
-  ChevronDown,
-} from "lucide-react";
-import { getComment, postComment, postReply } from "../postDetailService";
+  doReportComment,
+  getComment,
+  postComment,
+  postReply,
+} from "../postDetailService";
 import groupCommentsFlat from "../../../utils/groupComment";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { LoginRequiredModal } from "../../../components/LoginRequiredModal";
+import { ReportModal } from "./ReportModal";
+import CommentItem from "./CommentItem"; // Import component đã tách
 
 const PARENT_COMMENTS_PER_PAGE = 10;
 const REPLIES_PER_PAGE = 10;
 
-// --- Comment Item Component (Internal) ---
-// Component con để render một bình luận gốc và các phản hồi của nó
-const CommentItem = ({
-  commentGroup,
-  index,
-  onChooseParentComment,
-  onToggleReplies,
-  onLoadMoreReplies,
-  commentState,
-  isReplyInputVisible,
-  replyContent,
-  onReplyContentChange,
-  onPostReply,
-}) => {
-  const parentComment = commentGroup[0];
-  const replies = commentGroup.slice(1);
-  const totalReplies = replies.length;
-
-  // Lấy trạng thái của comment này
-  const { repliesVisible, visibleReplyCount } = commentState;
-
-  return (
-    <div className="py-4 border-b-gray-300 border-b">
-      {/* Comment gốc */}
-      <div className="px-4">
-        <div className="flex">
-          <div className="h-9 w-9 mr-3 flex-shrink-0">
-            <img
-              src={
-                parentComment?.avatarUrl ||
-                "/src/app/assets/images/defaultAvatar.jpg"
-              }
-              className="h-full w-full rounded-full object-cover border border-gray-200"
-              alt="Commenter avatar"
-            />
-          </div>
-          <div className="flex-1">
-            <div className="bg-gray-50 rounded-2xl px-4 py-2">
-              <div className="flex items-center justify-between">
-                <span className="font-medium text-sm text-text">
-                  {parentComment?.userName || "Anonymous"}
-                </span>
-                <MoreHorizontal
-                  size={16}
-                  className="text-gray-400 cursor-pointer"
-                />
-              </div>
-              <p className="mt-1 text-text text-sm">{parentComment?.content}</p>
-            </div>
-            <div className="flex items-center mt-2 pl-2 text-xs text-gray-500 space-x-4">
-              <span>{parentComment?.createdAt || "01-05-2025"}</span>
-              <button
-                className="flex items-center hover:text-pblue cursor-pointer"
-                onClick={() => onChooseParentComment(parentComment.id, index)}
-              >
-                <Reply size={14} className="mr-1" />
-                <span>Phản hồi</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Nút xem/ẩn và phần phản hồi */}
-      {totalReplies > 0 && (
-        <div className="pl-16 pr-4 mt-2">
-          <button
-            onClick={() => onToggleReplies(parentComment.id)}
-            className="text-xs font-semibold cursor-pointer text-gray-600 hover:text-pblue flex items-center"
-          >
-            {repliesVisible ? "Ẩn phản hồi" : `Xem ${totalReplies} phản hồi`}
-            <ChevronDown
-              size={16}
-              className={`ml-1 transition-transform ${
-                repliesVisible ? "rotate-180" : ""
-              }`}
-            />
-          </button>
-
-          {repliesVisible && (
-            <div className="mt-3 space-y-3">
-              {replies.slice(0, visibleReplyCount).map((reply) => (
-                <div key={reply.id} className="flex">
-                  <div className="h-8 w-8 mr-2 flex-shrink-0">
-                    <img
-                      src={
-                        reply?.avatarUrl ||
-                        "/src/app/assets/images/defaultAvatar.jpg"
-                      }
-                      className="h-full w-full rounded-full object-cover border border-gray-200"
-                      alt="Replier avatar"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <div className="bg-gray-50 rounded-2xl px-3 py-2">
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium text-xs text-gray-900">
-                          {reply?.userName || "Anonymous"}
-                        </span>
-                        <MoreHorizontal
-                          size={14}
-                          className="text-gray-400 cursor-pointer"
-                        />
-                      </div>
-                      <p className="mt-0.5 text-text text-xs">
-                        {reply.content}
-                      </p>
-                    </div>
-                    <div className="flex items-center mt-1 pl-2 text-xs text-gray-500 space-x-3">
-                      <span className="text-xs">
-                        {reply?.createdAt || "01-06-2025"}
-                      </span>
-                      <button
-                        className="flex items-center hover:text-pblue cursor-pointer"
-                        onClick={() =>
-                          onChooseParentComment(parentComment.id, index)
-                        }
-                      >
-                        <Reply size={12} className="mr-1" />
-                        <span>Phản hồi</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-              {visibleReplyCount < totalReplies && (
-                <button
-                  onClick={() => onLoadMoreReplies(parentComment.id)}
-                  className="text-xs font-semibold cursor-pointer text-gray-600 hover:text-pblue ml-10"
-                >
-                  Xem thêm phản hồi
-                </button>
-              )}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Input để phản hồi */}
-      <div className="px-4">
-        {isReplyInputVisible && (
-          <div className="mt-3 flex items-center">
-            <div className="h-8 w-8 mr-2 flex-shrink-0">
-              <img
-                src={
-                  localStorage.getItem("avatarUrl") !== "null"
-                    ? localStorage.getItem("avatarUrl")
-                    : "/src/app/assets/images/defaultAvatar.jpg"
-                }
-                className="h-full w-full rounded-full object-cover"
-                alt="Current user avatar"
-              />
-            </div>
-            <input
-              autoFocus
-              spellCheck="false"
-              type="text"
-              value={replyContent}
-              onChange={onReplyContentChange}
-              placeholder={`Phản hồi ${parentComment.userName}...`}
-              className="flex-1 bg-gray-100 rounded-full py-1.5 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-pblue"
-            />
-            <button className="ml-2 text-pblue mt-1" onClick={onPostReply}>
-              <Send size={18} className={"text-pblue cursor-pointer"} />
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-// --- Comment Section Component ---
 const CommentSection = ({ postId }) => {
   const [number, setNumber] = useState(0);
   const [comments, setComments] = useState([]);
@@ -198,10 +25,16 @@ const CommentSection = ({ postId }) => {
   const [replyContent, setReplyContent] = useState("");
   const [currentCommentId, setCurrentCommentId] = useState(null);
   const [currentCommentIndex, setCurrentCommentIndex] = useState(-1);
+
+  // State cho các modal
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+
+  // State mới để quản lý bình luận đang được báo cáo
+  const [reportingComment, setReportingComment] = useState(null);
+
   const navigate = useNavigate();
 
-  // ✅ State mới để quản lý hiển thị
   const [visibleParentCount, setVisibleParentCount] = useState(
     PARENT_COMMENTS_PER_PAGE
   );
@@ -222,7 +55,9 @@ const CommentSection = ({ postId }) => {
   };
 
   useEffect(() => {
-    fetchComment();
+    if (postId) {
+      fetchComment();
+    }
   }, [postId]);
 
   const chooseParentComment = (commentId, index) => {
@@ -233,18 +68,19 @@ const CommentSection = ({ postId }) => {
   };
 
   const handleComment = async (content, isReply = false) => {
-    if (!localStorage.getItem("user_id")) {
+    const userID = localStorage.getItem("user_id");
+    if (!userID) {
       setIsLoginModalOpen(true);
       return;
     }
 
-    if (!content) {
+    if (!content.trim()) {
       toast.warn("Vui lòng nhập nội dung!");
       return;
     }
 
     const data = {
-      userId: localStorage.getItem("user_id"),
+      userId: userID,
       postId: postId,
       content: content,
     };
@@ -274,7 +110,6 @@ const CommentSection = ({ postId }) => {
     navigate("/login");
   };
 
-  // ✅ Hàm mới để bật/tắt hiển thị phản hồi
   const toggleReplies = (commentId) => {
     setCommentStates((prev) => {
       const currentState = prev[commentId] || {};
@@ -289,7 +124,6 @@ const CommentSection = ({ postId }) => {
     });
   };
 
-  // ✅ Hàm mới để tải thêm phản hồi
   const loadMoreReplies = (commentId) => {
     setCommentStates((prev) => ({
       ...prev,
@@ -301,12 +135,76 @@ const CommentSection = ({ postId }) => {
     }));
   };
 
+  // --- LOGIC BÁO CÁO ĐÃ SỬA ---
+
+  const handleOpenReportModal = (commentToReport) => {
+    const userID = localStorage.getItem("user_id");
+    if (!userID) {
+      setIsLoginModalOpen(true);
+      return;
+    }
+
+    if (userID === commentToReport.userId) {
+      toast.warn("Không thể báo cáo bình luận của bản thân!");
+      return;
+    }
+
+    setReportingComment(commentToReport);
+    setIsReportModalOpen(true);
+  };
+
+  const handleReportComment = async (reason) => {
+    const userID = localStorage.getItem("user_id");
+
+    if (!reportingComment || !userID) {
+      toast.error("Đã có lỗi xảy ra, vui lòng thử lại.");
+      setIsReportModalOpen(false);
+      return;
+    }
+
+    const report = {
+      reporterId: userID,
+      commentId: reportingComment.id,
+      reason: reason,
+      status: "PENDING",
+    };
+
+    try {
+      const res = await doReportComment(report);
+      if (res?.status === 200) {
+        if (res?.data === "Already reported") {
+          toast.info("Bạn đã từng báo cáo bình luận này!");
+        } else if (res?.data === "Report submitted") {
+          toast.success("Báo cáo thành công!");
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Báo cáo thất bại, vui lòng thử lại.");
+    } finally {
+      setIsReportModalOpen(false);
+      setReportingComment(null);
+    }
+  };
+
+  const handleCloseReportModal = () => {
+    setIsReportModalOpen(false);
+    setReportingComment(null);
+  };
+
   return (
     <>
       <LoginRequiredModal
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
         onLogin={handleLoginRedirect}
+      />
+
+      <ReportModal
+        type={"bình luận"}
+        isOpen={isReportModalOpen}
+        onClose={handleCloseReportModal}
+        onConfirm={handleReportComment}
       />
 
       <div className="w-[800px] mx-auto mt-10 bg-white rounded-lg shadow-sm">
@@ -320,6 +218,7 @@ const CommentSection = ({ postId }) => {
           <div className="h-8 w-8 mr-3">
             <img
               src={
+                localStorage.getItem("avatarUrl") &&
                 localStorage.getItem("avatarUrl") !== "null"
                   ? localStorage.getItem("avatarUrl")
                   : "/src/app/assets/images/defaultAvatar.jpg"
@@ -346,7 +245,7 @@ const CommentSection = ({ postId }) => {
         </div>
 
         {/* Danh sách bình luận */}
-        <div className=" ">
+        <div>
           {comments.slice(0, visibleParentCount).map((commentGroup, index) => (
             <CommentItem
               key={commentGroup[0]?.id || index}
@@ -365,6 +264,7 @@ const CommentSection = ({ postId }) => {
               replyContent={currentCommentIndex === index ? replyContent : ""}
               onReplyContentChange={(e) => setReplyContent(e.target.value)}
               onPostReply={() => handleComment(replyContent, true)}
+              onReport={handleOpenReportModal} // Truyền hàm xử lý báo cáo xuống
             />
           ))}
         </div>
