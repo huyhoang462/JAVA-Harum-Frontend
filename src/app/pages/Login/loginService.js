@@ -7,7 +7,7 @@ export const handleLoginApi = async (email, password) => {
       email: email,
       passwordHash: password,
     });
-    console.log("dữ liệ: ", response.data);
+    console.log("đăng nhập: ", response.data);
     return response.data;
   } catch (error) {
     console.error("Lỗi khi đăng nhập:", error);

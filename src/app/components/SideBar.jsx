@@ -1,53 +1,74 @@
-import { House, MessageSquareMore, Pencil, User } from "lucide-react";
+// src/components/SideBar.jsx
+
+import {
+  Home,
+  MessageSquareQuote,
+  Pencil,
+  User,
+  ShieldAlert,
+} from "lucide-react";
 import React from "react";
 import { NavLink } from "react-router-dom";
 
+// Tách menuItems ra ngoài để dễ quản lý
+const menuItems = [
+  {
+    id: "users",
+    name: "Quản lý Người dùng",
+    path: "/admin/users",
+    icon: <User size={20} />,
+  },
+  {
+    id: "posts",
+    name: "Báo cáo Bài viết",
+    path: "/admin/posts",
+    icon: <Pencil size={20} />,
+  },
+  {
+    id: "comments",
+    name: "Báo cáo Bình luận",
+    path: "/admin/comments",
+    icon: <MessageSquareQuote size={20} />,
+  },
+];
+
 export default function SideBar() {
-  const menuItems = [
-    // {
-    //   name: "Trang chủ",
-    //   path: "/admin/",
-    //   icon: <House className="h-8  mr-2" strokeWidth={3} />,
-    // },
-    {
-      name: "Người dùng",
-      path: "/admin/users",
-      icon: <User className="h-8  mr-2" strokeWidth={3} />,
-    },
-    {
-      name: "Bài viết",
-      path: "/admin/posts",
-      icon: <Pencil className="h-8  mr-2" strokeWidth={3} />,
-    },
-    {
-      name: "Bình luận",
-      path: "/admin/comments",
-      icon: <MessageSquareMore className="h-8  mr-2" strokeWidth={3} />,
-    },
-  ];
   return (
-    <div className="w-wsidebar bg-gray-300 text-text fixed  border-[#A19393] font-bold text-md  h-screen ">
-      <div className="  py-4">
-        <img src="/logo.svg" className="h-24 mx-auto" />
+    // Nền tối, chữ sáng để tăng độ tương phản
+    <aside className="w-wsidebar bg-slate-800 text-gray-300 fixed h-screen flex flex-col">
+      {/* Logo Section */}
+      <div className="flex items-center justify-center p-6 border-b border-slate-700">
+        <img src="/logo.svg" className="h-12" alt="Logo" />
+        <h1 className="ml-3 text-xl font-bold text-white">Admin</h1>
       </div>
-      <ul>
-        {menuItems.map((item) => (
-          <NavLink
-            to={item.path}
-            key={item.path}
-            className={({ isActive }) =>
-              `h-16 px-8 cursor-pointer flex items-center ${
-                isActive
-                  ? "bg-gray-200 text-pblue  text-primary"
-                  : "hover:bg-gray-200 font-semibold hover:text-pblue"
-              }`
-            }
-          >
-            {item.icon}
-            <li>{item.name}</li>
-          </NavLink>
-        ))}
-      </ul>
-    </div>
+
+      {/* Navigation Links */}
+      <nav className="flex-1 mt-6">
+        <ul>
+          {menuItems.map((item) => (
+            <li key={item.id}>
+              <NavLink
+                to={item.path}
+                className={({ isActive }) =>
+                  `flex items-center py-3 px-6 mx-3 my-1 rounded-lg transition-all duration-200 ${
+                    isActive
+                      ? "bg-pblue text-white shadow-md"
+                      : "hover:bg-slate-700 hover:text-white"
+                  }`
+                }
+              >
+                <span className="mr-4">{item.icon}</span>
+                <span>{item.name}</span>
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      {/* Footer Section (Optional) */}
+      <div className="p-4 border-t border-slate-700 text-center text-xs text-slate-500">
+        <div>© 2024 Your Company</div>
+      </div>
+    </aside>
   );
 }

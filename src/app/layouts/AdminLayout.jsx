@@ -1,3 +1,5 @@
+// src/layouts/AdminLayout.jsx
+
 import React from "react";
 import { Outlet } from "react-router-dom";
 import SideBar from "../components/SideBar";
@@ -5,14 +7,19 @@ import AdminHeader from "../components/AdminHeader";
 
 export default function AdminLayout() {
   return (
-    <div className="bg-gray-200 min-h-screen">
+    // Nền chính của toàn bộ khu vực nội dung (phần bên phải sidebar)
+    <div className="bg-gray-100 min-h-screen">
       <SideBar />
-      <main className="flex flex-1 ml-wsidebar">
+
+      {/* Container cho phần nội dung bên phải */}
+      <div className="ml-wsidebar">
         <AdminHeader />
-        <div className="flex-1  mt-hheader bg-gray-200">
+
+        {/* Khu vực nội dung chính, có padding và cách header một khoảng */}
+        <main className="p-6 ">
           <Outlet />
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
   );
 }
