@@ -19,7 +19,7 @@ export default function Post({ post }) {
     >
       <div className="mb-2">
         <img
-          src={imageUrl || "/public/defaultImage.png"}
+          src={imageUrl || "/defaultImage.png"}
           className="h-36 w-full object-cover "
         />
       </div>

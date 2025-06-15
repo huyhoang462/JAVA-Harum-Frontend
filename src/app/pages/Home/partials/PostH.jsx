@@ -18,7 +18,7 @@ export default function PostH({ post }) {
     >
       <div className="mb-2 w-full">
         <img
-          src={imageUrl || "/public/defaultImage.png"}
+          src={imageUrl || "/defaultImage.png"}
           className="rounded-sm h-[172px] w-full object-cover"
         />
       </div>
@@ -32,7 +32,7 @@ export default function PostH({ post }) {
             <div className="flex items-center">
               <div className="mr-2">
                 <img
-                  src={post?.userImage || "/public/defaultAvatar.jpg"}
+                  src={post?.userImage || "/defaultAvatar.jpg"}
                   className="h-8 w-8 object-cover rounded-full "
                 />
               </div>

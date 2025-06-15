@@ -189,7 +189,7 @@ export default function ContactPart({ post, refreshPost }) {
         <p>{post?.countDislike}</p>
         <div className="relative cursor-pointer">
           <img
-            src={post?.avatarUrl || "/public/defaultAvatar.jpg"}
+            src={post?.avatarUrl || "/defaultAvatar.jpg"}
             className="w-14 h-14  object-cover rounded-full shadow-md cursor-pointer hover:scale-105"
             onClick={() => nav(`/profile/${post?.userId}`)}
           />

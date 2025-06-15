@@ -137,7 +137,7 @@ const ProfileEdit = () => {
             onClick={() => avatarInputRef.current.click()}
           >
             <img
-              src={avatarPreview || "/public/defaultAvatar.jpg"} // Cập nhật đường dẫn nếu cần
+              src={avatarPreview || "/defaultAvatar.jpg"} // Cập nhật đường dẫn nếu cần
               alt="Avatar Preview"
               className="w-36 h-36 object-cover rounded-full border-4 border-gray-100 shadow-md transition-transform transform group-hover:scale-105"
             />

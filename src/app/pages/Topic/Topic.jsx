@@ -69,7 +69,7 @@ export default function Topic() {
       case "67f3596980e7a31c46a4e33c":
         return "/public/xahoi.png";
       default:
-        return "/public/defaultImage.png"; // nếu không khớp thì trả về ảnh mặc định
+        return "/defaultImage.png"; // nếu không khớp thì trả về ảnh mặc định
     }
   };
 

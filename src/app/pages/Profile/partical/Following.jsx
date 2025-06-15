@@ -21,7 +21,7 @@ export default function Following({ user, refresh }) {
       onClick={() => nav(`/profile/${user.id}`)}
     >
       <img
-        src={user.avatarUrl || "/public/defaultAvatar.jpg"}
+        src={user.avatarUrl || "/defaultAvatar.jpg"}
         alt={`${user.username}'s avatar`}
         className="w-12 h-12 object-cover rounded-full mr-4 shrink-0"
       />

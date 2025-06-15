@@ -18,7 +18,7 @@ export default function PostV({ post }) {
     >
       <div>
         <img
-          src={imageUrl || "/public/defaultImage.png"}
+          src={imageUrl || "/defaultImage.png"}
           className="h-40 w-60 rounded-md object-cover"
         />
       </div>
@@ -35,7 +35,7 @@ export default function PostV({ post }) {
         <div className="flex justify-between items-center">
           <div className=" flex items-center ">
             <img
-              src={post?.userImage || "/public/defaultAvatar.jpg"}
+              src={post?.userImage || "/defaultAvatar.jpg"}
               className="rounded-full h-10 w-10 object-cover mr-2.5"
             />
             <div className="font-bold line-clamp-1 max-w-16 text-sm mr-2">

@@ -22,7 +22,7 @@ export default function AdminHeader() {
           <button className="flex items-center space-x-2 text-left hover:bg-gray-100 p-2 rounded-lg">
             <img
               className="rounded-full h-10 w-10 object-cover"
-              src="/public/defaultAvatar.jpg"
+              src="/defaultAvatar.jpg"
               alt="Admin Avatar"
             />
             <div className="hidden sm:block">

@@ -19,7 +19,7 @@ export default function Post({ post }) {
     >
       <div className="mb-2 w-full overflow-hidden rounded-sm">
         <img
-          src={imageUrl || "/public/defaultImage.png"}
+          src={imageUrl || "/defaultImage.png"}
           alt={post?.title}
           className="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
@@ -34,7 +34,7 @@ export default function Post({ post }) {
           <div className="flex items-center">
             <div className="mr-2">
               <img
-                src={post?.userImage || "/public/defaultAvatar.jpg"}
+                src={post?.userImage || "/defaultAvatar.jpg"}
                 alt={post?.username}
                 className="h-8 w-8 object-cover rounded-full"
               />

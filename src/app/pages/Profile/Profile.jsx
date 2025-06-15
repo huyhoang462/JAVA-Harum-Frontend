@@ -96,7 +96,7 @@ export default function Profile() {
             <div className="relative">
               <img
                 className="h-36 w-36 object-cover rounded-full border-4 border-white bg-white shadow-lg"
-                src={user.avatarUrl || "/public/defaultAvatar.jpg"}
+                src={user.avatarUrl || "/defaultAvatar.jpg"}
                 alt="avatar"
               />
             </div>

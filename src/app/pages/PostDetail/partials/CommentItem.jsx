@@ -28,7 +28,7 @@ const CommentItem = ({
         <div className="flex">
           <div className="h-9 w-9 mr-3 flex-shrink-0">
             <img
-              src={parentComment?.avatarUrl || "/public/defaultAvatar.jpg"}
+              src={parentComment?.avatarUrl || "/defaultAvatar.jpg"}
               className="h-full w-full rounded-full object-cover border border-gray-200"
               alt="Commenter avatar"
             />
@@ -84,7 +84,7 @@ const CommentItem = ({
                 <div key={reply.id} className="flex">
                   <div className="h-8 w-8 mr-2 flex-shrink-0">
                     <img
-                      src={reply?.avatarUrl || "/public/defaultAvatar.jpg"}
+                      src={reply?.avatarUrl || "/defaultAvatar.jpg"}
                       className="h-full w-full rounded-full object-cover border border-gray-200"
                       alt="Replier avatar"
                     />
@@ -145,7 +145,7 @@ const CommentItem = ({
                 src={
                   localStorage.getItem("avatarUrl") !== "null"
                     ? localStorage.getItem("avatarUrl")
-                    : "/public/defaultAvatar.jpg"
+                    : "/defaultAvatar.jpg"
                 }
                 className="h-full w-full rounded-full object-cover"
                 alt="Current user avatar"

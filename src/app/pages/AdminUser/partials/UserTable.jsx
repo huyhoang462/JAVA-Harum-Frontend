@@ -75,7 +75,7 @@ const UserTable = ({ users, isLoading, isError, error }) => {
                 <div className="flex items-center">
                   <img
                     className="w-10 h-10 rounded-full object-cover mr-3"
-                    src={user.avatarUrl || "/public/defaultAvatar.jpg"}
+                    src={user.avatarUrl || "/defaultAvatar.jpg"}
                     alt={user.username}
                   />
                   <div>

@@ -40,8 +40,9 @@ export default function PostContent({ post }) {
         <div className="flex justify-between mt-4 items-center">
           <div className="flex  items-center">
             <img
-              className="w-14 h-14  object-cover rounded-full mr-2.5"
-              src={post?.user?.avatar || "/public/defaultAvatar.jpg"}
+              className="w-14 h-14  object-cover rounded-full mr-2.5 cursor-pointer hover:scale-105 shadow-sm"
+              onClick={() => nav(`/profile/${post?.userId}`)}
+              src={post?.user?.avatar || "/defaultAvatar.jpg"}
             />
             <div className="text-sm font-semibold">
               <p className="text-text">{post?.username || "Người dùng A"}</p>
