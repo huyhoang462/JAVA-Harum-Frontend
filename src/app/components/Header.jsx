@@ -175,7 +175,7 @@ export default function Header({ textColor }) {
                     src={
                       localStorage.getItem("avatarUrl") !== "null"
                         ? localStorage.getItem("avatarUrl")
-                        : "/src/app/assets/images/defaultAvatar.jpg"
+                        : "/public/defaultAvatar.jpg"
                     }
                     alt="Avatar"
                   />

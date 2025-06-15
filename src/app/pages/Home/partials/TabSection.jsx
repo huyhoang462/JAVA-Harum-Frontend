@@ -53,7 +53,7 @@ function PostV({ post }) {
     >
       <div className="flex-shrink-0">
         <img
-          src={imageUrl || "/src/app/assets/images/defaultImage.png"}
+          src={imageUrl || "/public/defaultImage.png"}
           alt={post?.title}
           className="h-40 w-72 object-cover rounded-md"
         />
@@ -70,9 +70,7 @@ function PostV({ post }) {
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <img
-              src={
-                post?.userImage || "/src/app/assets/images/defaultAvatar.jpg"
-              }
+              src={post?.userImage || "/public/defaultAvatar.jpg"}
               alt={post?.username}
               className="rounded-full h-10 w-10 object-cover mr-2.5"
             />

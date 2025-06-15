@@ -41,9 +41,7 @@ export default function PostContent({ post }) {
           <div className="flex  items-center">
             <img
               className="w-14 h-14  object-cover rounded-full mr-2.5"
-              src={
-                post?.user?.avatar || "/src/app/assets/images/defaultAvatar.jpg"
-              }
+              src={post?.user?.avatar || "/public/defaultAvatar.jpg"}
             />
             <div className="text-sm font-semibold">
               <p className="text-text">{post?.username || "Người dùng A"}</p>

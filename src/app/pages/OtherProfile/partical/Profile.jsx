@@ -51,7 +51,7 @@ export default function Profile({ user, refresh }) {
       <div className="relative">
         <img
           className="h-36 w-36 object-cover rounded-full border-4 border-white bg-white shadow-lg"
-          src={user.avatarUrl || "/src/app/assets/images/defaultAvatar.jpg"}
+          src={user.avatarUrl || "/public/defaultAvatar.jpg"}
           alt={user.username}
         />
       </div>

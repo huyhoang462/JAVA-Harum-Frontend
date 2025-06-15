@@ -221,7 +221,7 @@ const CommentSection = ({ postId }) => {
                 localStorage.getItem("avatarUrl") &&
                 localStorage.getItem("avatarUrl") !== "null"
                   ? localStorage.getItem("avatarUrl")
-                  : "/src/app/assets/images/defaultAvatar.jpg"
+                  : "/public/defaultAvatar.jpg"
               }
               className="h-full w-full rounded-full object-cover"
               alt="User avatar"
