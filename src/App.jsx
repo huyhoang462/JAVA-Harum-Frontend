@@ -21,6 +21,7 @@ import UserPage from "./app/pages/AdminUser/AdminUser";
 import PostPage from "./app/pages/AdminPost/AdminPost";
 import CommentPage from "./app/pages/AdminComment/AdminComment";
 import ProfileRouter from "./app/pages/ProfileRoute/ProfileRoute";
+import AdminWatchPost from "./app/pages/AdminPost/partials/AdminWatchPost";
 function App() {
   return (
     <>
@@ -86,6 +87,7 @@ function App() {
           <Route path="/admin" element={<AdminLayout />}>
             <Route path="users" element={<UserPage />} />
             <Route path="posts" element={<PostPage />} />
+            <Route path="posts/:id" element={<AdminWatchPost />} />
             <Route path="comments" element={<CommentPage />} />
           </Route>
         </Routes>

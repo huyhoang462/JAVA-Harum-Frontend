@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Flag, Reply, ChevronDown, Send } from "lucide-react";
-
+import formatDate from "../../../utils/formatDate";
 const CommentItem = ({
   commentGroup,
   index,
@@ -37,7 +37,7 @@ const CommentItem = ({
             <div className="bg-gray-50 rounded-2xl px-4 py-2">
               <div className="flex items-center justify-between">
                 <span className="font-medium text-sm text-text">
-                  {parentComment?.userName || "Anonymous"}
+                  {parentComment?.username || "Anonymous"}
                 </span>
                 {/* Sửa ở đây: Gọi onReport với thông tin của parentComment */}
                 <Flag
@@ -49,7 +49,9 @@ const CommentItem = ({
               <p className="mt-1 text-text text-sm">{parentComment?.content}</p>
             </div>
             <div className="flex items-center mt-2 pl-2 text-xs text-gray-500 space-x-4">
-              <span>{parentComment?.createdAt || "01-05-2025"}</span>
+              <span>
+                {formatDate(parentComment?.createdAt) || "01-05-2025"}
+              </span>
               <button
                 className="flex items-center hover:text-pblue cursor-pointer"
                 onClick={() => onChooseParentComment(parentComment.id, index)}
@@ -93,7 +95,7 @@ const CommentItem = ({
                     <div className="bg-gray-50 rounded-2xl px-3 py-2">
                       <div className="flex items-center justify-between">
                         <span className="font-medium text-xs text-gray-900">
-                          {reply?.userName || "Anonymous"}
+                          {reply?.username || "Anonymous"}
                         </span>
                         {/* Sửa ở đây: Gọi onReport với thông tin của reply */}
                         <Flag
@@ -108,7 +110,7 @@ const CommentItem = ({
                     </div>
                     <div className="flex items-center mt-1 pl-2 text-xs text-gray-500 space-x-3">
                       <span className="text-xs">
-                        {reply?.createdAt || "01-06-2025"}
+                        {formatDate(reply?.createdAt) || "01-06-2025"}
                       </span>
                       <button
                         className="flex items-center hover:text-pblue cursor-pointer"
@@ -157,7 +159,7 @@ const CommentItem = ({
               type="text"
               value={replyContent}
               onChange={onReplyContentChange}
-              placeholder={`Phản hồi ${parentComment.userName}...`}
+              placeholder={`Phản hồi ${parentComment.username}...`}
               className="flex-1 bg-gray-100 rounded-full py-1.5 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-pblue"
             />
             <button className="ml-2 text-pblue mt-1" onClick={onPostReply}>
