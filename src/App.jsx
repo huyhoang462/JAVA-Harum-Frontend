@@ -22,77 +22,83 @@ import PostPage from "./app/pages/AdminPost/AdminPost";
 import CommentPage from "./app/pages/AdminComment/AdminComment";
 import ProfileRouter from "./app/pages/ProfileRoute/ProfileRoute";
 import AdminWatchPost from "./app/pages/AdminPost/partials/AdminWatchPost";
+import { AuthProvider } from "./app/contexts/AuthContext";
+import AdminRoute from "./app/routes/AdminRoute";
 function App() {
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="*" element={<NotFound />} />
-          <Route element={<DefaultLayout />}>
-            <Route path="/" element={<Home />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/post-detail/:id" element={<PostDetail />} />
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="*" element={<NotFound />} />
+            <Route element={<DefaultLayout />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/post-detail/:id" element={<PostDetail />} />
 
-            <Route path="/topic/:id" element={<Topic />} />
-          </Route>
-          <Route element={<AccessLayout />}>
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-          </Route>
-          <Route element={<ProfileLayout />}>
-            <Route path="/profile/:id" element={<ProfileRouter />} />
-            <Route
-              path="/profileedit"
-              element={
-                <PrivatePart>
-                  <ProfileSetting />
-                </PrivatePart>
-              }
-            />
-            <Route
-              path="/changepassword"
-              element={
-                <PrivatePart>
-                  <ProfileSetting />
-                </PrivatePart>
-              }
-            />
-          </Route>
-          <Route element={<WriteLayout />}>
-            <Route
-              path="/write-post"
-              element={
-                <PrivatePart>
-                  <WritePost />
-                </PrivatePart>
-              }
-            />
-            <Route
-              path="/message"
-              element={
-                <PrivatePart>
-                  <Message />
-                </PrivatePart>
-              }
-            />
-            <Route
-              path="/edit-post/:id"
-              element={
-                <PrivatePart>
-                  <EditPost />
-                </PrivatePart>
-              }
-            />
-          </Route>
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route path="users" element={<UserPage />} />
-            <Route path="posts" element={<PostPage />} />
-            <Route path="posts/:id" element={<AdminWatchPost />} />
-            <Route path="comments" element={<CommentPage />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-      <ToastContainer autoClose={2000} />
+              <Route path="/topic/:id" element={<Topic />} />
+            </Route>
+            <Route element={<AccessLayout />}>
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+            </Route>
+            <Route element={<ProfileLayout />}>
+              <Route path="/profile/:id" element={<ProfileRouter />} />
+              <Route
+                path="/profileedit"
+                element={
+                  <PrivatePart>
+                    <ProfileSetting />
+                  </PrivatePart>
+                }
+              />
+              <Route
+                path="/changepassword"
+                element={
+                  <PrivatePart>
+                    <ProfileSetting />
+                  </PrivatePart>
+                }
+              />
+            </Route>
+            <Route element={<WriteLayout />}>
+              <Route
+                path="/write-post"
+                element={
+                  <PrivatePart>
+                    <WritePost />
+                  </PrivatePart>
+                }
+              />
+              <Route
+                path="/message"
+                element={
+                  <PrivatePart>
+                    <Message />
+                  </PrivatePart>
+                }
+              />
+              <Route
+                path="/edit-post/:id"
+                element={
+                  <PrivatePart>
+                    <EditPost />
+                  </PrivatePart>
+                }
+              />
+            </Route>
+            <Route element={<AdminRoute />}>
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route path="users" element={<UserPage />} />
+                <Route path="posts" element={<PostPage />} />
+                <Route path="posts/:id" element={<AdminWatchPost />} />
+                <Route path="comments" element={<CommentPage />} />
+              </Route>
+            </Route>
+          </Routes>
+        </BrowserRouter>
+        <ToastContainer autoClose={2000} />
+      </AuthProvider>
     </>
   );
 }

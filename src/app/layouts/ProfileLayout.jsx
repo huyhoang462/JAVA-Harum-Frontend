@@ -6,7 +6,7 @@ import Header from "../components/Header";
 export default function ProfileLayout() {
   return (
     <div className="bg-white ">
-      <div className="relative bg-[url('/public/sach.jpg')] bg-cover bg-center pt-2.5 mt-[-10px]">
+      <div className="relative bg-[url('/sach.jpg')] bg-cover bg-center pt-2.5 mt-[-10px]">
         <div className="absolute inset-0 bg-black/53"></div>
 
         <div className="relative z-5 mx-auto max-w-6xl ">

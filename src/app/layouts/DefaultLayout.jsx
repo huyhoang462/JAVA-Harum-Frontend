@@ -4,13 +4,15 @@ import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
+import NavbarSkeleton from "../components/NavBarSkeleton";
+import FullScreenError from "../components/FullScreenError"; // <-- Import component lỗi
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { API_URL } from "../../bkUrl";
 
 const getTopics = async () => {
   const res = await axios.get(`${API_URL}/topics`);
-  return res.data; // Giả sử res.data là một mảng các topics
+  return res.data;
 };
 
 export default function DefaultLayout() {
@@ -18,28 +20,22 @@ export default function DefaultLayout() {
     data: topics,
     isLoading,
     isError,
-    error, // Thêm error để có thể hiển thị chi tiết lỗi nếu cần
   } = useQuery({
     queryKey: ["topics"],
     queryFn: getTopics,
+    retry: false,
+    refetchOnWindowFocus: false,
   });
 
-  if (isLoading)
-    return (
-      <div className="text-center py-10">Đang tải thanh điều hướng...</div>
-    );
-  if (isError)
-    return (
-      <div className="text-center py-10 text-red-500">
-        Lỗi khi tải topics: {error?.message || "Unknown error"}
-      </div>
-    );
+  if (isError) {
+    return <FullScreenError />;
+  }
 
   return (
     <div className="bg-white">
       <Header textColor="text2" />
-      {/* Chỉ render Navbar nếu có topics */}
-      {topics && topics.length > 0 && <Navbar topics={topics} />}
+      {isLoading ? <NavbarSkeleton /> : <Navbar topics={topics} />}
+
       <div className="min-h-[calc(100svh-var(--spacing-hheader)-var(--spacing-hnavbar))]">
         <Outlet />
       </div>

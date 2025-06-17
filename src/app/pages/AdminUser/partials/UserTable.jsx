@@ -1,7 +1,7 @@
 // src/pages/admin/components/UserTable.jsx
 
 import React from "react";
-import { Edit, Trash2 } from "lucide-react";
+import { Edit } from "lucide-react";
 
 const Badge = ({ children, colorClass }) => (
   <span
@@ -31,7 +31,13 @@ const getRoleBadge = (roleName) => {
   }
 };
 
-const UserTable = ({ users, isLoading, isError, error }) => {
+const UserTable = ({
+  users,
+  onRequestChangeStatus,
+  isLoading,
+  isError,
+  error,
+}) => {
   if (isLoading) {
     return <div className="text-center p-8">Đang tải dữ liệu...</div>;
   }
@@ -90,28 +96,28 @@ const UserTable = ({ users, isLoading, isError, error }) => {
               <td className="px-6 py-4">
                 <Badge
                   colorClass={
-                    user.status === "BANNED"
-                      ? "bg-yellow-100 text-yellow-700"
-                      : "bg-green-100 text-green-700"
+                    user.status === "ENABLE"
+                      ? "bg-green-100 text-green-700"
+                      : "bg-yellow-100 text-yellow-800"
                   }
                 >
-                  {user.status || "Active"}
+                  {user.status === "ENABLE" ? "Hoạt động" : "Vô hiệu hóa"}
                 </Badge>
               </td>
               <td className="px-6 py-4">{formatDate(user.createdAt)}</td>
               <td className="px-6 py-4 text-center">
-                <div className="flex items-center justify-center space-x-2">
+                <div className="flex items-center justify-center">
                   <button
-                    className="p-2 text-blue-600 hover:bg-blue-100 rounded-full"
-                    title="Sửa người dùng"
+                    disabled={user.role.roleName === "ADMIN"}
+                    onClick={() => onRequestChangeStatus(user.id, user.status)}
+                    className="p-2 text-sblue hover:bg-blue-100 rounded-full disabled:text-gray-300 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+                    title={
+                      user.status === "ENABLE"
+                        ? "Vô hiệu hóa tài khoản"
+                        : "Kích hoạt lại tài khoản"
+                    }
                   >
                     <Edit size={18} />
-                  </button>
-                  <button
-                    className="p-2 text-red-600 hover:bg-red-100 rounded-full"
-                    title="Xóa người dùng"
-                  >
-                    <Trash2 size={18} />
                   </button>
                 </div>
               </td>

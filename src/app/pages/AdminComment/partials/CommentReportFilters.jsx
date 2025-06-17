@@ -39,8 +39,8 @@ const CommentReportFilters = ({ onFilterChange }) => {
       >
         <option value="ALL">Tất cả trạng thái</option>
         <option value="PENDING">Chờ xử lý</option>
-        <option value="REVIEWED">Đã xem</option>
-        <option value="RESOLVED">Đã giải quyết</option>
+        <option value="REVIEWED">Đã bỏ qua</option>
+        <option value="RESOLVED">Đã ẩn</option>
       </select>
     </div>
   );

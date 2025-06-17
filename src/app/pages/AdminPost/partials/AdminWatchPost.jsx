@@ -56,7 +56,7 @@ export default function AdminWatchPost() {
   }
 
   return (
-    <div className="px-6 py-2 bg-gray-100 min-h-full">
+    <div className="px-6 py-2 mt-4 bg-gray-100 min-h-full">
       <div className="flex  mb-[-44px] items-center">
         <Link
           to="/admin/posts"

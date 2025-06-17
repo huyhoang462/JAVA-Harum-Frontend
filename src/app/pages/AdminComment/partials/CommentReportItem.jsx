@@ -19,11 +19,9 @@ const getStatusBadge = (status) => {
         <Badge colorClass="bg-yellow-100 text-yellow-800">Chờ xử lý</Badge>
       );
     case "REVIEWED":
-      return <Badge colorClass="bg-blue-100 text-blue-800">Đã xem</Badge>;
+      return <Badge colorClass="bg-green-100 text-green-800">Đã bỏ qua</Badge>;
     case "RESOLVED":
-      return (
-        <Badge colorClass="bg-green-100 text-green-800">Đã giải quyết</Badge>
-      );
+      return <Badge colorClass="bg-red-100 text-red-600">Đã ẩn</Badge>;
     default:
       return <Badge colorClass="bg-gray-100 text-gray-800">{status}</Badge>;
   }
@@ -71,24 +69,23 @@ const CommentReportItem = ({ report, onDismiss, onDeleteComment }) => {
             avatar={report.commentOwnerAvatar}
             role="Chủ bình luận"
           />
+          <div className="">
+            <div className="flex  items-center text-gray-600">
+              {/* <MessageSquare
+                size={18}
+                className="mr-3 mt-1 flex-shrink-0 text-pblue"
+              /> */}
+              <p className="bg-gray-100 p-3 rounded-md text-sm italic">
+                "{report.commentContent}"
+              </p>
+            </div>
+          </div>
         </div>
         {getStatusBadge(report.status)}
       </div>
 
       {/* Nội dung bình luận bị báo cáo */}
-      <div className="mb-4">
-        <div className="flex items-start text-gray-600">
-          <MessageSquare
-            size={18}
-            className="mr-3 mt-1 flex-shrink-0 text-pblue"
-          />
-          <p className="bg-gray-100 p-3 rounded-md text-sm italic">
-            "{report.commentContent}"
-          </p>
-        </div>
-      </div>
 
-      {/* Lý do báo cáo */}
       <div className="mb-4">
         <p className="text-sm text-gray-800">
           <strong className="font-semibold">Lý do báo cáo:</strong>{" "}
@@ -96,28 +93,29 @@ const CommentReportItem = ({ report, onDismiss, onDeleteComment }) => {
         </p>
       </div>
 
-      {/* Footer: Thời gian và Hành động */}
       <div className="mt-4 flex justify-between items-center">
         <div className="flex items-center text-xs text-gray-500">
           <Clock size={14} className="mr-1.5" />
           <span>{formatDate(report.createdAt)}</span>
         </div>
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={() => onDismiss(report.reportId)}
-            className="flex items-center cursor-pointer text-sm font-semibold text-green-600 bg-green-50 hover:bg-green-100 px-3 py-1.5 rounded-md transition-colors"
-          >
-            <Check size={16} className="mr-1.5" />
-            Bỏ qua
-          </button>
-          <button
-            onClick={() => onDeleteComment(report.commentId, report.reportId)}
-            className="flex items-center cursor-pointer text-sm font-semibold text-red-600 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-md transition-colors"
-          >
-            <Trash2 size={16} className="mr-1.5" />
-            Xóa bình luận
-          </button>
-        </div>
+        {report.status === "PENDING" && (
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => onDismiss(report.reportId)}
+              className="flex items-center cursor-pointer text-sm font-semibold text-green-600 bg-green-50 hover:bg-green-100 px-3 py-1.5 rounded-md transition-colors"
+            >
+              <Check size={16} className="mr-1.5" />
+              Bỏ qua
+            </button>
+            <button
+              onClick={() => onDeleteComment(report.commentId, report.reportId)}
+              className="flex items-center cursor-pointer text-sm font-semibold text-red-600 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-md transition-colors"
+            >
+              <Trash2 size={16} className="mr-1.5" />
+              Ẩn bình luận
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -34,7 +34,6 @@ const menuItems = [
 
 export default function SideBar() {
   return (
-    // Nền tối, chữ sáng để tăng độ tương phản
     <aside className="w-wsidebar bg-slate-800 text-gray-300 fixed h-screen flex flex-col">
       {/* Logo Section */}
       <div className="flex items-center justify-center p-6 border-b border-slate-700">
@@ -42,7 +41,6 @@ export default function SideBar() {
         <h1 className="ml-3 text-xl font-bold text-white">Admin</h1>
       </div>
 
-      {/* Navigation Links */}
       <nav className="flex-1 mt-6">
         <ul>
           {menuItems.map((item) => (
@@ -65,9 +63,8 @@ export default function SideBar() {
         </ul>
       </nav>
 
-      {/* Footer Section (Optional) */}
       <div className="p-4 border-t border-slate-700 text-center text-xs text-slate-500">
-        <div>© 2024 Your Company</div>
+        <div>© 2025 Harum08</div>
       </div>
     </aside>
   );

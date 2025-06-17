@@ -19,11 +19,9 @@ const getStatusBadge = (status) => {
         <Badge colorClass="bg-yellow-100 text-yellow-800">Chờ xử lý</Badge>
       );
     case "REVIEWED":
-      return <Badge colorClass="bg-blue-100 text-blue-800">Đã xem</Badge>;
+      return <Badge colorClass="bg-green-100 text-green-800">Đã bỏ qua</Badge>;
     case "RESOLVED":
-      return (
-        <Badge colorClass="bg-green-100 text-green-800">Đã giải quyết</Badge>
-      );
+      return <Badge colorClass="bg-red-100 text-red-500">Đã ẩn</Badge>;
     default:
       return <Badge colorClass="bg-gray-100 text-gray-800">{status}</Badge>;
   }
@@ -93,22 +91,24 @@ const PostReportItem = ({ report, onDismiss, onDeletePost }) => {
           <Clock size={14} className="mr-1.5" />
           <span>{formatDate(report.createdAt)}</span>
         </div>
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={handleDismissClick}
-            className="flex items-center cursor-pointer text-sm font-semibold text-green-600 bg-green-50 hover:bg-green-100 px-3 py-1.5 rounded-md transition-colors"
-          >
-            <Check size={16} className="mr-1.5" />
-            Bỏ qua
-          </button>
-          <button
-            onClick={handleDeleteClick}
-            className="flex items-center cursor-pointer text-sm font-semibold text-red-600 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-md transition-colors"
-          >
-            <Trash2 size={16} className="mr-1.5" />
-            Xóa bài viết
-          </button>
-        </div>
+        {report.status === "PENDING" && (
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={handleDismissClick}
+              className="flex items-center cursor-pointer text-sm font-semibold text-green-600 bg-green-50 hover:bg-green-100 px-3 py-1.5 rounded-md transition-colors"
+            >
+              <Check size={16} className="mr-1.5" />
+              Bỏ qua
+            </button>
+            <button
+              onClick={handleDeleteClick}
+              className="flex items-center cursor-pointer text-sm font-semibold text-red-600 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-md transition-colors"
+            >
+              <Trash2 size={16} className="mr-1.5" />
+              Xóa bài viết
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

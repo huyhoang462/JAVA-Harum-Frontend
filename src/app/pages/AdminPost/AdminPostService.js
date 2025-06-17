@@ -27,3 +27,32 @@ export const getPostByIdForAdmin = async (id) => {
     throw error;
   }
 };
+
+export const updatePostReportStatus = async (reportId, status) => {
+  try {
+    const response = await axios.put(
+      `${API_URL}/post_reports/${reportId}`,
+      status,
+      { headers: { "Content-Type": "application/json" } }
+    );
+    console.log("UPDATE báo cáo post: ", response);
+
+    return response;
+  } catch (error) {
+    console.error(`Lỗi khi update bỏ qua post`, error);
+    throw error;
+  }
+};
+export const updatePostStatus = async (postId) => {
+  try {
+    const response = await axios.put(
+      `${API_URL}/posts/${postId}/toggle-status`
+    );
+    console.log("Update post: ", response);
+
+    return response;
+  } catch (error) {
+    console.error(`Lỗi khi update post`, error);
+    throw error;
+  }
+};

@@ -1,10 +1,11 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ForgetPassword from "./partials/ForgetPassword";
-import { Eye, EyeClosed, X } from "lucide-react";
-import { toast } from "react-toastify";
+import { Eye, EyeOff, X } from "lucide-react";
 import { getUserById, handleLoginApi } from "./loginService";
 import { sGlobalInfo } from "../../stores/globalStore";
+
 export default function Login() {
   const nav = useNavigate();
   const [isShowModal, setIsShowModal] = useState(false);
@@ -16,10 +17,11 @@ export default function Login() {
   const [savedAccounts, setSavedAccounts] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
 
+  const [errorMsg, setErrorMsg] = useState("");
+
   useEffect(() => {
     const accounts = JSON.parse(localStorage.getItem("accounts")) || [];
     setSavedAccounts(accounts);
-    console.log("accuont: ", accounts);
   }, []);
 
   const handleForgotPassword = () => {
@@ -31,35 +33,46 @@ export default function Login() {
   };
 
   const loggin = async () => {
-    const res = await handleLoginApi(email, password);
-    if (!res) {
-      toast.error("Sai thông tin đăng nhập");
-    } else {
-      localStorage.setItem("user_id", res?.id);
-      sGlobalInfo.set((pre) => {
-        pre.value.userId = res?.id;
-        pre.value.userName = res?.username;
-      });
-      if (isRememberPassword) {
-        const updatedAccounts = [
-          ...savedAccounts.filter((acc) => acc.email !== email),
-          { email, password },
-        ];
-        localStorage.setItem("accounts", JSON.stringify(updatedAccounts));
+    try {
+      const res = await handleLoginApi(email, password);
+      if (!res) {
+        setErrorMsg(
+          "Sai thông tin đăng nhập hoặc tài khoản đã bị vô hiệu hóa."
+        );
+      } else {
+        setErrorMsg("");
+        localStorage.setItem("user_id", res?.id);
+        sGlobalInfo.set((pre) => {
+          pre.value.userId = res?.id;
+          pre.value.userName = res?.username;
+        });
+        if (isRememberPassword) {
+          const updatedAccounts = [
+            ...savedAccounts.filter((acc) => acc.email !== email),
+            { email, password },
+          ];
+          localStorage.setItem("accounts", JSON.stringify(updatedAccounts));
+        }
+        const resUser = await getUserById(res?.id);
+        localStorage.setItem("avatarUrl", resUser.avatarUrl);
+        nav("/");
       }
-      const resUser = await getUserById(res?.id);
-      localStorage.setItem("avatarUrl", resUser.avatarUrl);
-      nav("/");
+    } catch (error) {
+      setErrorMsg("Đã có lỗi xảy ra. Vui lòng thử lại.");
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const handleLogin = () => {
-    setIsLoading(true);
+    setErrorMsg("");
+
     if (!password || !email) {
-      toast.error("Vui lòng điền đủ thông tin");
+      setErrorMsg("Vui lòng điền đầy đủ thông tin.");
       return;
     }
+
+    setIsLoading(true);
     loggin();
   };
 
@@ -70,12 +83,12 @@ export default function Login() {
     if (selectedAccount) {
       setEmail(selectedAccount.email);
       setPassword(selectedAccount.password);
-      () => console.log("acount: ", email, ", ", password);
     }
     setShowDropdown(false);
   };
 
-  const handleDeleteAccount = (deletedEmail) => {
+  const handleDeleteAccount = (e, deletedEmail) => {
+    e.stopPropagation();
     const updatedAccounts = savedAccounts.filter(
       (acc) => acc.email !== deletedEmail
     );
@@ -83,63 +96,73 @@ export default function Login() {
     localStorage.setItem("accounts", JSON.stringify(updatedAccounts));
   };
 
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    if (errorMsg) setErrorMsg("");
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+    if (errorMsg) setErrorMsg("");
+  };
+
   return (
-    <div className="p-10 rounded-sm shadow-lg w-full max-w-sm">
+    <div className="p-10 rounded-sm shadow-lg w-full max-w-sm bg-white">
       <div className="flex flex-col items-center">
         <div>
-          <img className="h-12" src="/logoFull.svg" />
+          <img className="h-12" src="/logoFull.svg" alt="Logo" />
         </div>
-        <div className="font-semibold text-sblue text-xl">Đăng nhập</div>
+        <div className="font-semibold text-sblue text-xl mt-2">Đăng nhập</div>
 
-        <div className="relative w-[306px] ">
+        <div className="relative w-[306px] mt-6">
           <p className="text-text font-medium">Email</p>
           <input
             className="w-full mt-2 mb-4 h-9 px-2 border-2 border-text rounded-md focus:outline-sblue"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleEmailChange}
             onFocus={() => setShowDropdown(true)}
-            onBlur={() => setTimeout(() => setShowDropdown(false), 100)}
+            onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
           />
           {showDropdown && savedAccounts.length > 0 && (
-            <div className="absolute w-full z-1 bg-white border border-gray-300 rounded-md shadow-lg mt-1">
+            <div className="absolute w-full z-10 bg-white border border-gray-300 rounded-md shadow-lg mt-[-10px]">
               {savedAccounts.map((acc, index) => (
                 <div
                   key={index}
+                  onMouseDown={() => handleSelectAccount(acc.email)}
                   className="p-2 flex justify-between items-center hover:bg-gray-100 cursor-pointer"
                 >
-                  <span onMouseDown={() => handleSelectAccount(acc.email)}>
-                    {acc.email}
-                  </span>
-                  <X
-                    className="h-4 w-4 text-gray-500 hover:text-red-500 cursor-pointer"
-                    onClick={() => handleDeleteAccount(acc.email)}
-                  />
+                  <span>{acc.email}</span>
+                  <button
+                    onClick={(e) => handleDeleteAccount(e, acc.email)}
+                    className="p-1 rounded-full hover:bg-gray-200"
+                  >
+                    <X className="h-4 w-4 text-gray-500 hover:text-red-500" />
+                  </button>
                 </div>
               ))}
             </div>
           )}
         </div>
 
-        <div className="w-[306px] ">
+        <div className="w-[306px]">
           <p className="text-text font-medium">Mật khẩu</p>
           <div className="relative">
             <input
               type={isHidePassword ? "password" : "text"}
               className="w-full mt-2 mb-4 h-9 px-2 border-2 border-text rounded-md focus:outline-sblue"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePasswordChange}
             />
-            {isHidePassword ? (
-              <Eye
-                className="absolute top-3 right-2 text-text h-6 hover:text-sblue cursor-pointer"
-                onClick={toggleHidePassword}
-              />
-            ) : (
-              <EyeClosed
-                className="absolute top-3 right-2 text-text h-6 hover:text-sblue cursor-pointer"
-                onClick={toggleHidePassword}
-              />
-            )}
+            <button
+              onClick={toggleHidePassword}
+              className="absolute top-7 -translate-y-1/2 right-2 p-1"
+            >
+              {isHidePassword ? (
+                <Eye className="text-text h-5 cursor-pointer hover:text-sblue" />
+              ) : (
+                <EyeOff className="text-text h-5 cursor-pointer hover:text-sblue" />
+              )}
+            </button>
           </div>
         </div>
 
@@ -147,11 +170,17 @@ export default function Login() {
           <div className="flex items-center">
             <input
               type="checkbox"
-              className="h-4 w-4 border-1 mr-2.5 border-text rounded-sm"
+              id="remember"
+              className="h-4 w-4 border-1 border-text rounded-sm accent-sblue"
               checked={isRememberPassword}
               onChange={(e) => setIsRememberPassword(e.target.checked)}
             />
-            <div className="text-sm text-text">Nhớ mật khẩu</div>
+            <label
+              htmlFor="remember"
+              className="text-sm text-text ml-2 cursor-pointer"
+            >
+              Nhớ mật khẩu
+            </label>
           </div>
           <div
             className="font-medium cursor-pointer text-sm text-sblue hover:text-pblue"
@@ -162,10 +191,12 @@ export default function Login() {
         </div>
 
         <div
-          className={`rounded-md cursor-pointer flex justify-center items-center w-[316px] h-9 
-    ${
-      isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-sblue hover:bg-pblue"
-    }`}
+          className={`rounded-md cursor-pointer flex justify-center items-center w-[306px] h-9 transition-colors
+            ${
+              isLoading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-sblue hover:bg-pblue"
+            }`}
           onClick={!isLoading ? handleLogin : undefined}
         >
           <p className="font-medium text-white">
@@ -173,8 +204,15 @@ export default function Login() {
           </p>
         </div>
 
-        <div className="flex mt-2">
-          <p className="text-text text-sm mr-1 ">Chưa có tài khoản?</p>
+        {/* 4. Hiển thị thông báo lỗi tại đây */}
+        {errorMsg && (
+          <div className="w-[306px] mt-3 text-center">
+            <p className="text-red-500 text-sm">{errorMsg}</p>
+          </div>
+        )}
+
+        <div className="flex mt-4">
+          <p className="text-text text-sm mr-1">Chưa có tài khoản?</p>
           <p
             className="text-sblue underline text-sm font-medium hover:text-pblue cursor-pointer"
             onClick={() => {
@@ -190,9 +228,7 @@ export default function Login() {
         <ForgetPassword
           onBack={() => {
             setIsShowModal(false);
-            setEmail("");
-            setPassword("");
-            setIsHidePassword(true);
+            setErrorMsg("");
           }}
         />
       )}
