@@ -7,7 +7,7 @@ export default function Post({ post }) {
   const nav = useNavigate();
   const imageUrl = post?.contentBlock.find(
     (block) => block.type === "image"
-  ).value;
+  )?.value;
   const handleCLickEdit = (event, postId) => {
     event.stopPropagation();
     nav(`/edit-post/${postId}`);

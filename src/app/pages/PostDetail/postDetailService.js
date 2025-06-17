@@ -4,7 +4,6 @@ import { API_URL } from "../../../bkUrl";
 export const getPosticbyId = async (id) => {
   try {
     const res = await axios.get(`${API_URL}/posts/${id}`);
-    console.log("post này: ", res);
 
     return res;
   } catch (error) {
@@ -44,10 +43,9 @@ export const checkSave = async (userId, postId) => {
     return error;
   }
 };
-export const doSave = async (save) => {
+export const doSave = async (savedPosts) => {
   try {
-    const res = await axios.post(`${API_URL}/saved-posts/interact`, save);
-
+    const res = await axios.post(`${API_URL}/saved-posts/interact`, savedPosts);
     return res;
   } catch (error) {
     console.error("Lỗi khi save:", error);
@@ -81,7 +79,6 @@ export const doFollow = async (followerId, followedId) => {
 export const getComment = async (postId) => {
   try {
     const res = await axios.get(`${API_URL}/comment/post/${postId}`);
-    console.log("Comment này: ", res);
     return res;
   } catch (error) {
     console.error("Lỗi khi lấy comment:", error);

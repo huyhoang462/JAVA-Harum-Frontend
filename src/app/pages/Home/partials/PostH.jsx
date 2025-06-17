@@ -10,7 +10,7 @@ export default function PostH({ post }) {
 
   const imageUrl = post?.contentBlock.find(
     (block) => block.type === "image"
-  ).value;
+  )?.value;
   return (
     <div
       className=" flex flex-col cursor-pointer w-full "
