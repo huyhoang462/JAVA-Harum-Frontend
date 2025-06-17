@@ -49,25 +49,25 @@ export default function Topic() {
   const getImageName = (topicIdFromParams) => {
     switch (topicIdFromParams) {
       case "67f357e280e7a31c46a4e333":
-        return "/public/thethao.jpg";
+        return "/thethao.jpg";
       case "67f3584980e7a31c46a4e334":
-        return "/public/tamly.jpg";
+        return "/tamly.jpg";
       case "67f3585d80e7a31c46a4e335":
-        return "/public/giaoduc.png";
+        return "/giaoduc.png";
       case "67f3587d80e7a31c46a4e336":
-        return "/public/tranhluan.jpg";
+        return "/tranhluan.jpg";
       case "67f3589080e7a31c46a4e337":
-        return "/public/khoahoc.jpg";
+        return "/khoahoc.jpg";
       case "67f358a780e7a31c46a4e338":
-        return "/public/lichsu.jpg";
+        return "/lichsu.jpg";
       case "67f3591980e7a31c46a4e339":
-        return "/public/nghethuat.jpg";
+        return "/nghethuat.jpg";
       case "67f3593780e7a31c46a4e33a":
-        return "/public/sach.jpg";
+        return "/sach.jpg";
       case "67f3594480e7a31c46a4e33b":
-        return "/public/tinhyeu.jpg";
+        return "/tinhyeu.jpg";
       case "67f3596980e7a31c46a4e33c":
-        return "/public/xahoi.png";
+        return "/xahoi.png";
       default:
         return "/defaultImage.png"; // nếu không khớp thì trả về ảnh mặc định
     }
