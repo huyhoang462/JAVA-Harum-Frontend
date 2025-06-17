@@ -37,6 +37,7 @@ export default function Header({ textColor }) {
   const handleLogout = () => {
     localStorage.removeItem("user_id");
     localStorage.removeItem("avatarUrl");
+    localStorage.removeItem("role");
     nav("/");
   };
 

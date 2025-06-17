@@ -159,7 +159,6 @@ export default function AdminComment() {
   return (
     <div className="p-6 bg-gray-100 min-h-full">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Báo cáo Bình luận</h1>
         {isFetching && !isLoading && (
           <div className="text-sm text-pblue animate-pulse">
             Đang làm mới...

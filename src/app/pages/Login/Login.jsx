@@ -55,7 +55,9 @@ export default function Login() {
         }
         const resUser = await getUserById(res?.id);
         localStorage.setItem("avatarUrl", resUser.avatarUrl);
-        nav("/");
+        localStorage.setItem("role", res.role);
+        if (res.role === "USER") nav("/");
+        else nav("/admin/users");
       }
     } catch (error) {
       setErrorMsg("Đã có lỗi xảy ra. Vui lòng thử lại.");

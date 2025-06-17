@@ -126,11 +126,8 @@ export default function AdminUserPage() {
   return (
     <div className="p-6 bg-gray-100 min-h-full">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Quản lý Người dùng</h1>
         {isFetching && !isLoading && (
-          <div className="text-sm text-pblue animate-pulse">
-            Đang làm mới...
-          </div>
+          <div className="text-sm text-pblue animate-pulse"></div>
         )}
       </div>
 
