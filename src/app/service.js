@@ -98,6 +98,8 @@ initializeWebSocket(userId, onNotificationReceived) {
 }
 
 export const notificationService = new NotificationService();
+export const getNotifications = notificationService.getNotifications.bind(NotificationService);
+
 export const isReadPost = async (userId, postId) => {
   try {
     const res = await axios.get(`${API_URL}/views/check/${userId}/${postId}`);
