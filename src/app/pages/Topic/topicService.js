@@ -25,10 +25,10 @@ export const getTopicDetails = async (id) => {
     return error;
   }
 };
-export const getForYouPosts = async ({ userId, pageParam = 1 }) => {
+export const getForYouPosts = async ({ userId, topicId, pageParam = 1 }) => {
   try {
     const res = await axios.get(
-      `${API_URL}/posts/top?page=${pageParam}&size=8`
+      `${API_URL}/recommend/${userId}/by-topic/${topicId}?page=${pageParam}&size=8`
     );
     console.log("For you này (page " + pageParam + "): ", res.data);
     return res.data;

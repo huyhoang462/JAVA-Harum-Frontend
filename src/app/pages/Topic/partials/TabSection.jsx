@@ -56,7 +56,8 @@ const TabSection = ({ topicId }) => {
 
   const forYouPostsQuery = useInfiniteQuery({
     queryKey: ["posts", topicId, "forYou"],
-    queryFn: ({ pageParam = 1 }) => getForYouPosts(topicId, pageParam),
+    queryFn: ({ pageParam = 1 }) =>
+      getForYouPosts({ userId, topicId, pageParam }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       if (lastPage && lastPage.number < lastPage.totalPages - 1) {

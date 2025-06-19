@@ -58,6 +58,7 @@ const CommentSection = ({ postId }) => {
     if (postId) {
       fetchComment();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postId]);
 
   const chooseParentComment = (commentId, index) => {
@@ -135,8 +136,6 @@ const CommentSection = ({ postId }) => {
     }));
   };
 
-  // --- LOGIC BÁO CÁO ĐÃ SỬA ---
-
   const handleOpenReportModal = (commentToReport) => {
     const userID = localStorage.getItem("user_id");
     if (!userID) {
@@ -192,6 +191,19 @@ const CommentSection = ({ postId }) => {
     setReportingComment(null);
   };
 
+  // --- BẮT ĐẦU PHẦN THAY ĐỔI ---
+  // Hàm xử lý khi nhấn phím trên ô nhập bình luận chính
+  const handleKeyDown = (event) => {
+    // Kiểm tra nếu phím được nhấn là "Enter"
+    if (event.key === "Enter") {
+      // Ngăn hành vi mặc định (như xuống dòng trong textarea hoặc submit form)
+      event.preventDefault();
+      // Gọi hàm gửi bình luận chính (isReply = false)
+      handleComment(commentContent, false);
+    }
+  };
+  // --- KẾT THÚC PHẦN THAY ĐỔI ---
+
   return (
     <>
       <LoginRequiredModal
@@ -233,6 +245,9 @@ const CommentSection = ({ postId }) => {
             value={commentContent}
             onChange={(e) => setCommentContent(e.target.value)}
             onFocus={() => chooseParentComment(null, -1)}
+            // --- BẮT ĐẦU PHẦN THAY ĐỔI ---
+            onKeyDown={handleKeyDown} // Thêm sự kiện onKeyDown vào đây
+            // --- KẾT THÚC PHẦN THAY ĐỔI ---
             placeholder="Hãy chia sẻ cảm nghĩ của bạn về bài viết"
             className="flex-1 bg-gray-100 rounded-full py-2 px-4 text-sm focus:outline-none focus:ring-2 focus:ring-pblue"
           />
@@ -264,7 +279,7 @@ const CommentSection = ({ postId }) => {
               replyContent={currentCommentIndex === index ? replyContent : ""}
               onReplyContentChange={(e) => setReplyContent(e.target.value)}
               onPostReply={() => handleComment(replyContent, true)}
-              onReport={handleOpenReportModal} // Truyền hàm xử lý báo cáo xuống
+              onReport={handleOpenReportModal}
             />
           ))}
         </div>

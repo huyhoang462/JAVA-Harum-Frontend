@@ -1,4 +1,4 @@
-import { service } from "/src/app/service.js";
+import { service } from "../service";
 
 export const navToDetail = async (nav, userId, postId) => {
   console.log("id này: ", userId);

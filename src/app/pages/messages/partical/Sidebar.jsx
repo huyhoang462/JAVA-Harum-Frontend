@@ -2,11 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { Search, X } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { messageService } from "../MessageService";
-import { debounce } from 'lodash'; 
+import { debounce } from "lodash";
 
 export default function Sidebar({ onSelectUser, selectedUserId }) {
   const navigate = useNavigate();
-  
+
   const [conversations, setConversations] = useState([]);
   const [loadingConversations, setLoadingConversations] = useState(true);
 
@@ -16,9 +16,9 @@ export default function Sidebar({ onSelectUser, selectedUserId }) {
   const [loadingSearch, setLoadingSearch] = useState(false);
 
   useEffect(() => {
-    const currentUserId = localStorage.getItem('user_id');
+    const currentUserId = localStorage.getItem("user_id");
     if (!currentUserId) {
-      navigate('/login');
+      navigate("/login");
       return;
     }
 
@@ -42,13 +42,13 @@ export default function Sidebar({ onSelectUser, selectedUserId }) {
       if (term) {
         setLoadingSearch(true);
         const results = await messageService.searchUsers(term);
-        const currentUserId = localStorage.getItem('user_id');
-        setSearchResults(results.filter(user => user.id !== currentUserId));
+        const currentUserId = localStorage.getItem("user_id");
+        setSearchResults(results.filter((user) => user.id !== currentUserId));
         setLoadingSearch(false);
       } else {
         setSearchResults([]);
       }
-    }, 500), 
+    }, 500),
     []
   );
 
@@ -59,13 +59,12 @@ export default function Sidebar({ onSelectUser, selectedUserId }) {
     return () => debouncedSearch.cancel();
   }, [searchTerm, isSearching, debouncedSearch]);
 
-
   const handleSearchChange = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
     setIsSearching(term.length > 0);
-    if(term.length === 0) {
-        setSearchResults([]);
+    if (term.length === 0) {
+      setSearchResults([]);
     }
   };
 
@@ -74,24 +73,29 @@ export default function Sidebar({ onSelectUser, selectedUserId }) {
     setSearchResults([]);
     setIsSearching(false);
   };
-  
+
   const handleUserClick = (user) => {
     onSelectUser(user);
     handleClearSearch();
-  }
+  };
 
   return (
     <div className="w-full md:w-80 lg:w-96 border-r border-gray-200 overflow-y-auto bg-white h-full flex flex-col">
       {/* Header */}
-      <div className="p-4 border-b border-gray-200 cursor-pointer flex items-center justify-center sticky top-0 bg-white z-10"
-        onClick={() => navigate("/")}>
+      <div
+        className="p-4 border-b border-gray-200 cursor-pointer flex items-center justify-center sticky top-0 bg-white z-10"
+        onClick={() => navigate("/")}
+      >
         <img src="/logoFull.svg" alt="Logo" className="w-32 h-auto" />
       </div>
 
       {/* Search */}
       <div className="p-3 border-b border-gray-200 sticky top-16 bg-white z-10">
         <div className="relative">
-          <Search size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <Search
+            size={18}
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+          />
           <input
             type="text"
             placeholder="Tìm kiếm người dùng..."
@@ -100,8 +104,11 @@ export default function Sidebar({ onSelectUser, selectedUserId }) {
             onChange={handleSearchChange}
           />
           {isSearching && (
-            <button onClick={handleClearSearch} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-800">
-                <X size={20} />
+            <button
+              onClick={handleClearSearch}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-800"
+            >
+              <X size={20} />
             </button>
           )}
         </div>
@@ -110,7 +117,9 @@ export default function Sidebar({ onSelectUser, selectedUserId }) {
       <div className="flex-1 overflow-y-auto">
         {isSearching ? (
           <div>
-            <h3 className="p-3 text-sm font-semibold text-gray-600">Kết quả tìm kiếm</h3>
+            <h3 className="p-3 text-sm font-semibold text-gray-600">
+              Kết quả tìm kiếm
+            </h3>
             {loadingSearch ? (
               <p className="p-4 text-center text-gray-500">Đang tìm...</p>
             ) : searchResults.length > 0 ? (
@@ -121,7 +130,7 @@ export default function Sidebar({ onSelectUser, selectedUserId }) {
                   className="p-3 hover:bg-gray-50 cursor-pointer flex items-center gap-3 border-b border-gray-100 transition-colors"
                 >
                   <img
-                    src={user.avatarUrl}
+                    src={user.avatarUrl || "/defaultAvatar.jpg"}
                     alt={user.username}
                     className="w-12 h-12 rounded-full object-cover"
                   />
@@ -132,13 +141,17 @@ export default function Sidebar({ onSelectUser, selectedUserId }) {
                 </div>
               ))
             ) : (
-              <p className="p-4 text-center text-gray-500">Không tìm thấy người dùng nào.</p>
+              <p className="p-4 text-center text-gray-500">
+                Không tìm thấy người dùng nào.
+              </p>
             )}
           </div>
         ) : (
           <div>
             {loadingConversations ? (
-              <p className="p-4 text-center text-gray-500">Đang tải cuộc trò chuyện...</p>
+              <p className="p-4 text-center text-gray-500">
+                Đang tải cuộc trò chuyện...
+              </p>
             ) : conversations.length > 0 ? (
               conversations.map((user) => (
                 <div
@@ -148,19 +161,25 @@ export default function Sidebar({ onSelectUser, selectedUserId }) {
                     user.id === selectedUserId ? "bg-blue-50" : ""
                   }`}
                 >
-                   <img
-                    src={user.avatarUrl}
+                  <img
+                    src={user.avatarUrl || "/defaultAvatar.jpg"}
                     alt={user.name}
                     className="w-12 h-12 rounded-full object-cover"
                   />
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-medium text-gray-800 truncate">{user.name}</h3>
-                    <p className="text-sm text-gray-500 truncate">Nhấn để xem tin nhắn</p>
+                    <h3 className="font-medium text-gray-800 truncate">
+                      {user.name}
+                    </h3>
+                    <p className="text-sm text-gray-500 truncate">
+                      Nhấn để xem tin nhắn
+                    </p>
                   </div>
                 </div>
               ))
             ) : (
-              <p className="p-4 text-center text-gray-500">Không có cuộc trò chuyện nào. Hãy tìm kiếm để bắt đầu!</p>
+              <p className="p-4 text-center text-gray-500">
+                Không có cuộc trò chuyện nào. Hãy tìm kiếm để bắt đầu!
+              </p>
             )}
           </div>
         )}

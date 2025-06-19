@@ -4,11 +4,11 @@ import { API_URL } from "../../../bkUrl";
 
 export const getTopPosts = async () => {
   try {
-  const res = await axios.get(`${API_URL}/posts/top?page=1&size=10`);
-    return res.data; 
+    const res = await axios.get(`${API_URL}/posts/top?page=1&size=10`);
+    return res.data;
   } catch (error) {
     console.error("Lỗi khi lấy Top Posts:", error);
-    throw error; 
+    throw error;
   }
 };
 export const getPopularPosts = async () => {
@@ -20,10 +20,10 @@ export const getPopularPosts = async () => {
     return error;
   }
 };
-export const getForYouPosts = async ({ userId, pageParam = 1 }) => {
+export const getForYouPosts = async ({ userId, pageParam = 1, size = 8 }) => {
   try {
     const res = await axios.get(
-      `${API_URL}/posts/top?page=${pageParam}&size=8`
+      `${API_URL}/recommend/${userId}?page=${pageParam}&size=${size}`
     );
     return res.data;
   } catch (error) {

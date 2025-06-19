@@ -12,17 +12,21 @@ class AppService {
     this.axiosInstance.interceptors.response.use(
       (response) => response,
       (error) => {
+        // Không cần thay đổi interceptor
         const { config, response } = error;
         console.error(
           `API Error on ${config.method.toUpperCase()} ${config.url}:`,
-          response
+          response?.data || error.message
         );
         return Promise.reject(error);
       }
     );
   }
 
-  initializeWebSocket(userId, onNotificationReceived) {
+  // Chuyển tất cả các phương thức dùng 'this' thành arrow function
+  // để 'this' luôn được ràng buộc đúng với instance của class.
+
+  initializeWebSocket = (userId, onNotificationReceived) => {
     if (this.stompClient && this.stompClient.active) {
       console.log("WebSocket đã được kết nối, không khởi tạo lại.");
       return () => {};
@@ -62,42 +66,45 @@ class AppService {
         this.stompClient.deactivate();
       }
     };
-  }
+  };
 
-  async getNotifications(userId) {
+  getNotifications = async (userId) => {
     const response = await this.axiosInstance.get(
       `/notification/user/${userId}`
     );
     return response;
-  }
+  };
 
-  async setReadNotification(notificationId) {
+  setReadNotification = async (notificationId) => {
+    // Bây giờ 'this' ở đây sẽ luôn đúng
     const response = await this.axiosInstance.put(
       `/notification/${notificationId}/read`
     );
     return response;
-  }
+  };
 
-  async deleteNotification(notificationId) {
+  deleteNotification = async (notificationId) => {
+    // Và cả ở đây
     await this.axiosInstance.delete(`/notification/${notificationId}`);
-  }
+  };
 
-  async getCommentById(commentId) {
+  getCommentById = async (commentId) => {
     const response = await this.axiosInstance.get(`/comment/${commentId}`);
+    console.log("lây comment theo id: ", response);
     return response;
-  }
+  };
 
-  async isReadPost(userId, postId) {
+  isReadPost = async (userId, postId) => {
     const response = await this.axiosInstance.get(
       `/views/check/${userId}/${postId}`
     );
     return response.data;
-  }
+  };
 
-  async setReadPost(views) {
+  setReadPost = async (views) => {
     const response = await this.axiosInstance.post(`/views`, views);
     return response.data;
-  }
+  };
 }
 
 export const service = new AppService();

@@ -1,13 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react"; // 1. Thêm useCallback
 import ContactPart from "./partials/ContactPart";
 import PostContent from "./partials/PostContent";
 import CommentSection from "./partials/CommentSection";
 import { useParams } from "react-router-dom";
 import { getPosticbyId } from "./postDetailService";
-import { Loader2 } from "lucide-react"; // 1. Import icon loading
+import { Loader2 } from "lucide-react";
 
-// 2. Tạo một component con cho trạng thái loading
+// Component con PostDetailSkeleton không đổi
 const PostDetailSkeleton = () => {
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -23,38 +23,40 @@ export default function PostDetail() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
   const [isHidden, setIsHidden] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const commentRef = useRef(null);
 
-  // 3. Thêm state để quản lý trạng thái loading
-  const [isLoading, setIsLoading] = useState(true);
+  // --- BẮT ĐẦU PHẦN SỬA LẠI ---
 
-  const hasFetchedRef = useRef(false);
+  // 2. Dùng useCallback để định nghĩa hàm fetchPost
+  // Hàm này sẽ được tạo lại mỗi khi `id` thay đổi.
+  const fetchPost = useCallback(async () => {
+    if (!id) return; // Không làm gì nếu không có id
 
-  const fetchPost = async () => {
+    setIsLoading(true); // Bắt đầu loading mỗi khi fetch
     try {
       const res = await getPosticbyId(id);
       if (res.status === 200) {
         setPost(res.data);
       } else {
-        console.error("Lỗi: Không lấy được bài viết");
-        setPost(null); // Đảm bảo post là null nếu có lỗi
+        console.error("Lỗi: Không lấy được bài viết, status:", res.status);
+        setPost(null);
       }
     } catch (error) {
       console.error("Lỗi gọi API:", error);
-      setPost(null); // Đảm bảo post là null nếu có lỗi
+      setPost(null);
     } finally {
-      // 4. Dù thành công hay thất bại, cũng kết thúc loading
-      setIsLoading(false);
+      setIsLoading(false); // Luôn kết thúc loading
     }
-  };
+  }, [id]); // Phụ thuộc vào `id`
 
+  // 3. useEffect để gọi fetchPost khi component mount hoặc id thay đổi
   useEffect(() => {
-    if (id && !hasFetchedRef.current) {
-      hasFetchedRef.current = true;
-      fetchPost();
-    }
-  }, [id]);
+    fetchPost();
+    window.scrollTo(0, 0); // Scroll lên đầu trang khi có bài viết mới
+  }, [fetchPost]); // Bây giờ dependency là hàm `fetchPost` ổn định
 
+  // useEffect cho việc ẩn/hiện ContactPart không đổi
   useEffect(() => {
     const handleScroll = () => {
       if (commentRef.current) {
@@ -65,9 +67,11 @@ export default function PostDetail() {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, []); // Dependency rỗng là đúng ở đây
 
-  // 5. Logic render mới
+  // --- KẾT THÚC PHẦN SỬA LẠI ---
+
+  // Logic render JSX không đổi, nhưng giờ đã an toàn
   if (isLoading) {
     return <PostDetailSkeleton />;
   }
@@ -83,12 +87,13 @@ export default function PostDetail() {
   return (
     <div>
       <div className="flex mx-auto flex-col max-w-7xl">
-        {/* ContactPart */}
+        {/* ContactPart bây giờ nhận được prop `refreshPost` hợp lệ */}
         <div
           className={`fixed top-1/3 left-50 transition-opacity duration-300 ${
             isHidden ? "opacity-0 pointer-events-none" : "opacity-100"
           }`}
         >
+          {/* 4. Truyền hàm fetchPost vào đây, bây giờ đã đúng */}
           <ContactPart post={post} refreshPost={fetchPost} />
         </div>
 

@@ -1,7 +1,7 @@
 // src/features/postDetail/components/CommentItem.jsx
 
 import React from "react";
-import { Flag, Reply, ChevronDown, Send, ShieldAlert } from "lucide-react"; // Thêm icon ShieldAlert
+import { Flag, Reply, ChevronDown, Send, ShieldAlert } from "lucide-react";
 import formatDate from "../../../utils/formatDate";
 
 // Component con để hiển thị nội dung bình luận bị vô hiệu hóa
@@ -34,6 +34,19 @@ const CommentItem = ({
 
   // Kiểm tra trạng thái của bình luận cha
   const isParentDisabled = parentComment?.status === "DISABLE";
+
+  // --- BẮT ĐẦU PHẦN THAY ĐỔI ---
+  // Hàm xử lý khi nhấn phím trên ô input
+  const handleKeyDown = (event) => {
+    // Kiểm tra nếu phím được nhấn là "Enter"
+    if (event.key === "Enter") {
+      // Ngăn hành vi mặc định của phím Enter (ví dụ: submit form)
+      event.preventDefault();
+      // Gọi hàm gửi phản hồi đã có
+      onPostReply();
+    }
+  };
+  // --- KẾT THÚC PHẦN THAY ĐỔI ---
 
   return (
     <div className="py-4 border-b-gray-300 border-b">
@@ -196,6 +209,9 @@ const CommentItem = ({
                 type="text"
                 value={replyContent}
                 onChange={onReplyContentChange}
+                // --- BẮT ĐẦU PHẦN THAY ĐỔI ---
+                onKeyDown={handleKeyDown} // Thêm sự kiện onKeyDown vào đây
+                // --- KẾT THÚC PHẦN THAY ĐỔI ---
                 placeholder={`Phản hồi ${parentComment.username}...`}
                 className="flex-1 bg-gray-100 rounded-full py-1.5 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-pblue"
               />
