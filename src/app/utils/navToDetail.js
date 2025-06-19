@@ -1,9 +1,9 @@
-import { service } from '/src/app/service.js'; 
+import { service } from "/src/app/service.js";
 
 export const navToDetail = async (nav, userId, postId) => {
   console.log("id này: ", userId);
   if (userId) {
-    const isReadRes = await isReadPost(userId, postId);
+    const isReadRes = await service.isReadPost(userId, postId);
     if (!isReadRes) {
       const views = {
         userId: userId,
