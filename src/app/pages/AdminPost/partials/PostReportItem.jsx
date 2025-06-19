@@ -63,10 +63,7 @@ const PostReportItem = ({ report, onDismiss, onDeletePost }) => {
       <div className="flex justify-between items-start">
         <div className="flex items-center">
           <img
-            src={
-              report.reporterAvatar ||
-              "/src/app/assets/images/defaultAvatar.jpg"
-            }
+            src={report.reporterAvatar || "/defaultAvatar.jpg"}
             alt={report.reporterName}
             className="w-10 h-10 rounded-full object-cover mr-3"
           />

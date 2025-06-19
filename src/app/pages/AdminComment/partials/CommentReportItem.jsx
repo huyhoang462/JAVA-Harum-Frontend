@@ -41,7 +41,7 @@ const formatDate = (isoString) => {
 const UserInfo = ({ name, avatar, role }) => (
   <div className="flex items-center">
     <img
-      src={avatar || "/src/app/assets/images/defaultAvatar.jpg"}
+      src={avatar || "/defaultAvatar.jpg"}
       alt={name}
       className="w-10 h-10 rounded-full object-cover mr-3"
     />
