@@ -20,7 +20,7 @@ export default function PostV({ post }) {
         <img
           src={imageUrl || "/defaultImage.png"}
           alt={post?.title}
-          className="h-40 w-72 object-cover rounded-md"
+          className="h-40 w-72 object-cover rounded-sm group-hover:scale-105"
         />
       </div>
       <div className="flex flex-col justify-between w-full ml-4">

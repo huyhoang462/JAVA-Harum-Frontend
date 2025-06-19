@@ -110,7 +110,7 @@ const UserTable = ({
                   <button
                     disabled={user.role.roleName === "ADMIN"}
                     onClick={() => onRequestChangeStatus(user.id, user.status)}
-                    className="p-2 text-sblue hover:bg-blue-100 rounded-full disabled:text-gray-300 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+                    className="p-2 cursor-pointer text-sblue hover:bg-blue-100 rounded-full disabled:text-gray-300 disabled:cursor-not-allowed disabled:hover:bg-transparent"
                     title={
                       user.status === "ENABLE"
                         ? "Vô hiệu hóa tài khoản"

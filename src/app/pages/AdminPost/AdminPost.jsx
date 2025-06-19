@@ -9,13 +9,14 @@ import {
 } from "./AdminPostService";
 import Pagination from "./partials/Pagination";
 import PostReportFilters from "./partials/PostReportFilters";
-import PostReportList from "./partials/PostReportList";
-import ConfirmationModal from "./partials/ConfirmationModal"; // Import modal
+import PostReportList from "./partials/PostReportList"; // Component sẽ được sửa ở bước 2
+import ConfirmationModal from "./partials/ConfirmationModal";
 import { toast } from "react-toastify";
 
 const PAGE_SIZE = 5;
 
 export default function AdminPost() {
+  // Các state và hooks useQuery, useMutation giữ nguyên
   const [filters, setFilters] = useState({ searchTerm: "", status: "ALL" });
   const [currentPage, setCurrentPage] = useState(1);
   const [modalState, setModalState] = useState({
@@ -23,54 +24,41 @@ export default function AdminPost() {
     action: null,
     data: null,
   });
-
   const queryClient = useQueryClient();
-
-  // --- QUERIES & MUTATIONS ---
-
   const {
     data: allReports = [],
     isLoading,
     isError,
     error,
-    isFetching,
+    isFetching, // Sử dụng cờ này
   } = useQuery({
     queryKey: ["allPostReports"],
     queryFn: getPostReport,
     staleTime: 1000 * 60 * 5,
   });
-
   const dismissMutation = useMutation({
     mutationFn: (reportId) => updatePostReportStatus(reportId, "REVIEWED"),
     onSuccess: () => {
       toast.info("Đã bỏ qua báo cáo bài viết.");
-      queryClient.invalidateQueries(["allPostReports"]);
+      queryClient.invalidateQueries({ queryKey: ["allPostReports"] });
     },
-    onError: () => {
-      toast.error("Lỗi khi bỏ qua báo cáo!");
-    },
-    onSettled: () => {
-      handleCloseModal();
-    },
+    onError: () => toast.error("Lỗi khi bỏ qua báo cáo!"),
+    onSettled: () => handleCloseModal(),
   });
-
   const deleteMutation = useMutation({
     mutationFn: async ({ postId, reportId }) => {
-      await updatePostStatus(postId); // Ẩn bài viết
-      await updatePostReportStatus(reportId, "RESOLVED"); // Giải quyết báo cáo
+      await updatePostStatus(postId);
+      await updatePostReportStatus(reportId, "RESOLVED");
     },
     onSuccess: () => {
       toast.success("Đã ẩn bài viết và giải quyết báo cáo.");
-      queryClient.invalidateQueries(["allPostReports"]);
+      queryClient.invalidateQueries({ queryKey: ["allPostReports"] });
     },
-    onError: () => {
-      toast.error("Lỗi khi ẩn bài viết!");
-    },
-    onSettled: () => {
-      handleCloseModal();
-    },
+    onError: () => toast.error("Lỗi khi ẩn bài viết!"),
+    onSettled: () => handleCloseModal(),
   });
 
+  // Toàn bộ logic lọc và phân trang giữ nguyên
   const filteredData = useMemo(() => {
     let data = [...allReports];
     if (filters.status !== "ALL") {
@@ -84,7 +72,6 @@ export default function AdminPost() {
           report.reason.toLowerCase().includes(term)
       );
     }
-    // Sắp xếp báo cáo PENDING lên đầu, sau đó theo ngày tạo mới nhất
     return data.sort((a, b) => {
       if (a.status === "PENDING" && b.status !== "PENDING") return -1;
       if (a.status !== "PENDING" && b.status === "PENDING") return 1;
@@ -110,21 +97,17 @@ export default function AdminPost() {
     };
   }, [filteredData, currentPage]);
 
-  // --- HANDLERS ---
-
+  // Các hàm handlers giữ nguyên
   const handleFilterChange = useCallback((newFilters) => {
     setCurrentPage(1);
     setFilters(newFilters);
   }, []);
-
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
   };
-
   const handleCloseModal = () => {
     setModalState({ isOpen: false, action: null, data: null });
   };
-
   const handleConfirmAction = () => {
     if (modalState.action === "dismiss") {
       dismissMutation.mutate(modalState.data.reportId);
@@ -132,15 +115,9 @@ export default function AdminPost() {
       deleteMutation.mutate(modalState.data);
     }
   };
-
   const handleRequestDismiss = (reportId) => {
-    setModalState({
-      isOpen: true,
-      action: "dismiss",
-      data: { reportId },
-    });
+    setModalState({ isOpen: true, action: "dismiss", data: { reportId } });
   };
-
   const handleRequestDelete = (postId, reportId) => {
     setModalState({
       isOpen: true,
@@ -148,17 +125,10 @@ export default function AdminPost() {
       data: { postId, reportId },
     });
   };
-
-  const isMutating = dismissMutation.isLoading || deleteMutation.isLoading;
+  const isSubmitting = dismissMutation.isPending || deleteMutation.isPending;
 
   return (
-    <div className="p-6 bg-gray-100 min-h-full">
-      <div className="flex justify-between items-center mb-6">
-        {isFetching && !isLoading && (
-          <div className="text-sm text-pblue animate-pulse"></div>
-        )}
-      </div>
-
+    <div className="p-6 relative  bg-gray-100 min-h-full">
       <div className="bg-white rounded-lg shadow-md">
         <PostReportFilters onFilterChange={handleFilterChange} />
 
@@ -169,17 +139,18 @@ export default function AdminPost() {
           error={error}
           onDismiss={handleRequestDismiss}
           onDeletePost={handleRequestDelete}
+          // === TRUYỀN PROP isFetching XUỐNG ===
+          isFetching={isFetching}
         />
 
         <Pagination pageInfo={pageInfo} onPageChange={handlePageChange} />
       </div>
 
-      {/* Render Modal */}
       <ConfirmationModal
         isOpen={modalState.isOpen}
         onClose={handleCloseModal}
         onConfirm={handleConfirmAction}
-        isMutating={isMutating}
+        isLoading={isSubmitting}
         title={
           modalState.action === "delete"
             ? "Xác nhận Ẩn Bài viết"

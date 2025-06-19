@@ -1,10 +1,14 @@
+/* eslint-disable no-unused-vars */
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useState } from "react";
 import { getTopPosts } from "../homeService";
-import { Bookmark, Eye, ThumbsUp } from "lucide-react";
+import { ThumbsUp, Eye, ChevronLeft, ChevronRight } from "lucide-react";
 import formatDate from "../../../utils/formatDate";
 import { useNavigate } from "react-router-dom";
 import { navToDetail } from "../../../utils/navToDetail";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
 
 const PostHSkeleton = () => {
   return (
@@ -36,18 +40,18 @@ function PostH({ post }) {
 
   const imageUrl = post?.contentBlock.find(
     (block) => block.type === "image"
-  )?.value; // Thêm ?. để an toàn hơn
+  )?.value;
 
   return (
     <div
-      className="flex flex-col cursor-pointer w-full group" // Thêm 'group' để có thể tạo hiệu ứng hover
+      className="flex flex-col cursor-pointer w-full group"
       onClick={() => navToDetail(nav, userId, post?.id)}
     >
       <div className="mb-2 w-full overflow-hidden rounded-sm">
         <img
           src={imageUrl || "/defaultImage.png"}
           alt={post?.title}
-          className="h-[172px] w-full object-cover transition-transform duration-300 group-hover:scale-105" // Hiệu ứng zoom khi hover
+          className="h-[172px] w-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
       </div>
       <div>
@@ -102,38 +106,95 @@ function TopSection() {
     staleTime: 5 * 60 * 1000,
   });
 
+  const [swiperInstance, setSwiperInstance] = useState(null);
+  const [isBeginning, setIsBeginning] = useState(true);
+  // Khởi tạo isEnd là false để đảm bảo nút có thể hiện ra ban đầu
+  const [isEnd, setIsEnd] = useState(false);
+
+  const handlePrev = () => swiperInstance?.slidePrev();
+  const handleNext = () => swiperInstance?.slideNext();
+
   const renderContent = () => {
     if (isLoading) {
-      return [...Array(4)].map((_, index) => <PostHSkeleton key={index} />);
+      return (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6">
+          {[...Array(4)].map((_, index) => (
+            <PostHSkeleton key={index} />
+          ))}
+        </div>
+      );
     }
-
     if (isError) {
       return (
-        <div className="col-span-4 text-center text-red-500 py-10">
-          <p>Đã có lỗi xảy ra khi tải bài viết.</p>
-          <p className="text-sm text-gray-500">{error.message}</p>
-        </div>
+        <div className="text-center text-red-500 py-10">Đã có lỗi xảy ra.</div>
       );
     }
-
     if (!topPosts?.content || topPosts.content.length === 0) {
       return (
-        <div className="col-span-4 text-center text-gray-500 py-10">
-          <p>Chưa có bài viết nổi bật nào.</p>
-        </div>
+        <div className="text-center text-gray-500 py-10">Chưa có bài viết.</div>
       );
     }
 
-    return topPosts.content.map((post) => <PostH key={post.id} post={post} />);
+    return (
+      <Swiper
+        onSwiper={setSwiperInstance}
+        onSlideChange={(swiper) => {
+          setIsBeginning(swiper.isBeginning);
+          setIsEnd(swiper.isEnd);
+        }}
+        spaceBetween={24}
+        slidesPerView={1}
+        breakpoints={{
+          640: { slidesPerView: 2 },
+          768: { slidesPerView: 3 },
+          1024: { slidesPerView: 4 },
+        }}
+      >
+        {topPosts.content.map((post) => (
+          <SwiperSlide key={post.id}>
+            <PostH post={post} />
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    );
   };
 
   return (
-    <section className="flex flex-col my-4">
-      <div className="text-text font-medium text-lg   pb-2 mb-5 inline-block">
-        BÀI VIẾT NỔI BẬT
+    <section className="relative flex flex-col my-4">
+      <div className="flex justify-between items-center pb-2 mb-5">
+        <div className="text-text font-medium text-lg inline-block">
+          BÀI VIẾT NỔI BẬT
+        </div>
+        {!isLoading && !isError && topPosts?.content.length > 0 && (
+          <div className="flex items-center gap-2"></div>
+        )}
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8">
+
+      <div className=" relative">
         {renderContent()}
+        {!isLoading && !isError && topPosts?.content.length > 4 && (
+          <>
+            <div className=" absolute top-20 z-10 left-[-20px]">
+              <button
+                onClick={handlePrev}
+                disabled={isBeginning}
+                className="p-2 rounded-full bg-white/70  shadow-md border border-gray-200 text-gray-600 hover:bg-pblue hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed enabled:cursor-pointer"
+              >
+                <ChevronLeft size={20} />
+              </button>
+            </div>
+
+            <div className=" absolute top-20 z-10 right-[-20px]">
+              <button
+                onClick={handleNext}
+                disabled={isEnd}
+                className="p-2 rounded-full bg-white/70  shadow-md border border-gray-200 text-gray-600 hover:bg-pblue hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed enabled:cursor-pointer"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </section>
   );

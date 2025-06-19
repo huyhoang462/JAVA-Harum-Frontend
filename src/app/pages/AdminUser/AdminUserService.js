@@ -24,7 +24,7 @@ export const fetchAllUsers = async () => {
 
   do {
     try {
-      const data = await getUsersPage(currentPage, 10); // Lấy mỗi lần 10 người dùng
+      const data = await getUsersPage(currentPage, 14); // Lấy mỗi lần 10 người dùng
       if (data && data.content) {
         allUsers = allUsers.concat(data.content);
         totalPages = data.totalPages;

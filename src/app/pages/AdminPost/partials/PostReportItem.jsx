@@ -105,7 +105,7 @@ const PostReportItem = ({ report, onDismiss, onDeletePost }) => {
               className="flex items-center cursor-pointer text-sm font-semibold text-red-600 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-md transition-colors"
             >
               <Trash2 size={16} className="mr-1.5" />
-              Xóa bài viết
+              Ẩn bài viết
             </button>
           </div>
         )}

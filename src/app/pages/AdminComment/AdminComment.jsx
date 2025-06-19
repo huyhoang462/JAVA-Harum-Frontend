@@ -10,7 +10,7 @@ import {
 import Pagination from "./partials/Pagination";
 import CommentReportFilters from "./partials/CommentReportFilters";
 import CommentReportList from "./partials/CommentReportList";
-import ConfirmationModal from "./partials/ConfirmationModal"; // Import modal mới
+import ConfirmationModal from "./partials/ConfirmationModal";
 import { toast } from "react-toastify";
 
 const PAGE_SIZE = 5;
@@ -25,8 +25,6 @@ export default function AdminComment() {
   });
 
   const queryClient = useQueryClient();
-
-  // --- QUERIES & MUTATIONS ---
 
   const {
     data: allReports = [],
@@ -44,37 +42,26 @@ export default function AdminComment() {
     mutationFn: (reportId) => updateCommentReportStatus(reportId, "REVIEWED"),
     onSuccess: () => {
       toast.info("Đã bỏ qua báo cáo.");
-      queryClient.invalidateQueries(["allCommentReports"]);
+      queryClient.invalidateQueries({ queryKey: ["allCommentReports"] });
     },
-    onError: () => {
-      toast.error("Lỗi khi bỏ qua báo cáo!");
-    },
-    onSettled: () => {
-      handleCloseModal();
-    },
+    onError: () => toast.error("Lỗi khi bỏ qua báo cáo!"),
+    onSettled: () => handleCloseModal(),
   });
 
   const deleteMutation = useMutation({
     mutationFn: async ({ commentId, reportId }) => {
-      await updateCommentStatus(commentId); // Vô hiệu hóa comment
-      await updateCommentReportStatus(reportId, "RESOLVED"); // Giải quyết report
+      await updateCommentStatus(commentId);
+      await updateCommentReportStatus(reportId, "RESOLVED");
     },
     onSuccess: () => {
       toast.success("Đã xóa bình luận và giải quyết báo cáo.");
-      queryClient.invalidateQueries(["allCommentReports"]);
+      queryClient.invalidateQueries({ queryKey: ["allCommentReports"] });
     },
-    onError: () => {
-      toast.error("Lỗi khi xóa bình luận!");
-    },
-    onSettled: () => {
-      handleCloseModal();
-    },
+    onError: () => toast.error("Lỗi khi xóa bình luận!"),
+    onSettled: () => handleCloseModal(),
   });
 
-  // --- LOGIC LỌC & PHÂN TRANG (Không đổi) ---
-
   const filteredData = useMemo(() => {
-    // ... logic lọc không đổi ...
     let data = [...allReports];
     if (filters.status !== "ALL")
       data = data.filter((r) => r.status === filters.status);
@@ -96,13 +83,11 @@ export default function AdminComment() {
   }, [allReports, filters]);
 
   const paginatedData = useMemo(() => {
-    // ... logic phân trang không đổi ...
     const startIndex = (currentPage - 1) * PAGE_SIZE;
     return filteredData.slice(startIndex, startIndex + PAGE_SIZE);
   }, [filteredData, currentPage]);
 
   const pageInfo = useMemo(() => {
-    // ... logic tạo pageInfo không đổi ...
     const totalElements = filteredData.length;
     const totalPages = Math.ceil(totalElements / PAGE_SIZE);
     return {
@@ -114,8 +99,6 @@ export default function AdminComment() {
       last: currentPage === totalPages,
     };
   }, [filteredData, currentPage]);
-
-  // --- HANDLERS ---
 
   const handleFilterChange = useCallback((newFilters) => {
     setCurrentPage(1);
@@ -139,11 +122,7 @@ export default function AdminComment() {
   };
 
   const handleRequestDismiss = (reportId) => {
-    setModalState({
-      isOpen: true,
-      action: "dismiss",
-      data: { reportId },
-    });
+    setModalState({ isOpen: true, action: "dismiss", data: { reportId } });
   };
 
   const handleRequestDelete = (commentId, reportId) => {
@@ -154,21 +133,14 @@ export default function AdminComment() {
     });
   };
 
-  const isMutating = dismissMutation.isLoading || deleteMutation.isLoading;
+  // Đổi tên isMutating -> isSubmitting, và isLoading -> isPending
+  const isSubmitting = dismissMutation.isPending || deleteMutation.isPending;
 
   return (
     <div className="p-6 bg-gray-100 min-h-full">
-      <div className="flex justify-between items-center mb-6">
-        {isFetching && !isLoading && (
-          <div className="text-sm text-pblue animate-pulse">
-            Đang làm mới...
-          </div>
-        )}
-      </div>
-
+      {/* Không cần hiển thị thông báo "Đang làm mới..." nhỏ ở đây nữa */}
       <div className="bg-white rounded-lg shadow-md">
         <CommentReportFilters onFilterChange={handleFilterChange} />
-
         <CommentReportList
           reports={paginatedData}
           isLoading={isLoading}
@@ -176,17 +148,16 @@ export default function AdminComment() {
           error={error}
           onDismiss={handleRequestDismiss}
           onDeleteComment={handleRequestDelete}
+          isFetching={isFetching} // Truyền prop isFetching
         />
-
         <Pagination pageInfo={pageInfo} onPageChange={handlePageChange} />
       </div>
 
-      {/* Render Modal */}
       <ConfirmationModal
         isOpen={modalState.isOpen}
         onClose={handleCloseModal}
         onConfirm={handleConfirmAction}
-        isMutating={isMutating}
+        isLoading={isSubmitting} // Truyền prop isLoading
         title={
           modalState.action === "delete"
             ? "Xác nhận Xóa Bình luận"

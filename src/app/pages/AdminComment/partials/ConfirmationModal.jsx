@@ -1,7 +1,8 @@
 // src/pages/admin/components/ConfirmationModal.jsx
 
 import React from "react";
-import { X, AlertTriangle, ShieldCheck } from "lucide-react";
+// Thêm Loader2 để làm spinner
+import { X, AlertTriangle, ShieldCheck, Loader2 } from "lucide-react";
 
 const icons = {
   danger: <AlertTriangle size={40} className="text-red-500" />,
@@ -13,6 +14,7 @@ const buttonClasses = {
   success: "bg-green-600 hover:bg-green-700",
 };
 
+// Đổi tên prop isMutating -> isLoading để nhất quán
 const ConfirmationModal = ({
   isOpen,
   onClose,
@@ -20,8 +22,8 @@ const ConfirmationModal = ({
   title,
   message,
   confirmText = "Xác nhận",
-  variant = "danger", // 'danger' | 'success'
-  isMutating = false,
+  variant = "danger",
+  isLoading = false, // Dùng isLoading thay vì isMutating
 }) => {
   if (!isOpen) return null;
 
@@ -30,7 +32,7 @@ const ConfirmationModal = ({
       <div className="relative bg-white rounded-2xl shadow-xl p-8 w-full max-w-md mx-auto transform transition-all animate-scale-in">
         <button
           onClick={onClose}
-          disabled={isMutating}
+          disabled={isLoading}
           className="absolute top-4 right-4 text-gray-400 hover:text-pblue transition-colors cursor-pointer disabled:cursor-not-allowed"
         >
           <X size={24} />
@@ -52,17 +54,25 @@ const ConfirmationModal = ({
         <div className="flex flex-col sm:flex-row gap-3">
           <button
             onClick={onClose}
-            disabled={isMutating}
-            className="w-full px-4 py-2.5 rounded-lg cursor-pointer text-gray-800 bg-gray-100 hover:bg-gray-200 font-semibold transition-all disabled:opacity-50"
+            disabled={isLoading}
+            className="w-full px-4 py-2.5 rounded-lg cursor-pointer text-gray-800 bg-gray-100 hover:bg-gray-200 font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Hủy
           </button>
           <button
             onClick={onConfirm}
-            disabled={isMutating}
-            className={`w-full px-4 py-2.5 rounded-lg cursor-pointer text-white ${buttonClasses[variant]} font-semibold transition-all shadow-md hover:shadow-lg disabled:bg-gray-400 disabled:cursor-wait`}
+            disabled={isLoading}
+            className={`w-full px-4 py-2.5 rounded-lg cursor-pointer text-white ${buttonClasses[variant]} font-semibold transition-all shadow-md hover:shadow-lg disabled:bg-gray-400 disabled:cursor-wait flex items-center justify-center`}
           >
-            {isMutating ? "Đang xử lý..." : confirmText}
+            {/* Logic hiển thị spinner */}
+            {isLoading ? (
+              <>
+                <Loader2 size={20} className="animate-spin mr-2" />
+                <span>Đang xử lý...</span>
+              </>
+            ) : (
+              <span>{confirmText}</span>
+            )}
           </button>
         </div>
       </div>

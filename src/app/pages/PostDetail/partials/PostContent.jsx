@@ -83,6 +83,14 @@ export default function PostContent({ post }) {
                     dangerouslySetInnerHTML={{ __html: block?.value }}
                   />
                 );
+              case "text":
+                return (
+                  <p
+                    key={index}
+                    className="text-gray-700"
+                    dangerouslySetInnerHTML={{ __html: block?.value }}
+                  />
+                );
               case "quote":
                 return (
                   <blockquote

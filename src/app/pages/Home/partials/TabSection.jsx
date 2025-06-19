@@ -55,7 +55,7 @@ function PostV({ post }) {
         <img
           src={imageUrl || "/defaultImage.png"}
           alt={post?.title}
-          className="h-40 w-72 object-cover rounded-md"
+          className="h-40 w-72 object-cover rounded-md group-hover:scale-105"
         />
       </div>
       <div className="flex flex-col justify-between w-full ml-4">
@@ -157,13 +157,13 @@ const TabSection = () => {
       return [...Array(5)].map((_, index) => <PostVSkeleton key={index} />);
     }
 
-    if (status === "error" && !isFetching) {
-      return (
-        <p className="text-center text-red-500">
-          Lỗi: {error?.message || "Đã có lỗi xảy ra"}
-        </p>
-      );
-    }
+    // if (status === "error" && !isFetching) {
+    //   return (
+    //     <p className="text-center text-red-500">
+    //       Lỗi: {error?.message || "Đã có lỗi xảy ra"}
+    //     </p>
+    //   );
+    // }
 
     if (allPosts.length === 0 && !isFetching) {
       if (activeTab === "following" && !userId) {

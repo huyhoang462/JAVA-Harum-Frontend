@@ -13,13 +13,13 @@ export default function PostV({ post }) {
   )?.value;
   return (
     <div
-      className="flex w-full cursor-pointer"
+      className="flex w-full cursor-pointer group"
       onClick={() => navToDetail(nav, userId, post?.id)}
     >
       <div>
         <img
           src={imageUrl || "/defaultImage.png"}
-          className="h-40 w-60 rounded-md object-cover"
+          className="h-40 w-60 rounded-sm object-cover group-hover:scale-105"
         />
       </div>
 

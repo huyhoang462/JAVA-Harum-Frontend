@@ -14,18 +14,18 @@ export default function Post({ post }) {
   };
   return (
     <div
-      className="w-full  flex flex-col cursor-pointer"
+      className="w-full  flex flex-col cursor-pointer group"
       onClick={() => nav(`/post-detail/${post?.id}`)}
     >
       <div className="mb-2">
         <img
           src={imageUrl || "/defaultImage.png"}
-          className="h-36 w-full object-cover "
+          className="h-36 w-full object-cover rounded-md group-hover:scale-105"
         />
       </div>
       <div>
         <div className="flex items-center justify-between">
-          <div className="font-medium line-clamp-1 min-h-8">{post?.title}</div>
+          <div className="font-medium line-clamp-1 min-h-6">{post?.title}</div>
           <Pencil
             className="h-5 pb-1 hover:text-pblue  cursor-pointer text-text2"
             onClick={(e) => handleCLickEdit(e, post?.id)}

@@ -9,7 +9,7 @@ export default function SavedPost({ post, refresh }) {
 
   const imageUrl = post?.post?.contentBlock?.find(
     (block) => block.type === "image"
-  ).value;
+  )?.value;
   const handleUnsaved = async (e, id) => {
     e.stopPropagation();
     const save = {
@@ -24,13 +24,13 @@ export default function SavedPost({ post, refresh }) {
   };
   return (
     <div
-      className=" flex flex-col cursor-pointer w-full "
+      className=" flex flex-col cursor-pointer w-full group "
       onClick={() => nav(`/post-detail/${post?.post?.id}`)}
     >
       <div className="mb-2 w-full">
         <img
           src={imageUrl || "/defaultImage.png"}
-          className="rounded-sm h-40 w-full object-cover"
+          className="rounded-sm h-40 w-full object-cover group-hover:scale-105"
         />
       </div>
       <div className="">

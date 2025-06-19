@@ -1,4 +1,7 @@
+// Header.jsx
+
 import React, { useEffect, useState, useRef } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   Bell,
   ChevronDown,
@@ -11,34 +14,42 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import NotificationMenu from "./NotificationMenu";
+import { getNotifications } from "../service";
 
 export default function Header({ textColor }) {
   const nav = useNavigate();
   const [isShowMenu, setIsShowMenu] = useState(false);
-  const [isShowNotifiaction, setIsShowNotifiaction] = useState(false);
+  const [isShowNotification, setIsShowNotification] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const userId = localStorage.getItem("user_id");
 
   const menuRef = useRef(null);
   const notiRef = useRef(null);
+  const isLoggedIn = !!userId;
 
-  const handleClickLogo = () => {
-    nav("/");
-  };
+  // --- SỬA LẠI: Dùng React Query để fetch thông báo tại Header ---
+  const { data: notifications = [], isLoading: isLoadingNotifications } =
+    useQuery({
+      queryKey: ["notifications", userId],
+      queryFn: () => getNotifications(userId).then((res) => res.data || []),
+      // Chỉ chạy query khi đã đăng nhập
+      enabled: isLoggedIn,
+      // Fetch lại sau mỗi 1 phút
+      refetchInterval: 60000,
+    });
 
-  const handleClickLogin = () => {
-    nav("/login");
-  };
+  // Xác định có thông báo chưa đọc hay không
+  const hasUnread = notifications.some((noti) => !noti.isRead);
 
-  const handleClickSignUp = () => {
-    nav("/signup");
-  };
+  // --- LOGIC CŨ GIỮ NGUYÊN ---
+  const handleClickLogo = () => nav("/");
+  const handleClickLogin = () => nav("/login");
+  const handleClickSignUp = () => nav("/signup");
 
   const handleLogout = () => {
-    localStorage.removeItem("user_id");
-    localStorage.removeItem("avatarUrl");
-    localStorage.removeItem("role");
+    localStorage.clear(); // Xóa hết cho chắc chắn
     nav("/");
+    window.location.reload(); // Tải lại trang để reset state
   };
 
   const handleSearch = () => {
@@ -46,11 +57,8 @@ export default function Header({ textColor }) {
       nav(`/search?q=${encodeURIComponent(searchTerm)}`);
     }
   };
-
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      handleSearch();
-    }
+    if (e.key === "Enter") handleSearch();
   };
   const menuItems = [
     {
@@ -60,12 +68,10 @@ export default function Header({ textColor }) {
     },
     {
       title: "Chỉnh sửa thông tin",
-      icon: <Settings className="h-6 text2-text mr-2" />,
+      icon: <Settings className="h-6 text-text2 mr-2" />,
       path: "/profileedit",
     },
   ];
-
-  const isLoggedIn = !!localStorage.getItem("user_id");
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -73,12 +79,10 @@ export default function Header({ textColor }) {
         setIsShowMenu(false);
       }
       if (notiRef.current && !notiRef.current.contains(event.target)) {
-        setIsShowNotifiaction(false);
+        setIsShowNotification(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -88,6 +92,7 @@ export default function Header({ textColor }) {
     <div className="w-full bg-transparent h-hheader my-2.5">
       <div className="mx-auto max-w-6xl">
         <div className="w-full flex justify-between items-center">
+          {/* Logo và Search bar không đổi */}
           <div>
             <img
               className="h-12 cursor-pointer"
@@ -96,7 +101,7 @@ export default function Header({ textColor }) {
               alt="Logo"
             />
           </div>
-          {isLoggedIn ? (
+          {isLoggedIn && (
             <div className="flex relative ml-8">
               <Search
                 className={`${
@@ -113,7 +118,8 @@ export default function Header({ textColor }) {
                 onKeyDown={handleKeyDown}
               />
             </div>
-          ) : null}
+          )}
+
           {isLoggedIn ? (
             <div className="flex items-center">
               <div className="ml-4">
@@ -125,42 +131,45 @@ export default function Header({ textColor }) {
                 />
               </div>
               <div className="ml-4 relative" ref={notiRef}>
-                <Bell
-                  className={`${
-                    textColor === "white" ? "text-white" : "text-text2"
-                  } h-[25px] w-[25px] cursor-pointer hover:text-pblue`}
-                  onClick={() => setIsShowNotifiaction(!isShowNotifiaction)}
-                />
+                {/* --- SỬA LẠI: Bell icon với chấm đỏ --- */}
                 <div
-                  className={`${
-                    isShowNotifiaction ? "" : "hidden"
-                  } w-96 max-h-[400px] overflow-y-auto p-2 flex flex-col absolute right-0 top-10 rounded-lg shadow-xl z-50 bg-white  custom-scrollbar`}
+                  className="relative"
+                  onClick={() => setIsShowNotification(!isShowNotification)}
                 >
-                  <NotificationMenu />
+                  <Bell
+                    className={`${
+                      textColor === "white" ? "text-white" : "text-text2"
+                    } h-[25px] w-[25px] cursor-pointer hover:text-pblue`}
+                  />
+                  {hasUnread && (
+                    <span className="absolute top-0 right-0 block h-2.5 w-2.5 rounded-full bg-red-500 ring-2 ring-white"></span>
+                  )}
                 </div>
+                {isShowNotification && (
+                  <div className="w-96 max-h-[400px] overflow-y-auto p-2 flex flex-col absolute right-0 top-10 rounded-lg shadow-xl z-50 bg-white custom-scrollbar">
+                    {/* Truyền dữ liệu xuống NotificationMenu */}
+                    <NotificationMenu
+                      notifications={notifications}
+                      isLoading={isLoadingNotifications}
+                      onClose={() => setIsShowNotification(false)}
+                    />
+                  </div>
+                )}
               </div>
+              {/* Nút Viết bài và Menu cá nhân không đổi */}
               <div className="ml-4 cursor-pointer">
                 <div
-                  className={`
-                    group 
-                    border-2 px-4 py-1.5 rounded-3xl flex items-center cursor-pointer 
-                    transition-colors duration-200
-                    ${
-                      textColor === "white"
-                        ? "text-white border-white"
-                        : "text-text2 border-text2"
-                    }
-                    hover:border-pblue hover:text-pblue
-                  `}
+                  className={`group border-2 px-4 py-1.5 rounded-3xl flex items-center cursor-pointer transition-colors duration-200 ${
+                    textColor === "white"
+                      ? "text-white border-white"
+                      : "text-text2 border-text2"
+                  } hover:border-pblue hover:text-pblue`}
                   onClick={() => nav("/write-post")}
                 >
                   <Feather
-                    className={`
-                      h-6 w-6 mr-1
-                      transition-colors duration-200
-                      ${textColor === "white" ? "text-white" : "text-text2"}
-                      group-hover:text-pblue
-                    `}
+                    className={`h-6 w-6 mr-1 transition-colors duration-200 ${
+                      textColor === "white" ? "text-white" : "text-text2"
+                    } group-hover:text-pblue`}
                   />
                   <p className="font-medium pr-[4px]">Viết bài</p>
                 </div>
@@ -174,6 +183,7 @@ export default function Header({ textColor }) {
                   <img
                     className="rounded-full h-10 w-10 object-cover"
                     src={
+                      localStorage.getItem("avatarUrl") &&
                       localStorage.getItem("avatarUrl") !== "null"
                         ? localStorage.getItem("avatarUrl")
                         : "/defaultAvatar.jpg"
@@ -190,8 +200,7 @@ export default function Header({ textColor }) {
                         key={index}
                         onClick={() => nav(item.path)}
                       >
-                        {item.icon}
-                        {item.title}
+                        {item.icon} {item.title}
                       </div>
                     ))}
                     <div

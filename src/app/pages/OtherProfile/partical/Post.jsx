@@ -17,11 +17,11 @@ export default function Post({ post }) {
       className="flex flex-col cursor-pointer w-full group"
       onClick={() => navToDetail(nav, userId, post?.id)}
     >
-      <div className="mb-2 w-full overflow-hidden rounded-sm">
+      <div className="mb-2 w-full overflow-hidden rounded-sm group-hover:scale-105">
         <img
           src={imageUrl || "/defaultImage.png"}
           alt={post?.title}
-          className="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          className="h-36 w-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
       </div>
       <div>

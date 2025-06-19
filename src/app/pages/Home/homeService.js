@@ -4,7 +4,8 @@ import { API_URL } from "../../../bkUrl";
 
 export const getTopPosts = async () => {
   try {
-    const res = await axios.get(`${API_URL}/posts/top?page=1&size=4`);
+    const res = await axios.get(`${API_URL}/posts/top?page=1&size=10`);
+    console.log("TOp post: ", res.data);
     return res.data;
   } catch (error) {
     console.error("Lỗi khi lấy top post:", error);
@@ -13,7 +14,7 @@ export const getTopPosts = async () => {
 };
 export const getPopularPosts = async () => {
   try {
-    const res = await axios.get(`${API_URL}/posts/popular?page=1&size=4`);
+    const res = await axios.get(`${API_URL}/posts/popular?page=1&size=10`);
     return res.data;
   } catch (error) {
     console.error("Lỗi khi lấy popular post:", error);
