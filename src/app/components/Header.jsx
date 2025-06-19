@@ -1,5 +1,3 @@
-// Header.jsx
-
 import React, { useEffect, useState, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -27,29 +25,29 @@ export default function Header({ textColor }) {
   const notiRef = useRef(null);
   const isLoggedIn = !!userId;
 
-  // --- SỬA LẠI: Dùng React Query để fetch thông báo tại Header ---
   const { data: notifications = [], isLoading: isLoadingNotifications } =
     useQuery({
       queryKey: ["notifications", userId],
       queryFn: () => getNotifications(userId).then((res) => res.data || []),
-      // Chỉ chạy query khi đã đăng nhập
+
       enabled: isLoggedIn,
-      // Fetch lại sau mỗi 1 phút
+
       refetchInterval: 60000,
     });
 
-  // Xác định có thông báo chưa đọc hay không
   const hasUnread = notifications.some((noti) => !noti.isRead);
 
-  // --- LOGIC CŨ GIỮ NGUYÊN ---
   const handleClickLogo = () => nav("/");
   const handleClickLogin = () => nav("/login");
   const handleClickSignUp = () => nav("/signup");
 
   const handleLogout = () => {
-    localStorage.clear(); // Xóa hết cho chắc chắn
+    localStorage.removeItem("user_id");
+    localStorage.removeItem("avatarUrl");
+    localStorage.removeItem("role");
+    localStorage.removeItem("user_id");
     nav("/");
-    window.location.reload(); // Tải lại trang để reset state
+    window.location.reload();
   };
 
   const handleSearch = () => {
