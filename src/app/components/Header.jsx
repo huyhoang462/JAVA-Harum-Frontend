@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import NotificationMenu from "./NotificationMenu";
-import { getNotifications } from "../service";
+import { service } from "../service";
 
 export default function Header({ textColor }) {
   const nav = useNavigate();
@@ -28,7 +28,7 @@ export default function Header({ textColor }) {
   const { data: notifications = [], isLoading: isLoadingNotifications } =
     useQuery({
       queryKey: ["notifications", userId],
-      queryFn: () => getNotifications(userId).then((res) => res.data || []),
+      queryFn: () => service.getNotifications(userId).then((res) => res.data || []),
 
       enabled: isLoggedIn,
 

@@ -1,4 +1,4 @@
-import { isReadPost, setReadPost } from "../service";
+import { service } from '/src/app/service.js'; 
 
 export const navToDetail = async (nav, userId, postId) => {
   console.log("id này: ", userId);
@@ -10,7 +10,7 @@ export const navToDetail = async (nav, userId, postId) => {
         postId: postId,
       };
 
-      await setReadPost(views);
+      await service.setReadPost(views);
     }
   }
   nav(`/post-detail/${postId}`);

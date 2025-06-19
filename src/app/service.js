@@ -1,32 +1,38 @@
 
 import axios from 'axios';
 import { Client } from '@stomp/stompjs';
-import { API_URL } from '../bkUrl';
-import { WEBSOCKET_URL } from '../bkUrl';
+import { API_URL, WEBSOCKET_URL } from '../bkUrl'; 
 
-class NotificationService {
+class AppService {
     constructor() {
-        this.stompClient = null;        
+        this.stompClient = null;
         this.axiosInstance = axios.create({
             baseURL: API_URL,
+
         });
+
+        this.axiosInstance.interceptors.response.use(
+            response => response,
+            error => {
+                const { config, response } = error;
+                console.error(`API Error on ${config.method.toUpperCase()} ${config.url}:`, response);
+                return Promise.reject(error);
+            }
+        );
     }
 
-initializeWebSocket(userId, onNotificationReceived) {
-
-        if (this.stompClient) {
-            this.stompClient.deactivate();
+    initializeWebSocket(userId, onNotificationReceived) {
+        if (this.stompClient && this.stompClient.active) {
+            console.log("WebSocket đã được kết nối, không khởi tạo lại.");
+            return () => {};
         }
 
-        console.log("Đang khởi tạo kết nối WebSocket mới...");
-        
         this.stompClient = new Client({
             brokerURL: WEBSOCKET_URL,
             reconnectDelay: 5000,
-            debug: (str) => {  },
+            debug: () => {},
             onConnect: () => {
                 console.log('Notification WebSocket đã kết nối thành công!');
-                
                 const topic = `/notifications/${userId}`;
                 console.log(`Đang đăng ký lắng nghe thông báo tại: ${topic}`);
 
@@ -40,8 +46,7 @@ initializeWebSocket(userId, onNotificationReceived) {
                 });
             },
             onStompError: (frame) => {
-                console.error('Lỗi từ Broker (Notification): ' + frame.headers['message']);
-                console.error('Chi tiết lỗi:', frame.body);
+                console.error('Lỗi từ Broker (Notification): ' + frame.headers['message'], frame.body);
             },
         });
 
@@ -52,73 +57,37 @@ initializeWebSocket(userId, onNotificationReceived) {
                 console.log("Ngắt kết nối WebSocket thông báo.");
                 this.stompClient.deactivate();
             }
-            this.stompClient = null;
         };
     }
 
     async getNotifications(userId) {
-        try {
-            const response = await this.axiosInstance.get(`/notification/user/${userId}`);
-            return response; 
-        } catch (error) {
-            console.error("Lỗi khi lấy thông báo:", error);
-            throw error; 
-        }
+        const response = await this.axiosInstance.get(`/notification/user/${userId}`);
     }
 
     async setReadNotification(notificationId) {
-        try {
-            const response = await this.axiosInstance.put(`/notification/${notificationId}/read`);
-            return response;
-        } catch (error) {
-            console.error("Lỗi khi đọc thông báo:", error);
-            throw error;
-        }
+        const response = await this.axiosInstance.put(`/notification/${notificationId}/read`);
+        return response;
     }
 
     async deleteNotification(notificationId) {
-        try {
-            const response = await this.axiosInstance.delete(`/notification/${notificationId}`);
-            return { status: response.status, data: "Xóa thành công" };
-        } catch (error) {
-            console.error("Lỗi khi xóa thông báo:", error);
-            throw error;
-        }
+        await this.axiosInstance.delete(`/notification/${notificationId}`);
     }
-    
+
     async getCommentById(commentId) {
-        try {
-            const response = await this.axiosInstance.get(`/comment/${commentId}`);
-            return response;
-        } catch (error) {
-            console.error("Lỗi khi lấy comment từ thông báo:", error);
-            throw error;
-        }
+        const response = await this.axiosInstance.get(`/comment/${commentId}`);
+        return response;
+    }
+
+
+    async isReadPost(userId, postId) {
+        const response = await this.axiosInstance.get(`/views/check/${userId}/${postId}`);
+        return response.data; 
+    }
+
+    async setReadPost(views) {
+        const response = await this.axiosInstance.post(`/views`, views);
+        return response.data;
     }
 }
 
-export const notificationService = new NotificationService();
-export const getNotifications = notificationService.getNotifications.bind(NotificationService);
-
-export const isReadPost = async (userId, postId) => {
-  try {
-    const res = await axios.get(`${API_URL}/views/check/${userId}/${postId}`);
-    console.log("đọc chưa: ", res);
-
-    return res?.data;
-  } catch (error) {
-    console.error("Lỗi khi xem đọc chưa:", error);
-    return error;
-  }
-};
-export const setReadPost = async (views) => {
-  try {
-    const res = await axios.post(`${API_URL}/views`, views);
-    console.log("Đã đọc ", res);
-
-    return res?.data;
-  } catch (error) {
-    console.error("Lỗi khi set đọc:", error);
-    return error;
-  }
-};
+export const service = new AppService();

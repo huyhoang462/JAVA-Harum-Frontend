@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { X, Loader2 } from "lucide-react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { notificationService } from "../service";
+import { service } from "../service";
 import formatTimeAgo from "../utils/formatTimeAgo"; 
 
 const NotificationItem = React.memo(({ noti, onClick, onDelete }) => (
@@ -62,7 +62,7 @@ export default function NotificationMenu({ notifications = [], isLoading, onClos
             });
         };
 
-        const cleanup = notificationService.initializeWebSocket(userId, handleNewNotification);
+        const cleanup = service.initializeWebSocket(userId, handleNewNotification);
         return cleanup;
     }, [userId, queryClient, queryKey]);
 
@@ -97,8 +97,8 @@ export default function NotificationMenu({ notifications = [], isLoading, onClos
         });
     };
 
-    const markAsReadMutation = useOptimisticMutation(notificationService.setReadNotification, 'markRead');
-    const deleteMutation = useOptimisticMutation(notificationService.deleteNotification, 'delete');
+    const markAsReadMutation = useOptimisticMutation(service.setReadNotification, 'markRead');
+    const deleteMutation = useOptimisticMutation(service.deleteNotification, 'delete');
 
     const { unread, read } = useMemo(() => {
         const unread = notifications.filter(n => !n.isRead).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -117,7 +117,7 @@ export default function NotificationMenu({ notifications = [], isLoading, onClos
                     nav(`/profile/${noti.followId}`);
                     break;
                 case "COMMENT":
-                    const res = await notificationService.getCommentById(noti.commentId);
+                    const res = await service.getCommentById(noti.commentId);
                     if (res.status === 200) {
                         nav(`/post-detail/${res.data.postId}`);
                     } else {
