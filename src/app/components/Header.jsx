@@ -125,7 +125,6 @@ export default function Header({ textColor }) {
               <div className="ml-4">
                 <MessageSquareMore
                   onClick={() => nav("/message")}
-                  onClick={() => nav("/message")}
                   className={`${
                     textColor === "white" ? "text-white" : "text-text2"
                   } h-[25px] w-[25px] cursor-pointer hover:text-pblue`}
@@ -176,7 +175,6 @@ export default function Header({ textColor }) {
                 </div>
               </div>
               <div
-                ref={menuRef}
                 ref={menuRef}
                 className="flex items-center justify-between ml-4 cursor-pointer relative"
                 onClick={() => setIsShowMenu(!isShowMenu)}
