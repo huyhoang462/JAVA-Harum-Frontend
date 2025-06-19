@@ -1,98 +1,106 @@
 /* eslint-disable no-case-declarations */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useRef, useState } from "react";
-import {
-  deleteNotification,
-  getCommentById,
-  getNotifications,
-  setReadNotification,
-} from "../service";
+
+import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { notificationService } from "../service";
+
 
 export default function NotificationMenu() {
-  const [notifications, setNotifications] = useState([]);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [selectedNotificationId, setSelectedNotificationId] = useState(null);
-  const nav = useNavigate();
-  const hasFetchedRef = useRef(false);
+    const [notifications, setNotifications] = useState([]);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [selectedNotificationId, setSelectedNotificationId] = useState(null);
+    const nav = useNavigate();
+    const userId = localStorage.getItem("user_id"); 
 
-  const fetchNotifications = async () => {
-    const res = await getNotifications(localStorage.getItem("user_id"));
-    if (res.status === 200) {
-      setNotifications(res.data);
-    }
-  };
+   useEffect(() => {
+    if (!userId) return;
 
-  useEffect(() => {
-    if (!hasFetchedRef.current) {
-      fetchNotifications();
-      hasFetchedRef.current = true;
-    }
-  }, []);
-  const handleClickNotification = async (noti) => {
-    if (noti.isRead) {
-      switch (noti.type) {
-        case "POST":
-          nav(`/post-detail/${noti.postId}`);
-          break;
-        case "FOLLOW":
-          nav(`/otherprofile/${noti.followId}`);
-          break;
-        case "COMMENT":
-          const resComment = await getCommentById(noti.commentId);
-          if (resComment.status === 200) {
-            nav(`/post-detail/${resComment.data.postId}`);
-          } else toast.error("Không thể xem chi tiết");
-          break;
-        default:
-          break;
-      }
-    } else {
-      const res = await setReadNotification(noti.id);
-      if (res?.status === 200) {
-        switch (res?.data?.type) {
-          case "POST":
-            nav(`/post-detail/${res.data.postId}`);
-            break;
-          case "FOLLOW":
-            nav(`/otherprofile/${res.data.followId}`);
-            break;
-          case "COMMENT":
-            const resComment = await getCommentById(res.data.commentId);
-            if (resComment.status === 200) {
-              nav(`/post-detail/${resComment.data.postId}`);
-            } else toast.error("Không thể xem chi tiết");
-            break;
-          default:
-            break;
+    const handleNewNotification = (newNotification) => {
+        toast.info(`🔔 ${newNotification.message}`);
+        setNotifications(prev => [newNotification, ...prev]);
+    };
+
+    const cleanup = notificationService.initializeWebSocket(userId, handleNewNotification);
+
+    return cleanup;
+
+}, [userId]); 
+
+    useEffect(() => {
+        const fetchInitialNotifications = async () => {
+            if (!userId) return;
+            try {
+                const res = await notificationService.getNotifications(userId);
+                if (res.status === 200) {
+                    setNotifications(res.data);
+                }
+            } catch (error) {
+                toast.error("Không thể tải danh sách thông báo.");
+            }
+        };
+
+        fetchInitialNotifications();
+    }, [userId]); 
+
+    const handleClickNotification = async (noti) => {
+        const navigateToTarget = async (notification) => {
+            switch (notification.type) {
+                case "POST":
+                    nav(`/post-detail/${notification.postId}`);
+                    break;
+                case "FOLLOW":
+                    nav(`/otherprofile/${notification.followId}`);
+                    break;
+                case "COMMENT":
+                    try {
+                        const resComment = await notificationService.getCommentById(notification.commentId);
+                        nav(`/post-detail/${resComment.data.postId}`);
+                    } catch {
+                        toast.error("Không thể xem chi tiết bình luận.");
+                    }
+                    break;
+                default:
+                    break;
+            }
+        };
+
+        if (noti.isRead) {
+            navigateToTarget(noti);
+        } else {
+            try {
+                const res = await notificationService.setReadNotification(noti.id);
+                setNotifications(prev => 
+                    prev.map(n => n.id === noti.id ? { ...n, isRead: true } : n)
+                );
+                navigateToTarget(res.data);
+            } catch {
+                toast.error("Có lỗi khi xem thông báo");
+            }
         }
-        fetchNotifications();
-      } else toast.error("Có lỗi khi xem thông báo");
-    }
-  };
+    };
 
-  const openConfirmModal = (e, id) => {
-    e.stopPropagation();
-    setSelectedNotificationId(id);
-    setShowConfirmModal(true);
-  };
+    const openConfirmModal = (e, id) => {
+        e.stopPropagation();
+        setSelectedNotificationId(id);
+        setShowConfirmModal(true);
+    };
 
-  const confirmDelete = async () => {
-    if (selectedNotificationId) {
-      const res = await deleteNotification(selectedNotificationId);
-      if (res?.status === 200) {
-        toast.success("Đã xóa thông báo!");
-        fetchNotifications();
-      } else {
-        toast.error("Xảy ra lỗi khi xóa thông báo!");
-      }
-      setSelectedNotificationId(null);
-      setShowConfirmModal(false);
-    }
-  };
-
+    const confirmDelete = async () => {
+        if (!selectedNotificationId) return;
+        try {
+            await notificationService.deleteNotification(selectedNotificationId);
+            toast.success("Đã xóa thông báo!");
+            setNotifications(prev => prev.filter(n => n.id !== selectedNotificationId));
+        } catch (error) {
+            toast.error("Xảy ra lỗi khi xóa thông báo!");
+        } finally {
+            setShowConfirmModal(false);
+            setSelectedNotificationId(null);
+        }
+    };
   const cancelDelete = () => {
     setSelectedNotificationId(null);
     setShowConfirmModal(false);

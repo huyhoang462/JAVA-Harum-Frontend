@@ -15,7 +15,8 @@ export const getPostsByUserApi = async (userId, page = 1, size = 10) => {
     const response = await axios.get(`${API_URL}/posts/user/${userId}`, {
       params: { page, size },
     });
-    return response.data;
+    console.log(response.data);
+        return response.data;
   } catch (error) {
     console.error("Lỗi khi lấy danh sách bài viết của user:", error);
     throw error;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Bell,
   ChevronDown,
@@ -17,6 +17,10 @@ export default function Header({ textColor }) {
   const [isShowMenu, setIsShowMenu] = useState(false);
   const [isShowNotifiaction, setIsShowNotifiaction] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const userId = localStorage.getItem("user_id");
+
+  const menuRef = useRef(null);
+  const notiRef = useRef(null);
 
   const handleClickLogo = () => {
     nav("/");
@@ -32,6 +36,7 @@ export default function Header({ textColor }) {
 
   const handleLogout = () => {
     localStorage.removeItem("user_id");
+    localStorage.removeItem("avatarUrl");
     nav("/");
   };
 
@@ -60,6 +65,23 @@ export default function Header({ textColor }) {
   ];
 
   const isLoggedIn = !!localStorage.getItem("user_id");
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsShowMenu(false);
+      }
+      if (notiRef.current && !notiRef.current.contains(event.target)) {
+        setIsShowNotifiaction(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="w-full bg-transparent h-hheader my-2.5">
@@ -95,19 +117,19 @@ export default function Header({ textColor }) {
             <div className="flex items-center">
               <div className="ml-4">
                 <MessageSquareMore
+                  onClick={() => nav("/message")}
                   className={`${
                     textColor === "white" ? "text-white" : "text-text2"
                   } h-[25px] w-[25px] cursor-pointer hover:text-pblue`}
                 />
               </div>
-              <div className="ml-4 relative">
+              <div className="ml-4 relative" ref={notiRef}>
                 <Bell
                   className={`${
                     textColor === "white" ? "text-white" : "text-text2"
                   } h-[25px] w-[25px] cursor-pointer hover:text-pblue`}
                   onClick={() => setIsShowNotifiaction(!isShowNotifiaction)}
                 />
-                {/* {isShowNotifiaction && ( */}
                 <div
                   className={`${
                     isShowNotifiaction ? "" : "hidden"
@@ -115,34 +137,46 @@ export default function Header({ textColor }) {
                 >
                   <NotificationMenu />
                 </div>
-
-                {/* )} */}
               </div>
               <div className="ml-4 cursor-pointer">
                 <div
-                  className={`${
-                    textColor === "white"
-                      ? "text-white border-white"
-                      : "text-text2 border-text2"
-                  } border-2 px-4 py-1.5 rounded-3xl flex hover:text-pblue`}
+                  className={`
+                    group 
+                    border-2 px-4 py-1.5 rounded-3xl flex items-center cursor-pointer 
+                    transition-colors duration-200
+                    ${
+                      textColor === "white"
+                        ? "text-white border-white"
+                        : "text-text2 border-text2"
+                    }
+                    hover:border-pblue hover:text-pblue
+                  `}
                   onClick={() => nav("/write-post")}
                 >
                   <Feather
-                    className={`${
-                      textColor === "white" ? "text-white" : "text-text2"
-                    } h-6 w-6 cursor-pointer mr-1 hover:text-pblue`}
+                    className={`
+                      h-6 w-6 mr-1
+                      transition-colors duration-200
+                      ${textColor === "white" ? "text-white" : "text-text2"}
+                      group-hover:text-pblue
+                    `}
                   />
                   <p className="font-medium pr-[4px]">Viết bài</p>
                 </div>
               </div>
               <div
+                ref={menuRef}
                 className="flex items-center justify-between ml-4 cursor-pointer relative"
                 onClick={() => setIsShowMenu(!isShowMenu)}
               >
                 <div>
                   <img
                     className="rounded-full h-10 w-10 object-cover"
-                    src="/src/app/assets/images/daisy.jpg"
+                    src={
+                      localStorage.getItem("avatarUrl") !== "null"
+                        ? localStorage.getItem("avatarUrl")
+                        : "/defaultAvatar.jpg"
+                    }
                     alt="Avatar"
                   />
                 </div>

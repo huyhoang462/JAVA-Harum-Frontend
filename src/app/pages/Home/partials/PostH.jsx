@@ -5,9 +5,9 @@ import { useNavigate } from "react-router-dom";
 
 export default function PostH({ post }) {
   const nav = useNavigate();
-  const imageUrl = post?.contentBlock.find(
-    (block) => block.type === "image"
-  ).value;
+    const imageUrl = post?.contentBlock.find(
+      (block) => block.type === "image"
+    )?.value;
   return (
     <div
       className=" flex flex-col cursor-pointer w-full "
