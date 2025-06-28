@@ -5,6 +5,8 @@ import { toast } from "react-toastify";
 import { handleSignUpApi, handleVerifyOtpApi } from "./signupService";
 import { Eye, EyeClosed } from "lucide-react";
 import VerifyOtp from "./partials/VerifyOtp";
+import { getUserById } from "./signupService";
+import { sGlobalInfo } from "../../stores/globalStore";
 
 export default function Signup() {
   const nav = useNavigate();
@@ -50,17 +52,17 @@ export default function Signup() {
     setIsLoading(true);
     try {
       const res = await handleSignUpApi(username, email, password);
-      if (res.status === 200) {
+      if (res && res.status === 200) {
         toast.success(res.data);
         setShowOtpModal(true);
       } else {
-        console.log("lỗi là:", res?.response?.data?.message);
-        toast.error(res?.response?.data?.message);
+        toast.error(res?.response?.data?.message || "Đăng ký thất bại.");
       }
     } catch (error) {
       toast.error("Có lỗi xảy ra. Vui lòng thử lại.");
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const handleSignUp = () => {
@@ -68,17 +70,52 @@ export default function Signup() {
     signup();
   };
 
-  const handleVerifyOtp = (otp) => {
-    const user = {
-      username: username,
-      email: email,
-      passwordHash: password,
-    };
-    const res = handleVerifyOtpApi(email, otp, user);
-    console.log("res: ", res);
-    setShowOtpModal(false);
-    toast.success("Xác thực thành công!");
-    nav("/login");
+  const handleVerifyOtp = async (otp) => {
+    setIsLoading(true);
+    try {
+      const userPayload = {
+        username: username,
+        email: email,
+        passwordHash: password,
+      };
+
+      const res = await handleVerifyOtpApi(email, otp, userPayload);
+      
+      if (res && res.status === 201 && res.data) {
+        setShowOtpModal(false);
+        toast.success("Tài khoản đã được tạo. Đang tự động đăng nhập...");
+
+        const loginData = res.data;
+
+        localStorage.setItem("user_id", loginData.id);
+
+        sGlobalInfo.set((pre) => {
+          pre.value.userId = loginData.id;
+          pre.value.userName = loginData.username;
+        });
+
+        const resUser = await getUserById(loginData.id);
+        if (resUser && resUser.avatarUrl) {
+            localStorage.setItem("avatarUrl", resUser.avatarUrl);
+        }
+
+        localStorage.setItem("role", loginData.role);
+
+        if (loginData.role === "USER") {
+          nav("/topicselection");
+        } else {
+          nav("/admin/users");
+        }
+        window.location.reload();
+
+      } else {
+        toast.error(res?.response?.data?.message || "Xác thực thất bại.");
+      }
+    } catch (error) {
+      toast.error("Có lỗi xảy ra trong quá trình xác thực.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -95,7 +132,6 @@ export default function Signup() {
             onChange={(e) => setUsername(e.target.value)}
           />
         </div>
-
         <div>
           <p className="text-text font-medium">Email</p>
           <input
@@ -104,7 +140,6 @@ export default function Signup() {
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-
         <div className="w-[306px] ">
           <p className="text-text font-medium">Mật khẩu</p>
           <div className="relative">
@@ -127,7 +162,6 @@ export default function Signup() {
             )}
           </div>
         </div>
-
         <div className="w-[306px] ">
           <p className="text-text font-medium">Nhập lại mật khẩu</p>
           <div className="relative">
@@ -151,11 +185,11 @@ export default function Signup() {
           </div>
         </div>
         <button
-          className="bg-sblue text-white rounded-md w-[316px] h-9 hover:bg-pblue cursor-pointer"
+          className="bg-sblue text-white rounded-md w-[316px] h-9 hover:bg-pblue cursor-pointer disabled:bg-gray-400"
           onClick={handleSignUp}
           disabled={isLoading}
         >
-          {isLoading ? "Đang đăng ký..." : "Đăng ký"}
+          {isLoading ? "Đang xử lý..." : "Đăng ký"}
         </button>
 
         <p className="text-sm mt-3">
@@ -174,6 +208,7 @@ export default function Signup() {
           email={email}
           onClose={() => setShowOtpModal(false)}
           onVerify={handleVerifyOtp}
+          isLoading={isLoading}
         />
       )}
     </div>

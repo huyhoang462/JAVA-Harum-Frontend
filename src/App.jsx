@@ -24,6 +24,8 @@ import ProfileRouter from "./app/pages/ProfileRoute/ProfileRoute";
 import AdminWatchPost from "./app/pages/AdminPost/partials/AdminWatchPost";
 import { AuthProvider } from "./app/contexts/AuthContext";
 import AdminRoute from "./app/routes/AdminRoute";
+import TopicSelection from "./app/pages/TopicSelection/TopicSelection";
+import AdminDashboardPage from "./app/pages/AdminDashboard/AdminDashboard";
 function App() {
   return (
     <>
@@ -60,6 +62,14 @@ function App() {
                   </PrivatePart>
                 }
               />
+              <Route
+                path="/changetopics"
+                element={
+                  <PrivatePart>
+                    <ProfileSetting />
+                  </PrivatePart>
+                }
+              />
             </Route>
             <Route element={<WriteLayout />}>
               <Route
@@ -86,6 +96,9 @@ function App() {
                   </PrivatePart>
                 }
               />
+              <Route path="/topicselection" element={<TopicSelection />}/>
+                <Route path="/dashboard" element={<AdminDashboardPage />} />
+
             </Route>
             <Route element={<AdminRoute />}>
               <Route path="/admin" element={<AdminLayout />}>

@@ -43,3 +43,26 @@ export const changePassword = async (request) => {
     throw err;
   }
 };
+export const getAllTopic = async () => {
+  try {
+    const res = await axios.get(`${API_URL}/topics`);
+    return res.data;
+  } catch (error) {
+    console.error("Lỗi khi lấy danh sách chủ đề:", error);
+    throw error;
+  }
+};
+
+export const updateUserTopicsApi = async (userId, topicIds) => {
+  try {
+    const payload = topicIds.map(id => ({ id }));
+    const response = await axios.post(
+      `${API_URL}/users/favorite-topics/${userId}`,
+      payload
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Lỗi khi cập nhật sở thích người dùng:", error);
+    throw error;
+  }
+};
