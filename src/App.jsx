@@ -97,8 +97,6 @@ function App() {
                 }
               />
               <Route path="/topicselection" element={<TopicSelection />}/>
-                <Route path="/dashboard" element={<AdminDashboardPage />} />
-
             </Route>
             <Route element={<AdminRoute />}>
               <Route path="/admin" element={<AdminLayout />}>
@@ -106,6 +104,7 @@ function App() {
                 <Route path="posts" element={<PostPage />} />
                 <Route path="posts/:id" element={<AdminWatchPost />} />
                 <Route path="comments" element={<CommentPage />} />
+                <Route path="dashboard" element={<AdminDashboardPage />} />
               </Route>
             </Route>
           </Routes>

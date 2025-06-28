@@ -5,7 +5,7 @@ import {
   MessageSquareQuote,
   Pencil,
   User,
-  ShieldAlert,
+  ChartLine
 } from "lucide-react";
 import React from "react";
 import { NavLink } from "react-router-dom";
@@ -29,6 +29,12 @@ const menuItems = [
     name: "Báo cáo Bình luận",
     path: "/admin/comments",
     icon: <MessageSquareQuote size={20} />,
+  },
+   {
+    id: "dashboard",
+    name: "Thống kê",
+    path: "/admin/dashboard", 
+    icon: <  ChartLine size={20} />,
   },
 ];
 
