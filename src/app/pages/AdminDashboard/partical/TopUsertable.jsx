@@ -58,7 +58,7 @@ const TopUsersTable = ({ title, data, isLoading, valueLabel = "Điểm" }) => {
                             data.map((user, index) => (
                                 <tr key={user.id} className="border-b border-slate-100 hover:bg-slate-50/80 transition-colors">
                                     <td className="p-3">
-                                        <Link to={`/profile/${user.id}`} className="flex items-center gap-4 group">
+                                        <Link to={`/admin/profile/${user.userId}`} className="flex items-center gap-4 group">
                                             <span className="font-bold text-slate-400 w-5 text-center">{index + 1}</span>
                                             <img
                                                 src={user.avatarUrl || "/defaultAvatar.jpg"}

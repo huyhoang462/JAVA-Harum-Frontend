@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Edit } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Badge = ({ children, colorClass }) => (
   <span
@@ -38,6 +39,8 @@ const UserTable = ({
   isError,
   error,
 }) => {
+   const navigate = useNavigate(); 
+
   if (isLoading) {
     return <div className="text-center p-8">Đang tải dữ liệu...</div>;
   }
@@ -76,7 +79,8 @@ const UserTable = ({
         </thead>
         <tbody>
           {users.map((user) => (
-            <tr key={user.id} className="bg-white border-b hover:bg-gray-50">
+            <tr key={user.id} className="bg-white border-b hover:bg-gray-50"
+            onClick={() => navigate(`/admin/profile/${user.id}`)}>
               <td className="px-6 py-4">
                 <div className="flex items-center">
                   <img
@@ -109,8 +113,10 @@ const UserTable = ({
                 <div className="flex items-center justify-center">
                   <button
                     disabled={user.role.roleName === "ADMIN"}
-                    onClick={() => onRequestChangeStatus(user.id, user.status)}
-                    className="p-2 cursor-pointer text-sblue hover:bg-blue-100 rounded-full disabled:text-gray-300 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onRequestChangeStatus(user.id, user.status);
+                    }} className="p-2 cursor-pointer text-sblue hover:bg-blue-100 rounded-full disabled:text-gray-300 disabled:cursor-not-allowed disabled:hover:bg-transparent"
                     title={
                       user.status === "ENABLE"
                         ? "Vô hiệu hóa tài khoản"

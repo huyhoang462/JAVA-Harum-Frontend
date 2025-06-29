@@ -47,6 +47,7 @@ export const getPostsByAllTopics = async () => {
 export const getUsersSortedByPostCount = async () => {
   try {
     const response = await axios.get(`${API_URL}/users/sorted-by-posts`);
+    console.log(response.data);
     return response.data.map(user => ({ ...user, value: user.postCount }));
   } catch (error) {
     console.error("Lỗi khi lấy danh sách người dùng theo bài viết:", error);

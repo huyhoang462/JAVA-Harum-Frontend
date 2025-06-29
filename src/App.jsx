@@ -26,6 +26,7 @@ import { AuthProvider } from "./app/contexts/AuthContext";
 import AdminRoute from "./app/routes/AdminRoute";
 import TopicSelection from "./app/pages/TopicSelection/TopicSelection";
 import AdminDashboardPage from "./app/pages/AdminDashboard/AdminDashboard";
+import AdminWatchUser from "./app/pages/AdminWatchUser/AdminWatchUser";
 function App() {
   return (
     <>
@@ -70,6 +71,7 @@ function App() {
                   </PrivatePart>
                 }
               />
+
             </Route>
             <Route element={<WriteLayout />}>
               <Route
@@ -97,13 +99,15 @@ function App() {
                 }
               />
               <Route path="/topicselection" element={<TopicSelection />}/>
+              
             </Route>
             <Route element={<AdminRoute />}>
               <Route path="/admin" element={<AdminLayout />}>
                 <Route path="users" element={<UserPage />} />
                 <Route path="posts" element={<PostPage />} />
-                <Route path="posts/:id" element={<AdminWatchPost />} />
                 <Route path="comments" element={<CommentPage />} />
+                 <Route path="profile/:id" element={<AdminWatchUser />} />
+               <Route path="posts/:id" element={<AdminWatchPost />} />
                 <Route path="dashboard" element={<AdminDashboardPage />} />
               </Route>
             </Route>
