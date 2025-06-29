@@ -1,10 +1,14 @@
 import React, { useState } from "react";
-import { Bookmark, FileText, UserCheck, Loader2 } from "lucide-react";
+import { Bookmark, FileText, UserCheck,Users,Heart, Loader2 } from "lucide-react";
 import Post from "./Post";
 import Following from "./Following";
+import Follower from "./Follower";
 import SavedPost from "./SavedPost";
+import TopicsTab from "./TopicTab";
 import {
+  getUserProfileApi,
   getFollowedByUserApi,
+  getFollowerByUserApi,
   getPostsByUserApi,
   getSavePostsByUserId,
 } from "../AdminWatchUserService";
@@ -41,6 +45,7 @@ const TabSection = ({ userId }) => {
   const [activeTab, setActiveTab] = useState("posts");
   const queryClient = useQueryClient();
   const FOLLOWING_PAGE_SIZE = 15;
+  const FOLLOWER_PAGE_SIZE = 15;
 
   const {
     data: postsData,
@@ -116,6 +121,50 @@ const TabSection = ({ userId }) => {
     staleTime: 5 * 60 * 1000,
   });
 
+    const {
+    data: followersDisplayData,
+    isLoading: isFollowersLoading,
+    error: followersError,
+    fetchNextPage: fetchNextFollowers,
+    hasNextPage: hasNextFollowers,
+    isFetchingNextPage: isFetchingNextFollowers,
+  } = useInfiniteQuery({
+    queryKey: ["userFollowersDisplay", userId], 
+    queryFn: ({ pageParam = 0 }) =>
+      getFollowerByUserApi(userId, pageParam, FOLLOWER_PAGE_SIZE), 
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.data.length < FOLLOWER_PAGE_SIZE) return undefined;
+      return allPages.length;
+    },
+    select: (data) => ({
+      ...data,
+      pages: data.pages.map((page) => page.data),
+    }),
+    enabled: !!userId,
+  });
+  
+  const { data: followersTotalCount } = useQuery({
+    queryKey: ["userFollowersCount", userId], 
+    queryFn: async () => {
+      let totalCount = 0;
+      let page = 0;
+      let hasMore = true;
+      while (hasMore) {
+        const res = await getFollowerByUserApi(userId, page, FOLLOWER_PAGE_SIZE); 
+        const fetchedCount = res.data.length;
+        totalCount += fetchedCount;
+        page += 1;
+        if (fetchedCount < FOLLOWER_PAGE_SIZE) {
+          hasMore = false;
+        }
+      }
+      return totalCount;
+    },
+    enabled: !!userId,
+    staleTime: 5 * 60 * 1000,
+  });
+
   const {
     data: savedPostsData,
     isLoading: isSavedPostsLoading,
@@ -138,9 +187,11 @@ const TabSection = ({ userId }) => {
   const postsCount = postsData?.pages[0]?.totalElements || 0;
   const savedCount = savedPostsData?.length || 0;
   const followingCount = followingTotalCount;
+  const followersCount = followersTotalCount;
+
 
   const renderContent = () => {
-    if (isPostsLoading || isFollowingLoading || isSavedPostsLoading) {
+    if (isPostsLoading || isFollowingLoading || isSavedPostsLoading || isFollowersLoading) {
       return (
         <div className="text-gray-500 text-center col-span-full flex justify-center items-center h-40">
           <Loader2 className="animate-spin" size={32} />
@@ -227,6 +278,32 @@ const TabSection = ({ userId }) => {
           </p>
         );
 
+        case "followers":
+        const allFollowers = followersDisplayData?.pages.flat() || [];
+        return allFollowers.length > 0 ? (
+          <>
+            {allFollowers.map((user) => (
+              <Follower
+                key={user.id}
+                user={user}
+                refresh={() => handleRefresh("userFollowers")}
+              />
+            ))}
+            <LoadMoreButton
+              hasNextPage={hasNextFollowers}
+              isFetchingNextPage={isFetchingNextFollowers}
+              fetchNextPage={fetchNextFollowers}
+            />
+          </>
+        ) : (
+          <p className="text-gray-500 text-center col-span-full">
+            Chưa có ai theo dõi người dùng này.
+          </p>
+        );
+
+        case "topics":
+        return <TopicsTab userId={userId} />;
+
       default:
         return null;
     }
@@ -268,6 +345,29 @@ const TabSection = ({ userId }) => {
           <UserCheck size={18} />
           Đang theo dõi ({followingCount === undefined ? "0" : followingCount})
         </button>
+         <button
+          className={`flex items-center cursor-pointer gap-2 pb-2 px-4 transition bg-transparent ${
+            activeTab === "followers"
+              ? "border-b-2 border-pblue text-pblue"
+              : "text-gray-600"
+          }`}
+          onClick={() => setActiveTab("followers")}
+        >
+          <Users size={18} /> 
+          Người theo dõi ({followersCount === undefined ? "0" : followersCount})
+        </button>
+           <button
+          className={`flex items-center cursor-pointer gap-2 pb-2 px-4 transition bg-transparent shrink-0 ${
+            activeTab === "topics"
+              ? "border-b-2 border-pblue text-pblue"
+              : "text-gray-600"
+          }`}
+          onClick={() => setActiveTab("topics")}
+        >
+          <Heart size={18} /> 
+          Sở thích 
+        </button>
+
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-8 mb-10">

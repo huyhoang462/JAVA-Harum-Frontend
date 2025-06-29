@@ -46,6 +46,18 @@ export const getFollowedByUserApi = async (userId, page = 0, size = 9) => {
     throw error;
   }
 };
+export const getFollowerByUserApi = async (userId, page = 0, size = 9) => {
+  try {
+    const response = await axios.get(
+      `${API_URL}/follow/followers/${userId}/${page}/${size}`
+    );
+    console.log("follower: ", response);
+    return response;
+  } catch (error) {
+    console.error("Lỗi khi lấy danh sách đang theo dõi của user:", error);
+    throw error;
+  }
+};
 export const unFollow = async (followerId, followedId) => {
   try {
     const res = await axios.post(
