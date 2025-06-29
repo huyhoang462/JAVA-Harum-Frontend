@@ -169,11 +169,23 @@ const TabSection = () => {
 
     switch (activeTab) {
       case "posts":
-        const allPosts = postsData?.pages.flatMap((page) => page.content) || [];
+        const allPosts =
+          postsData?.pages?.flatMap((page) => page?.content) || [];
+        {
+          console.log("posss: ", allPosts);
+        }
+        if (allPosts.length === 1) {
+          if (allPosts[1] == undefined)
+            return (
+              <p className="text-gray-500 text-center col-span-full">
+                Người dùng này chưa có bài viết nào.
+              </p>
+            );
+        }
         return allPosts.length > 0 ? (
           <>
-            {allPosts.map((post) => (
-              <Post key={post.id} post={post} />
+            {allPosts?.map((post) => (
+              <Post key={post?.id} post={post} />
             ))}
             <LoadMoreButton
               hasNextPage={hasNextPosts}
@@ -191,7 +203,7 @@ const TabSection = () => {
         return savedPostsData?.length > 0 ? (
           savedPostsData.map((post) => (
             <SavedPost
-              key={post.id}
+              key={post?.id}
               post={post}
               refresh={() =>
                 queryClient.invalidateQueries({
@@ -212,7 +224,7 @@ const TabSection = () => {
           <>
             {allFollowing.map((user) => (
               <Following
-                key={user.id}
+                key={user?.id}
                 user={user}
                 refresh={() => handleRefresh("userFollowing")}
               />

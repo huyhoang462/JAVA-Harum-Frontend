@@ -96,11 +96,18 @@ const TabSection = ({ userId }) => {
         </p>
       );
     }
-
+    if (allPosts.length === 1) {
+      if (allPosts[1] == undefined)
+        return (
+          <p className="text-gray-500 text-center col-span-full">
+            Người dùng này chưa có bài viết nào.
+          </p>
+        );
+    }
     return (
       <>
         {allPosts.map((post) => (
-          <Post key={post.id} post={post} />
+          <Post key={post?.id} post={post} />
         ))}
         <LoadMoreButton
           hasNextPage={hasNextPage}
