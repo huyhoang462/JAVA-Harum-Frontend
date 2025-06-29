@@ -53,13 +53,14 @@ export const getAllTopic = async () => {
   }
 };
 
-export const updateUserTopicsApi = async (userId, topicIds) => {
+export const updateUserTopicsApi = async (userId, payload) => {
   try {
-    const payload = topicIds.map(id => ({ id }));
+ 
     const response = await axios.post(
       `${API_URL}/users/favorite-topics/${userId}`,
-      payload
+      payload 
     );
+    console.log("Dữ liệu trả về sau khi cập nhật:", response.data);
     return response.data;
   } catch (error) {
     console.error("Lỗi khi cập nhật sở thích người dùng:", error);

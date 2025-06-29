@@ -219,10 +219,12 @@ const TabSection = ({ userId }) => {
     switch (activeTab) {
       case "posts":
         const allPosts = postsData?.pages.flatMap((page) => page.content) || [];
-        return allPosts.length > 0 ? (
+        const validPosts = allPosts.filter(Boolean);
+
+        return validPosts.length > 0 ? (
           <>
-            {allPosts.map((post) => (
-              <Post key={post?.id} post={post} />
+            {validPosts.map((post) => (
+              <Post key={post.id} post={post} />
             ))}
             <LoadMoreButton
               hasNextPage={hasNextPosts}
@@ -231,6 +233,7 @@ const TabSection = ({ userId }) => {
             />
           </>
         ) : (
+      
           <p className="text-gray-500 text-center col-span-full">
             Người dùng chưa có bài viết nào.
           </p>

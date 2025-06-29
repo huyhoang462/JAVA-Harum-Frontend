@@ -52,7 +52,7 @@ const TopicsTab = ({ userId }) => {
       {favoriteTopics.map((topic) => (
         <div
           key={topic.id}
-          className="col-span-1 flex items-center gap-2 px-4 py-2 bg-blue-50 text-blue-800 font-semibold rounded-lg border border-blue-200"
+          className="col-span-1 flex items-center gap-2 px-4 py-2 bg-bgblue text-pblue font-semibold rounded-lg border border-blue-200"
         >
           <Tag size={18} />
           <span>{topic.name}</span>

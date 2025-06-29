@@ -47,7 +47,6 @@ export default function Header({ textColor }) {
     localStorage.removeItem("role");
     localStorage.removeItem("user_id");
     nav("/");
-    window.location.reload();
   };
 
   const handleSearch = () => {

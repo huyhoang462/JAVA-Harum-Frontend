@@ -42,7 +42,7 @@ const TopicSelection = () => {
     });
   };
 
-  const handleSavePreferences = async () => {
+ const handleSavePreferences = async () => {
     if (selectedTopics.size < MIN_TOPICS_REQUIRED) {
       toast.warn(`Vui lòng chọn ít nhất ${MIN_TOPICS_REQUIRED} chủ đề`);
       return;
@@ -57,12 +57,18 @@ const TopicSelection = () => {
     setIsSubmitting(true);
     
     try {
-      const topicIds = Array.from(selectedTopics);
+
+      const selectedIds = Array.from(selectedTopics);
       
-      await updateUserTopicsApi(userId, topicIds);
+      const fullTopicsPayload = selectedIds.map(id => {
+        const fullTopic = topics.find(topic => topic.id === id);
+
+        return fullTopic ? { id: fullTopic.id, name: fullTopic.name } : null;
+      }).filter(Boolean); 
+
+      await updateUserTopicsApi(userId, fullTopicsPayload);
       
       toast.success("Đã lưu sở thích của bạn thành công!");
-      
       nav('/');
 
     } catch (err) {

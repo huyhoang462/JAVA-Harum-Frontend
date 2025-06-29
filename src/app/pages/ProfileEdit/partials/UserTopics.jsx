@@ -80,19 +80,33 @@ const UserTopics = () => {
     });
   };
 
+
   const handleSave = async () => {
 
     if (selectedTopicIds.size < MIN_TOPICS_REQUIRED) {
       toast.warn(`Bạn phải chọn ít nhất ${MIN_TOPICS_REQUIRED} chủ đề.`);
-      return; 
+      return;
     }
 
     setIsSaving(true);
     try {
       const topicIdsArray = Array.from(selectedTopicIds);
-      await updateUserTopicsApi(userId, topicIdsArray);
+      const fullTopicsPayload = topicIdsArray.map(id => {
+        const fullTopic = allTopics.find(topic => topic.id === id);
+        return { id: fullTopic.id, name: fullTopic.name };
+      }).filter(Boolean); 
+
+     const updatedUserObject = await updateUserTopicsApi(userId, fullTopicsPayload);
+
+      const updatedFavoriteTopics = updatedUserObject?.favoriteTopics || [];
+
+      const newTopicIdSet = new Set(updatedFavoriteTopics.map(topic => topic.id));
+
+      setSelectedTopicIds(newTopicIdSet);
+      setInitialSelectedTopicIds(newTopicIdSet);
+      
       toast.success("Cập nhật sở thích thành công!");
-      setInitialSelectedTopicIds(new Set(selectedTopicIds));
+
     } catch (error) {
       console.error("Lỗi khi cập nhật topics:", error);
       toast.error("Có lỗi xảy ra, không thể lưu thay đổi.");
