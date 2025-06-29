@@ -1,47 +1,50 @@
-/* eslint-disable no-unused-vars */
+// src/pages/admin/AdminUserService.js
 
 import { API_URL } from "../../../bkUrl";
-
 import axios from "axios";
 
-const getUsersPage = async (page, size) => {
+/**
+ * Lấy danh sách người dùng với phân trang và bộ lọc từ server.
+ * @param {object} params - Các tham số cho query.
+ * @param {number} params.page - Số trang (bắt đầu từ 1).
+ * @param {number} params.size - Kích thước trang.
+ * @param {string} [params.searchTerm] - Từ khóa tìm kiếm.
+ * @param {string} [params.role] - Vai trò cần lọc.
+ * @returns {Promise<object>} Dữ liệu phân trang trả về từ API.
+ */
+export const getUsers = async (params) => {
   try {
-    const response = await axios.get(`${API_URL}/users`, {
-      params: { page, size },
-    });
+    // Tạo bản sao để xử lý, đảm bảo page là 0-based cho API
+    const apiParams = {
+      ...params,
+      page: params.page, // Chuyển đổi từ 1-based (UI) sang 0-based (API)
+    };
+
+    // Xóa các trường rỗng hoặc không cần thiết
+    if (!apiParams.searchTerm) {
+      delete apiParams.searchTerm;
+    }
+    if (apiParams.role === "ALL") {
+      delete apiParams.role;
+    }
+
+    const response = await axios.get(`${API_URL}/users`, { params: apiParams });
     return response.data;
   } catch (error) {
-    console.error(`Lỗi khi lấy trang ${page} của users:`, error);
+    console.error(`Lỗi khi lấy danh sách người dùng:`, error);
     throw error;
   }
 };
 
-export const fetchAllUsers = async () => {
-  console.log("Bắt đầu fetch tất cả người dùng...");
-  let currentPage = 1; // API của bạn bắt đầu từ trang 1
-  let allUsers = [];
-  let totalPages = 1; // Khởi tạo với 1 trang để vòng lặp bắt đầu
+/**
+ * Cập nhật trạng thái của người dùng.
+ * @param {string} userId - ID của người dùng.
+ * @param {object} body - Dữ liệu cần cập nhật.
+ * @param {string} body.status - Trạng thái mới ('ENABLE' hoặc 'DISABLE').
+ * @param {string} body.emailContent - Nội dung email thông báo.
+ * @returns {Promise<object>} Phản hồi từ API.
+ */
 
-  do {
-    try {
-      const data = await getUsersPage(currentPage, 14); // Lấy mỗi lần 10 người dùng
-      if (data && data.content) {
-        allUsers = allUsers.concat(data.content);
-        totalPages = data.totalPages;
-        console.log(
-          `Đã lấy xong trang ${currentPage}/${totalPages}. Tổng số users hiện tại: ${allUsers.length}`
-        );
-      }
-      currentPage++;
-    } catch (error) {
-      console.error(`Dừng quá trình fetch ở trang ${currentPage} do lỗi.`);
-      break;
-    }
-  } while (currentPage <= totalPages);
-
-  console.log(`Fetch hoàn tất. Tổng cộng ${allUsers.length} người dùng.`);
-  return allUsers; // Trả về một mảng phẳng chứa tất cả người dùng
-};
 export const updateUserStatus = async (userId, body) => {
   try {
     const response = await axios.put(
