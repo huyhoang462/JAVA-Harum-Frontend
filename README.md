@@ -1,116 +1,67 @@
-# 📌 Harum - Knowledge Sharing Platform
+# Harum - Knowledge Sharing Platform 🐙
 
-Harum is a modern web application designed for writing, sharing, and discovering knowledge-based articles. Built with **React**, **Vite**, and **Tailwind CSS**, it offers a seamless and interactive user experience.
-
----
-
-## 🚀 Features
-
-- 📝 **Write & Share**: Create and publish knowledge-sharing articles.
-- 🌍 **Explore Content**: Browse, read, and engage with posts from the community.
-- 🔄 **Client-Side Routing**: Smooth navigation with **React Router**.
-- 💾 **State Management**: Using **React Signify** for global state handling.
-- 🔗 **API Integration**: Communicate with backend services using **Axios**.
-- 📱 **Responsive Design**: Fully optimized for desktop and mobile devices.
+A full-featured social platform designed for creating, sharing, and interacting with rich-text articles, built with a modern React frontend and a Java Spring Boot backend.
 
 ---
 
-## 🛠 Installation & Setup
+## 🎥 Live Demo
 
-### 1️⃣ Clone the repository
+_A brief showcase of the core user flow: creating a new article with the rich-text editor, publishing, and interacting with post._
 
-```sh
-git clone https://github.com/huyhoang462/JAVA-Harum-Frontend.git
-cd JAVA-Harum-Frontend
-```
-
-### 2️⃣ Install dependencies
-
-```sh
-npm install
-```
-
-### 3️⃣ Start the development server
-
-```sh
-npm run dev
-```
-
-The app should be running at **http://localhost:5173**.
+![Harum Project Demo](harum-demo-optimized.gif)
 
 ---
 
-## 📦 Build for Production
+## ✨ Key Features & Technical Highlights
 
-To create an optimized production build:
+- **🚀 High-Performance Data Handling:** Leveraged **React Query** to efficiently manage server state, implementing robust caching, automatic data refetching, and optimistic updates to ensure a fast, responsive user experience and minimize API calls.
 
-```sh
-npm run build
-```
+- **✍️ Modern Block-Style Editor:** Integrated **Editor.js** to provide a clean, powerful rich-text editor, allowing users to craft beautifully formatted articles.
 
-The output will be in the `dist/` folder.
+- **👥 Comprehensive Social Interaction:** Engineered a full suite of social features including a user-following system, and multi-level interactions on posts (liking, commenting, saving, and reporting) to foster an engaging community.
 
-To preview the built project:
-
-```sh
-npm run preview
-```
+- **🔐 Full User Lifecycle:** Developed a complete user authentication flow, secure client-side routing, and dynamic user profile pages to showcase user-generated content and social activity.
 
 ---
 
-## 🛠 Technologies Used
+## 🛠️ My Role & Contributions
 
-- **Vite** - Fast build tool for modern web apps.
-- **React** - Component-based UI framework.
-- **Tailwind CSS** - Utility-first CSS framework.
-- **React Router** - Enables client-side navigation.
-- **React Signify** - Lightweight state management.
-- **Axios** - HTTP client for API communication.
+As the **project lead and primary frontend developer**, I was responsible for:
 
----
-
-## 📄 Folder Structure
-
-```
-📂 src
- ┣ 📂 app            # Main application folder
- ┃ ┣ 📂 assets       # Images, fonts, etc.
- ┃ ┣ 📂 components   # Reusable UI components
- ┃ ┣ 📂 layouts      # Layout components
- ┃ ┗ 📂 pages        # Page components
- ┣ 📜 index.css      # Global styles
- ┣ 📜 main.jsx       # Entry point
- ┗ 📜 App.jsx        # Main App component
-```
+- **User Authentication & Lifecycle:** Engineered the complete user flow, including registration, login, password recovery, and dynamic user profile pages.
+- **Content Creation & Interaction System:** Developed the entire article lifecycle from creation and editing (using Editor.js) to a full suite of social interactions (liking, saving, commenting, reporting, and a user-following system).
+- **Core Application & Admin Interface:** Built the main application pages (Homepage, Topic pages, Search page), and was responsible for developing key features within the admin dashboard.
 
 ---
 
-## 🔗 Backend Information
+## 💻 Tech Stack
 
-- The backend is developed using **Java Spring Boot**.
-- API integration is handled via **Axios** in the frontend.
-
-_link to Backend-folder_
-
----
-
-## 🤝 Contributing
-
-We welcome contributions! Fork the repo, create a branch, and submit a pull request.
-
-If you are a part of the project team, please add your information below:
-
-| Name                | MSSV     |
-| ------------------- | -------- |
-| Đỗ Nguyễn Hoàng Huy | 22520538 |
-| Lê Huy Hoàng        | 22520462 |
-| Phan Trần Tiến Hưng | 22520523 |
-| Ngô Duy Hưng        | 22520511 |
+- **Core:** ReactJS, JavaScript (ES6+), Vite
+- **Styling:** Tailwind CSS
+- **Routing:** React Router
+- **Data & State:** React Query, Axios
+- **Editor:** Editor.js
 
 ---
 
-## 📜 License
+## ⚙️ Setup & Installation
 
-This project is licensed under the **MIT License**.
+To run this project locally:
+
+1.  **Clone the repository:**
+    ```sh
+    git clone https://github.com/huyhoang462/JAVA-Harum-Frontend.git
+    cd JAVA-Harum-Frontend
+    ```
+2.  **Install dependencies:**
+    ```sh
+    npm install
+    ```
+3.  **Setup the backend:**
+    - _Note: The backend for this project is required. Please follow the setup instructions in the [https://github.com/PhanTranTienHung22520523/Harum_Backend](https://github.com/PhanTranTienHung22520523/Harum_Backend)._
+4.  **Start the development server:**
+    ```sh
+    npm run dev
+    ```
 
 ---
